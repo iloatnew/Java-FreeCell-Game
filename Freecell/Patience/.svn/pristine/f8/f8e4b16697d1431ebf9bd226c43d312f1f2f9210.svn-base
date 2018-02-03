@@ -1,0 +1,116 @@
+package controller;
+
+import static org.junit.Assert.*;
+
+import javax.swing.plaf.metal.MetalIconFactory.PaletteCloseIcon;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.sun.xml.internal.ws.model.ParameterImpl;
+
+import aui.FreeCellAUI;
+import model.Card;
+import model.Cardstack;
+import model.FreeCell;
+import model.Move;
+import model.Patience;
+import model.Rank;
+import model.Suit;
+import model.Type;
+
+public class FreeCellControllerTest {
+
+	FreeCell game;
+
+	PatienceController patienceController;
+
+	@Before
+	public void setUp() throws Exception {
+		game = new FreeCell(new DeckController().randomDeck());
+
+		patienceController = new PatienceController();
+		patienceController.initController();
+		patienceController.getPatience().setGame(game);
+		patienceController.getFreeCellController().setFreeCellAUI(new FreeCellAUI() {
+			
+			 
+			
+			@Override
+			public void refreshAll() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void initializeStacks() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void animateMove(Move move) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		patienceController.getFreeCellController().initGame();
+		
+		// leere Spielfeld
+		for (Cardstack stack : game.getPlayingStacks()) {
+			stack.clear();
+
+		}
+
+	}
+
+	@Test
+	public void testIsDroppable() {
+		Cardstack stack = new Cardstack(Type.DEFAULT);
+		stack.add(new Card(Rank.THREE, Suit.CLUB));
+		stack.add(new Card(Rank.TWO, Suit.DIAMOND));
+		stack.add(new Card(Rank.ACE, Suit.CLUB));
+		
+		patienceController.getFreeCellController().setStackToDrag(stack);
+		
+		game.getPlayingStacks()[0].add(new Card(Rank.FOUR, Suit.DIAMOND));
+		game.getPlayingStacks()[1].add(new Card(Rank.FOUR, Suit.CLUB));
+		
+		
+		assertTrue(patienceController.getFreeCellController().isDroppable(game.getPlayingStacks()[0]));
+		
+		
+		
+		assertFalse(patienceController.getFreeCellController().isDroppable(game.getPlayingStacks()[1]));
+		
+		
+		assertTrue(patienceController.getFreeCellController().isDroppable(game.getPlayingStacks()[2]));
+		
+		
+	}
+
+	@Test
+	public void testIsDraggable() {
+		// patienceController.getFreeCellController().initGame();
+		game.getPlayingStacks()[0].add(new Card(Rank.ACE, Suit.SPADE));
+		game.getPlayingStacks()[0].add(new Card(Rank.TWO, Suit.SPADE));
+		game.getPlayingStacks()[0].add(new Card(Rank.ACE, Suit.HEART));
+	
+		System.out.println(game.getFreeCells()[0].toString());
+		System.out.println(game.getFreeCells()[1].toString());
+		System.out.println(game.getFreeCells()[2].toString());
+		System.out.println(game.getFreeCells()[3].toString());
+
+		boolean shouldBeRight = patienceController.getFreeCellController().isDraggable(game.getPlayingStacks()[0],
+				game.getPlayingStacks()[0].get(1));
+		assert shouldBeRight;
+		
+		shouldBeRight = patienceController.getFreeCellController().isDraggable(game.getPlayingStacks()[0],
+				game.getPlayingStacks()[0].get(2));
+		assert shouldBeRight;
+		
+		boolean shouldBeWrong = patienceController.getFreeCellController().isDraggable(game.getPlayingStacks()[0],
+				game.getPlayingStacks()[0].get(0)); 
+		assert !shouldBeWrong;
+	}
+}

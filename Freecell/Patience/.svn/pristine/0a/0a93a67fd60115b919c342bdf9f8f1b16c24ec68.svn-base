@@ -1,0 +1,15 @@
+package model;
+
+import java.util.Collection;
+
+public class AcesUp extends Game {
+
+	private Cardstack[] playingStacks;
+
+	private SingleplayerStatistics statistics;
+
+	private Cardstack talon;
+
+	private Cardstack eliminationStack;
+
+}

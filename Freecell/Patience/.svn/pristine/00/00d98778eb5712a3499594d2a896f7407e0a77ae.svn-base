@@ -1,0 +1,241 @@
+package controller;
+
+import aicontroller.ZankAI;
+import aicontroller.ZankAIController;
+import aui.ZankAUI;
+import exceptions.NoMovesPossibleException;
+import exceptions.NotEnoughCardsOnPlaystacksException;
+import model.Card;
+import model.Cardstack;
+import model.Move;
+import model.MultiplayerStatistics;
+import model.Player;
+import model.Zank;
+
+public class ZankController extends GameController {
+
+	private Player activePlayer;
+
+	private Zank game;
+
+	private ZankAUI zankAUI;
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#initGame()
+	 */
+	@Override
+	public void initGame() {
+		game = (Zank) patienceController.getPatience().getGame();
+
+		Cardstack startStackPlayer1 = game.getStartStack();
+		Cardstack startStackPlayer2 = game.getStartStackPlayer2();
+
+		game.getHands()[0] = startStackPlayer1;
+		game.getHands()[1] = startStackPlayer2;
+
+		game.getReserves()[0] = game.getHands()[1].pop(13).flipStack();
+		game.getReserves()[1] = game.getHands()[0].pop(13).flipStack();
+
+		for (int i = 0; i < 4; i++) {
+			game.getPlayingStacks()[i].add(game.getHands()[0].pop());
+			game.getPlayingStacks()[i + 4].add(game.getHands()[1].pop());
+		}
+		
+		this.zankAUI.refreshAll();
+	}
+
+	public void setZankAUI(ZankAUI zankAUI){
+		this.zankAUI = zankAUI;
+	}
+	
+	public ZankAUI getZankAUI(){
+		return this.zankAUI;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#isDraggable(model.Cardstack, model.Card)
+	 */
+	@Override
+	public boolean isDraggable(Cardstack stack, Card card) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#isDroppable(model.Cardstack)
+	 */
+	@Override
+	public boolean isDroppable(Cardstack stack) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#isFinished()
+	 */
+	@Override
+	public boolean isFinished() {
+		return game.cardsOfPlayer1() == 0 || game.cardsOfPlayer2() == 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#autoPlay()
+	 */
+	@Override
+	public void autoPlay() {
+		try {
+			Move nextMove;
+			do {
+				nextMove = aIController.getNextMove();
+
+				executeMove(nextMove);
+			} while (nextMove != null);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#revertMove()
+	 */
+	@Override
+	public void undoMove() {
+		this.executeMove(game.getHistory().pop().revertMove());
+	}
+
+	/* (non-Javadoc)
+	 * @see controller.GameController#executeMove(model.Move)
+	 */
+	@Override
+	public void executeMove(Move moveToExecute) {
+		if (moveToExecute.getFrom() == game.getHands()[getActivePlayer()]
+				&& moveToExecute.getFrom() == game.getWastePiles()[getActivePlayer()]
+				&& moveToExecute.getTo() == game.getHands()[getActivePlayer()]
+				&& moveToExecute.getTo() == game.getWastePiles()[getActivePlayer()]) {
+			switchPlayer();
+		}
+		moveToExecute.getTo().push(moveToExecute.getFrom().pop());
+		// TODO show move in gui with animation
+		eliminateCards();
+	}
+
+	/**
+	 * switches activePlayer
+	 */
+	private void switchPlayer() {
+		if (getActivePlayer() == 0) {
+			activePlayer = game.getPlayer2();
+		}
+		activePlayer = game.getPlayer1();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#addStatistics()
+	 */
+	@Override
+	public void addStatistics() {
+		MultiplayerStatistics statistic = new MultiplayerStatistics(game.cardsOfPlayer1(), game.cardsOfPlayer2(),
+				activePlayer);
+		patienceController.getPatience().getStatistics().addZankStatistic(statistic);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#restartGame()
+	 */
+	@Override
+	public void restartGame() {
+		this.addStatistics();
+		this.initGame();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#cancelGame()
+	 */
+	@Override
+	public void cancelGame() {
+		this.addStatistics();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#refreshKarte()
+	 */
+	@Override
+	public void refreshKarte() {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * automaticly puts cards on eliminationStacks
+	 */
+	@Override
+	public void eliminateCards() {
+		for (Cardstack eliminationStack : game.getEliminationStacks()) {
+			for (Cardstack playingstack : game.getPlayingStacks()) {
+				if (isEliminateble(eliminationStack, playingstack)) {
+					return;
+				}
+			}
+
+			if (isEliminateble(eliminationStack, game.getHands()[getActivePlayer()])) {
+				return;
+			}
+
+			if (isEliminateble(eliminationStack, game.getReserves()[getActivePlayer()])) {
+				return;
+			}
+
+			if (isEliminateble(eliminationStack, game.getWastePiles()[getActivePlayer()])) {
+				return;
+			}
+		}
+	}
+
+	/**
+	 * @param eliminationStack
+	 * @param cardstackToEliminate
+	 * @return
+	 */
+	private boolean isEliminateble(Cardstack eliminationStack, Cardstack cardstackToEliminate) {
+		Card eliminationCard = eliminationStack.peek();
+		Card cardToEliminate = cardstackToEliminate.peek();
+
+		if (eliminationCard.getSuit() == cardToEliminate.getSuit()
+				&& cardToEliminate.getRank().value == eliminationCard.getRank().value + 1) {
+			executeMove(new Move(cardstackToEliminate, eliminationStack, 1));
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return 0 for player1 active 1 for player2 active
+	 */
+	public int getActivePlayer() {
+		if (activePlayer == game.getPlayer1()) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+}

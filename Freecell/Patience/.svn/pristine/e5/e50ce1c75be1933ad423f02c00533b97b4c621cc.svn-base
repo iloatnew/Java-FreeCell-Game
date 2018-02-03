@@ -1,0 +1,99 @@
+package movecontroller;
+
+import controller.*;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Pane;
+import model.Card;
+import model.Cardstack;
+import model.Type;
+
+/**
+ * DragStartController aktiviert, wenn das Image einer Karte gezieht wird der
+ * Controller hat als parameter ein Karte und ihr Image
+ * 
+ * @author wentao
+ *
+ */
+public class DragStartController implements EventHandler<MouseEvent> {
+
+	private Card karte;
+	private Cardstack stapel;
+	private ImageView karteImgView;
+	private GameController controller;
+
+	/**
+	 * Noch nicht gemacht: Controller sollte für alle Typen anpassen
+	 * 
+	 * @param stapel
+	 * @param karte
+	 * @param karteImgView
+	 * @param controller
+	 */
+	public DragStartController(GameController controller, ImageView karteImgView, Cardstack stapel, Card karte) {
+		this.karte = karte;
+		this.karteImgView = karteImgView;
+		this.stapel = stapel;
+		this.controller = controller;
+	}
+
+	public void handle(MouseEvent event) {
+
+		// zieht die Karte aus ihrem Stapels
+		if (controller.isDraggable(stapel, karte)) {
+			Dragboard db = karteImgView.startDragAndDrop(TransferMode.MOVE);
+			ClipboardContent content = new ClipboardContent();
+
+			content = setMultipleCard(content);
+
+			db.setContent(content);
+			controller.setStackToDrag(stapel.cloneAllBelow(karte));
+
+			ImageView tmpview = (ImageView) event.getSource();
+			
+			tmpview.setImage(null);
+			
+			ObservableList<Node> nodes = ((Pane)tmpview.getParent()).getChildren();
+					
+					
+			int tmpsize = controller.getStackToDrag().size();
+					
+					while(tmpsize>0)
+					{
+						((ImageView)nodes.get(controller.getSourceStack().size()-tmpsize)).setImage(null);
+						tmpsize--;
+					}
+
+
+			event.consume();
+		}
+
+		// controller.refreshKarte();
+	}
+
+	/**
+	 * setzt bild für das geziehte Stapel und gibt das Stapel zurück in
+	 * Controller anderer Controller kann dann das Stapel auch in Controller
+	 * zugreifen
+	 * 
+	 * @param content
+	 * @return
+	 */
+	private ClipboardContent setMultipleCard(ClipboardContent content) {
+		Cardstack stapelToDrag = stapel.cloneAllBelow(karte);
+		controller.setStackToDrag(stapelToDrag);
+		controller.setSourceStack(stapel);
+		// erzeugt das Bild für mehrere Karten
+		MergeImages mergeImage = new MergeImages(stapelToDrag);
+		content.putImage(mergeImage.getImage());
+		return content;
+	}
+
+}

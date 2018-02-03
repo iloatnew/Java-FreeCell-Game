@@ -1,0 +1,36 @@
+package model;
+
+import java.util.Stack;
+
+import application.FreeCellController;
+
+public class FreeCellSpielZuegen {
+
+	private FreeCellController controller;
+	private Stack<FreeCellSpielZug> spielzugList;
+	private Stapel startStapel;
+	private Stapel zielStapel;
+	private int bewegStapel;
+	
+	public FreeCellSpielZuegen(FreeCellController controller){
+		this.controller = controller;
+		this.spielzugList = new Stack<FreeCellSpielZug>();
+	}
+	
+	public void saveZug() {
+		controller.spielZug++;
+		startStapel = new Stapel(controller.getZiehHerkunft().getStapelType(),controller.getZiehHerkunft().getIndex());
+		zielStapel = new Stapel(controller.getZielStapel().getStapelType(),controller.getZielStapel().getIndex());
+		bewegStapel = controller.getStapelToDrag().size();
+		spielzugList.add(new FreeCellSpielZug(startStapel,zielStapel,bewegStapel));
+	}
+	
+	public FreeCellSpielZug getLastZug() {
+		if(spielzugList.size()>=1) {
+			return spielzugList.pop();
+		}
+		else {
+			return null;
+		}
+	}
+}

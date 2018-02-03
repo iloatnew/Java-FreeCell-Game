@@ -1,0 +1,265 @@
+package controller;
+
+import java.util.Date;
+import java.util.EmptyStackException;
+import java.util.Stack;
+
+import aui.AcesUpAUI;
+import model.AcesUp;
+import model.Card;
+import model.Cardstack;
+import model.Move;
+import model.Rank;
+import model.SingleplayerStatistics;
+import model.Suit;
+import model.Type;
+
+public class AcesUpController extends GameController {
+	
+	private AcesUpAUI acesUpAUI;
+	
+	private AcesUp game;
+
+	
+	//TODO: check if talon is Empty, could implement an ~emptyStackException~
+	/**
+	 * puts one card from talon to each playingStack  
+	 */
+	public void drawCards() {
+		if(!this.game.getTalon().isEmpty()){
+			for(int i= 0; i<4; i++){
+				this.game.getPlayingStacks()[i].add((this.game.getTalon()).pop());
+			}
+		}	
+		acesUpAUI.refreshAll();
+	}
+
+	/**
+	 * returns current game
+	 * @return game
+	 */
+	public AcesUp getGame() {
+		
+		return this.game;
+	}
+
+	
+	/**
+	 * @param acesUpAUI
+	 * sets private atrribute acesUpAUI to given parameter
+	 */
+	public void setAcesUpAUI(AcesUpAUI acesUpAUI){
+		this.acesUpAUI = acesUpAUI;
+	}
+	
+	
+	/**
+	 * @return AcesUpAUI - private attribute acesUpAUI
+	 */
+	public AcesUpAUI getAcesUpAUI(){
+		return this.acesUpAUI;
+	}
+	
+	/** 
+	 * sets game, talon, timer and plays first four cards
+	 * @see controller.GameController#initGame()
+	 */
+	@Override
+	public void initGame() {
+		this.game = (AcesUp) this.patienceController.getPatience().getGame();
+		this.game.setTalon(this.game.getStartStack());
+		this.game.setHistory(new Stack<Move>());				
+		this.setStartTime((new Date()).getTime());
+		this.acesUpAUI.initializeStacks();
+		this.drawCards();
+	}
+
+	/**
+	 * @see controller.GameController#isDraggable(Cardstack, Card)
+	 */
+	@Override
+	public boolean isDraggable(Cardstack stack, Card card) {		
+		Type stacktype = stack.getType();
+		if(stacktype.equals(Type.PLAYINGSTACK)){
+			return stack.peek().equals(card);
+		}
+		else{
+			if(stacktype.equals(Type.ELIMINATIONSTACK)){
+				return false;
+			}
+			else{// stacktype = Type.Talon --> maybe double click = drawCards()
+				this.drawCards();
+				return false;
+			}
+		}		
+	}
+
+	
+	/**
+	 * @see controller.GameController#isDroppable(Cardstack)
+	 */
+	@Override
+	public boolean isDroppable(Cardstack stack) {
+		Type stacktype = stack.getType();
+		if(stacktype.equals(Type.PLAYINGSTACK)){
+			return stack.isEmpty();
+		}
+		else{
+			if(stacktype.equals(Type.ELIMINATIONSTACK)){				
+				if(this.stackToDrag.size()==1){
+					Card cardToMove = this.stackToDrag.firstElement();
+					for(Cardstack playingStack: game.getPlayingStacks()){
+						if(existsHigherRankSameSuit(cardToMove, playingStack)){
+							//game.getEliminationStack().add(playingStack.pop())
+							return true;
+						}
+					}
+					return false;
+					
+				}
+				else{// should never be reached, otherwise error in dragging
+					//throw new WrongAmountOfDraggedCardsException();
+					return false;
+				}
+			}
+			else{// stacktype = type.TALON
+				return false;
+			}
+		}
+	}
+	
+	/**
+	 * @param card, playingStack 
+	 * @return True, if the given playingStack's toplevel card has the same Suit and a higher Rank as the given card
+	 * False, otherwise
+	 */
+	private boolean existsHigherRankSameSuit(Card card, Cardstack playingStack) {
+		Card playingStackTop = playingStack.peek();
+		
+		if(card.getRank().equals(Rank.ACE)){
+			return false;
+		}
+		
+		if(card.isSameSuit(playingStackTop)){
+			if(card.hasLowerRankAs(playingStackTop)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @return True, if there is an Ace on the bottom of each playingStack and an empty Talon
+	 * @see controller.GameController#isFinished()
+	 */
+	@Override
+	public boolean isFinished() {	
+		for(int i= 0; i<4; i++){
+			if(!this.game.getPlayingStacks()[i].get(0).getRank().equals(Rank.ACE)){
+				return false;				
+			}
+		}		
+		return game.getTalon().isEmpty();
+	}
+
+	/**
+	 * @see controller.GameController#autoPlay()
+	 */
+	@Override
+	public void autoPlay() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * @see controller.GameController#undoMove()
+	 */
+	@Override
+	public void undoMove() {
+		Cardstack source = game.getHistory().peek().getFrom();
+		Stack<Move> history = game.getHistory();
+		if(source.getType().equals(Type.TALON)){
+			for(int i = 0; i<4; i++){				
+				Move lastMove = history.pop();
+				this.executeMove(lastMove.revertMove());
+			}
+		}else{
+			Move lastMove = history.pop();
+			this.executeMove(lastMove.revertMove());
+		}
+	}
+
+	/**
+	 * @see controller.GameController#addStatistics()
+	 */
+	@Override
+	public void addStatistics() {
+		SingleplayerStatistics statistic = new SingleplayerStatistics(game.getSpielzug(),game.getEliminationStack().size(), super.getElapsedTime());
+		patienceController.getPatience().getStatistics().addAcesUpStatistic(statistic);
+	}
+
+	/**
+	 * @see controller.GameController#restartGame()
+	 */
+	@Override
+	public void restartGame() {
+		this.game.getEliminationStack().removeAllElements();
+		Cardstack[] playingStacks = this.game.getPlayingStacks();
+		for(Cardstack playingStack : playingStacks){			
+			playingStack.removeAllElements();
+		}
+		this.game.getHistory().removeAllElements();
+		initGame();
+	}
+
+	/**
+	 * @see controller.GameController#cancelGame()
+	 */
+	@Override
+	public void cancelGame() {
+		addStatistics();
+		this.game= null;
+	}
+
+	/**
+	 * @see controller.GameController#refreshKarte()
+	 */
+	@Override
+	public void refreshKarte() {
+		acesUpAUI.refreshAll();
+	}
+	
+	/**
+	 * @see controller.GameController#executeMove(Move)
+	 */
+	@Override
+	public void executeMove(Move move) {	
+	
+//		Cardstack source = move.getFrom();	System.out.println("vorher source: "+move.getFrom().size()+" "+move.getFrom().peek());
+//		Card toplevelCard = source.pop();
+//		Cardstack target = move.getTo();
+//		target.add(toplevelCard);			
+		
+		move.getTo().add(move.getFrom().pop());
+		
+	}
+
+	
+	/**
+	 * @author Luise
+	 * @param acesUp
+	 * sets private attribute game
+	 * Only used for Testing
+	 */
+	public void setGame(AcesUp acesUp){
+		this.game= acesUp;
+	}		
+	
+	public void eliminateCards(GameController gameController){}
+
+	@Override
+	public void eliminateCards() {
+		// TODO Auto-generated method stub
+		
+	}
+}

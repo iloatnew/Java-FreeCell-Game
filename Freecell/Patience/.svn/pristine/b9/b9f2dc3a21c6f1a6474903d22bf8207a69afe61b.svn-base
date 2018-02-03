@@ -1,0 +1,24 @@
+.diamond-background{
+	-fx-background-image: url("../../resources/DIAMOND1Background.png");
+    -fx-background-repeat: round;   
+    -fx-background-size: 95 138;
+    -fx-background-position: center center;
+}
+.heart-background{
+	-fx-background-image: url("../../resources/HEART1Background.png");
+    -fx-background-repeat: round;   
+    -fx-background-size: 95 138;
+    -fx-background-position: center center;
+}
+.spade-background{
+	-fx-background-image: url("../../resources/SPADE1Background.png");
+    -fx-background-repeat: round;   
+    -fx-background-size: 95 138;
+    -fx-background-position: center center;
+}
+.club-background{
+	-fx-background-image: url("../../resources/CLUB1Background.png");
+    -fx-background-repeat: round;   
+    -fx-background-size: 95 138;
+    -fx-background-position: center center;
+}

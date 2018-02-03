@@ -1,0 +1,46 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.effect.Glow;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.layout.Pane;
+import model.Stapel;
+import model.Stapel.StapelType;
+
+public class DragDropEnteredController implements EventHandler<DragEvent> {
+	FreeCellController controller;
+	Stapel stapel;
+	Pane pane;
+	
+	public DragDropEnteredController(FreeCellController controller,Stapel stapel,Pane pane) {
+		this.controller = controller;
+		this.stapel = stapel;
+		this.pane = pane;
+	}
+
+	@Override
+	public void handle(DragEvent event) {
+		if(stapel.getStapelType().equals(StapelType.DEFAULT)){
+			
+		}
+		else {
+			controller.safeCatch = true;
+			controller.setZielStapel(stapel);
+			if(controller.getZielStapel().getStapelType().equals(StapelType.SPIELFELD)){
+//				System.out.println("enter pane");
+				if(controller.isDroppable(controller.getZielStapel())){
+					if(controller.getZielStapel().size()>0){
+						ImageView view = (ImageView) pane.getChildren().get(pane.getChildren().size()-1);
+						view.setEffect(new Glow(0.8));
+					}
+				}
+			}
+		}
+		
+		
+
+	}
+
+}

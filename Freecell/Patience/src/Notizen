@@ -1,0 +1,10 @@
+GUI groß, Controller klein am Anfang
+HauptmenueController
+->SpielLadenController
+->->patienceController.setGame("Game");
+->->HauptfensterController.initSpielfeld("Game");
+->->->"Game"Controller.init(); <-typcasted aufs jeweilige Spiel
+->->->->"game"Controller.initGame();
+->->->->->"Game"AUI.initializeStacks(); ->GUI
+->->->->->->"Game"Controller. [lade Daten]
+->->->->->->"Game"Controller.refreshAll();

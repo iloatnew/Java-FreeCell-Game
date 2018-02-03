@@ -1,18 +1,16 @@
 package application;
-
 import controller.*;
 import model.*;
 
 public class Sender {
 
 	private AutoPoking autoPoking;
-	
 	/**
 	 * Sender deals all type of sending jobs, includes normal send,
 	 * disconnect, connect, poking and so on.
 	 */
-	public Sender() {
-		autoPoking = new AutoPoking();
+	public Sender(Messager messager) {
+		autoPoking = new AutoPoking(messager);
 		autoPoking.start();
 	}
  
@@ -21,6 +19,10 @@ public class Sender {
 	 */
 	public void stopPoking() {
 		autoPoking.terminate();
+	}
+	
+	public void startPoking(){
+		autoPoking.start();
 	}
 	
 	public void sendMessage(Peer targetPeer, String text) {
@@ -34,6 +36,13 @@ public class Sender {
 		String myName = ipTest.getMyName();
 		int port = -1;
 		return new Peer(myName, myIp, port);
+	}
+
+	public void poke(Peer targetPeer) {
+		String poke = "POKE " + targetPeer.toString();
+		autoPoking.setPoke(poke);
+		autoPoking.sendPokeToEveryone();
+		
 	}
 
 }

@@ -1,0 +1,12 @@
+package model;
+
+public enum Wert {
+	
+	ASS, ZWEI, DREI, VIER, FUENF, SECHS, SIEBEN, ACHT, NUEN, ZEHN, BUBE, DAME, KOENIG;
+
+	/**
+	 * 1 for Ace up to 13 for King.
+	 */
+	public final int value = ordinal() + 1;
+
+}

@@ -1,0 +1,205 @@
+package application;
+
+import java.util.ArrayList;
+
+import controller.DragDropCrontroller;
+import controller.DragOverController;
+import controller.DragStartController;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+import model.Karte;
+import model.Sort;
+import model.Stapel;
+import model.Wert;
+
+public class FreeCellController {
+	@FXML
+	AnchorPane HauptPane;
+	
+	@FXML
+	Rectangle freecell1;
+	@FXML
+	Rectangle freecell2;
+	@FXML
+	Rectangle freecell3;
+	@FXML
+	Rectangle freecell4;
+
+	@FXML
+	Rectangle homecell1;
+	@FXML
+	Rectangle homecell2;
+	@FXML
+	Rectangle homecell3;
+	@FXML
+	Rectangle homecell4;
+
+	@FXML
+	Pane spalte1;
+	@FXML
+	Pane spalte2;
+	@FXML
+	Pane spalte3;
+	@FXML
+	Pane spalte4;
+	@FXML
+	Pane spalte5;
+	@FXML
+	Pane spalte6;
+	@FXML
+	Pane spalte7;
+	@FXML
+	Pane spalte8;
+
+	private Stapel[] stapeln;
+	private Stapel stapelToDrag;
+	private Stapel ziehHerkunft;
+	
+	public Stapel getStapelToDrag() {
+		return stapelToDrag;
+	}
+
+	public void setStapelToDrag(Stapel stapelToDrag) {
+		this.stapelToDrag = stapelToDrag;
+	}
+	
+	public Stapel getZiehHerkunft() {
+		return ziehHerkunft;
+	}
+
+	public void setZiehHerkunft(Stapel ziehHerkunft) {
+		this.ziehHerkunft = ziehHerkunft;
+	}
+	public void initialize() {
+		
+		karteTeilung();
+		HauptPane.setOnDragOver(new DragOverController(this, new Stapel()));
+		HauptPane.setOnDragDropped(new DragDropCrontroller(this, new Stapel()));
+		initializespalten(stapeln);
+
+	}
+
+	private void karteTeilung() {
+		Stapel hauptStapel = new Stapel();
+
+		for (Wert wert : Wert.values())
+			for (Sort sort : Sort.values())
+				hauptStapel.add(new Karte(wert, sort));
+
+		stapeln = new Stapel[8];
+		for (int i = 0; i < 8; i++)
+			stapeln[i] = new Stapel();
+
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 7; j++)
+				stapeln[i].add(hauptStapel.randomPick());
+
+		for (int i = 4; i < 8; i++)
+			for (int j = 0; j < 6; j++)
+				stapeln[i].add(hauptStapel.randomPick());
+	}
+
+	/**
+	 * setzt ein Stapel in einer Spalte
+	 * 
+	 * @param stapeln
+	 */
+	private void initializespalten(Stapel[] stapeln) {
+		setStapel(spalte1, stapeln[0]);
+		setStapel(spalte2, stapeln[1]);
+		setStapel(spalte3, stapeln[2]);
+		setStapel(spalte4, stapeln[3]);
+		setStapel(spalte5, stapeln[4]);
+		setStapel(spalte6, stapeln[5]);
+		setStapel(spalte7, stapeln[6]);
+		setStapel(spalte8, stapeln[7]);
+
+	}
+
+	/**
+	 * alle Karte soll untereinander gesetzt werden dazu Controller für jede
+	 * Karte setzen
+	 * 
+	 * @param spalte
+	 * @param stapel
+	 */
+	private void setStapel(Pane spalte, Stapel stapel) {
+
+		for (int i = 0; i < stapel.size(); i++) {
+			Karte karte = stapel.get(i);
+			Image karteImg = karte.getFaceImage();
+			ImageView karteImgView = new ImageView(karteImg);
+			spalte.getChildren().add(karteImgView);
+			// bestimmt die Position für ein Bild
+			karteImgView.setLayoutY(i * 30);
+			// setzt DragController für eine Karte
+			karteImgView.setOnDragDetected(new DragStartController(this, karteImgView, stapel, karte));
+		}
+		spalte.setOnDragOver(new DragOverController(this, stapel));
+		spalte.setOnDragDropped(new DragDropCrontroller(this, stapel));
+	}
+
+	/**
+	 * kann von Drag/ Drop-Controller geruft werden
+	 */
+	public void refreshKarte() {
+		spalte1.getChildren().clear();
+		spalte2.getChildren().clear();
+		spalte3.getChildren().clear();
+		spalte4.getChildren().clear();
+		spalte5.getChildren().clear();
+		spalte6.getChildren().clear();
+		spalte7.getChildren().clear();
+		spalte8.getChildren().clear();
+		initializespalten(stapeln);
+	}
+
+	/**
+	 * die Methode soll jeder Controller haben, damit DragStartController sie
+	 * rufen kann
+	 * 
+	 * @return
+	 */
+	public boolean isDraggable(Stapel stapel, Karte karte) {
+		// TODO: prüft, wieviele FreeCells frei sind
+		int freecells = 4;
+
+		// die Länge der Strasse
+		int length = stapel.strasseLaenge(karte);
+
+		if (length <= freecells + 1 && length > 0)
+			return true;
+		else
+			return false;
+	}
+
+	
+	/**
+	 * die Methode soll jeder Controller haben, damit DragStartController sie
+	 * rufen kann
+	 * 
+	 * @return
+	 */
+	public boolean isDroppable(Stapel zielStapel) {
+		if(zielStapel.equals(new Stapel())) {
+			return false;
+		}
+		// get die Karte am oberest
+		Karte top = zielStapel.peek();
+		Karte root = this.stapelToDrag.firstElement();
+		if(top.inStrasseAbsteigend(root)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	
+
+}

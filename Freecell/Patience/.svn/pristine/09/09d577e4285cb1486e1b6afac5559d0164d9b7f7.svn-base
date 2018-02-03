@@ -1,0 +1,235 @@
+package application;
+
+import java.util.ArrayList;
+
+import aui.FreeCellAUI;
+import controller.GameController;
+import controller.PatienceController;
+import javafx.fxml.FXML;
+
+import javafx.scene.control.Button;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import model.Card;
+import model.Cardstack;
+import model.FreeCell;
+import model.Move;
+import model.Type;
+import movecontroller.DragDoneController;
+import movecontroller.DragDropCrontroller;
+import movecontroller.DragDropEnteredController;
+import movecontroller.DragDropExitController;
+import movecontroller.DragOverController;
+import movecontroller.DragStartController;
+
+public class FreeCellGUIController extends GameGUIController implements FreeCellAUI {
+	@FXML
+	Pane hauptPane;
+	@FXML
+	Button undo;
+
+	@FXML
+	Pane freecell1;
+	@FXML
+	Pane freecell2;
+	@FXML
+	Pane freecell3;
+	@FXML
+	Pane freecell4;
+
+	@FXML
+	Pane homecell1;
+	@FXML
+	Pane homecell2;
+	@FXML
+	Pane homecell3;
+	@FXML
+	Pane homecell4;
+
+	@FXML
+	Pane spalte1;
+	@FXML
+	Pane spalte2;
+	@FXML
+	Pane spalte3;
+	@FXML
+	Pane spalte4;
+	@FXML
+	Pane spalte5;
+	@FXML
+	Pane spalte6;
+	@FXML
+	Pane spalte7;
+	@FXML
+	Pane spalte8;
+
+	private Cardstack[] playingStacks;
+	private Cardstack[] freeCells;
+	private Cardstack[] homeCells;
+	private ArrayList<Pane> spielfeld;
+	private ArrayList<Pane> homecell;
+	private ArrayList<Pane> freecell;
+
+	@Override
+	public void init(){
+		
+		patienceController.getFreeCellController().setFreeCellAUI(this);
+		patienceController.getFreeCellController().initGame();
+		//refreshAll();	
+	}
+	
+	@FXML
+	public void initialize() {
+		spielfeld = new ArrayList<Pane>();
+		freecell = new ArrayList<Pane>();
+		homecell = new ArrayList<Pane>();
+
+		spielfeld.add(spalte1);
+		spielfeld.add(spalte2);
+		spielfeld.add(spalte3);
+		spielfeld.add(spalte4);
+		spielfeld.add(spalte5);
+		spielfeld.add(spalte6);
+		spielfeld.add(spalte7);
+		spielfeld.add(spalte8);
+		homecell.add(homecell1);
+		homecell.add(homecell2);
+		homecell.add(homecell3);
+		homecell.add(homecell4);
+		freecell.add(freecell1);
+		freecell.add(freecell2);
+		freecell.add(freecell3);
+		freecell.add(freecell4);
+
+		
+		// HauptPane.setOnDragOver(new DragOverController(this, new
+		// Cardstack(Type.DEFAULT, 0)));
+		// HauptPane.setOnDragDropped(new DragDropCrontroller(this));
+		
+//		for (Pane freecell : this.freecell) {
+//			freecell.setOnDragOver(new DragOverController(tmp, stack));
+//			freecell.setOnDragDropped(new DragDropCrontroller(tmp));
+//			freecell.setOnDragEntered(new DragDropEnteredController(tmp, stack, row));
+//			freecell.setOnDragExited(new DragDropExitController(tmp, row, stack));
+//
+//		}
+//		for (Pane homecell : this.homecell) {
+//			homecell.setOnDragOver(new DragOverController(tmp, stack));
+//			homecell.setOnDragDropped(new DragDropCrontroller(tmp));
+//			homecell.setOnDragEntered(new DragDropEnteredController(tmp, stack, row));
+//			homecell.setOnDragExited(new DragDropExitController(tmp, row, stack));
+//		}
+
+	}
+
+	/**
+	 * kann von Drag/ Drop-Controller geruft werden
+	 */
+
+	@Override
+	public void initializeStacks() {
+		patienceController.getFreeCellController().setFreeCellAUI(this);
+
+		playingStacks = ((FreeCell) patienceController.getPatience().getGame()).getPlayingStacks();
+		freeCells = ((FreeCell) patienceController.getPatience().getGame()).getFreeCells();
+		homeCells = ((FreeCell) patienceController.getPatience().getGame()).getHomeCells();
+		hauptPane.setOnDragOver(new DragOverController());
+	    hauptPane.setOnDragDropped(new DragDropCrontroller(this.patienceController.getFreeCellController()));
+
+		refreshAll();
+	}
+
+	/**
+	 * setzt ein Stapel in einer Spalte
+	 * 
+	 * @param Stapeln
+	 */
+	private void refreshSpalten() {
+		for (int i = 0; i < spielfeld.size(); i++) {
+			this.setFreeCellStacks(spielfeld.get(i), playingStacks[i]);
+		}
+		for (int i = 0; i < freecell.size(); i++) {
+			this.setFreeCellStacks(freecell.get(i), freeCells[i]);
+			this.setFreeCellStacks(homecell.get(i), homeCells[i]);
+		}
+	}
+
+	/**
+	 * alle Karte soll untereinander gesetzt werden DragController für jede
+	 * Karte setzen
+	 * 
+	 * @param row
+	 * @param stack
+	 */
+
+	public void setFreeCellStacks(Pane row, Cardstack stack) {
+
+		GameController tmp = patienceController.getFreeCellController();
+
+		// nur f�r Stacktype playingstack wird schleife mehr als 1 mal
+		// durchlaufen
+		// bei allen anderen Typen nur einmal
+
+		for (int i = 0; i < stack.size(); i++) {
+			Card karte = stack.get(i);
+			Image karteImg = karte.getFaceImage();
+			ImageView karteImgView = new ImageView(karteImg);
+			row.getChildren().add(karteImgView);
+			if (stack.getType().equals(Type.PLAYINGSTACK)) {
+				karteImgView.setLayoutY(i * 30);
+			}
+			else if (stack.getType().equals(Type.FREECELL)) {
+				karteImgView.setLayoutX(5);
+				karteImgView.setLayoutY(5);
+			} else if (stack.getType().equals(Type.HOMECELL)) {
+				karteImgView.setLayoutX(5);
+				karteImgView.setLayoutY(5);
+			}
+			// setzt DragController für eine Karte
+
+			karteImgView.setOnDragDetected(new DragStartController(tmp, karteImgView, stack, karte));
+			karteImgView.setOnDragOver(new DragOverController(tmp, stack));
+			karteImgView.setOnDragDropped(new DragDropCrontroller(tmp));
+			karteImgView.setOnDragDone(new DragDoneController(tmp));
+			// karteImgView.setOnDragEntered(new DragDropEnteredController(tmp,
+			// stack, row));
+			// karteImgView.setOnDragExited(new DragDropExitController(tmp, row,
+			// stack));
+
+		}
+
+		// spalte.setPrefHeight((stapel.size()-1)*30+153);
+		row.setOnDragDropped(new DragDropCrontroller(tmp));
+		row.setOnDragEntered(new DragDropEnteredController(tmp, stack, row));
+		row.setOnDragExited(new DragDropExitController(tmp, row, stack));
+		row.setOnDragOver(new DragOverController());
+		row.setOnDragDone(new DragDoneController(tmp));		
+	}
+
+	@Override
+	public void refreshAll() {
+		for (Pane freecell : this.freecell) {
+			freecell.getChildren().clear();
+		}
+		for (Pane homecell : this.homecell) {
+			homecell.getChildren().clear();
+		}
+		for (Pane field : this.spielfeld) {
+			field.getChildren().clear();
+		}
+		refreshSpalten();
+	}
+
+	@FXML
+	public void undo() {
+		patienceController.getFreeCellController().undoMove();
+	}
+
+	@Override
+	public void refreshMove(Move move) {
+		// TODO Auto-generated method stub
+	}
+
+}

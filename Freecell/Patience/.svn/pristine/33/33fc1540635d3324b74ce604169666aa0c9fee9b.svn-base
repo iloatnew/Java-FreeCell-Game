@@ -1,0 +1,318 @@
+package controller;
+
+import java.util.ArrayList;
+
+import aui.AcesUpAUI;
+import exceptions.IllegalGameArgumentException;
+import exceptions.NoMovesPossibleException;
+import exceptions.NotEnoughCardsOnPlaystacksException;
+import model.AcesUp;
+import model.Card;
+import model.Cardstack;
+import model.Move;
+import model.Rank;
+import model.SingleplayerStatistics;
+import model.Type;
+
+public class AcesUpController extends GameController {
+
+	private AcesUpAUI acesUpAUI;
+	private boolean allMove;
+	private AcesUp game;
+
+
+	/**
+	 * puts one card from talon to each playingStack
+	 */
+	public void drawCards() {
+		if (!this.game.getTalon().isEmpty()) {
+			for (int i = 0; i < 4; i++) {
+				// System.out.println("drawCards()
+				// "+this.game.getTalon().getType());
+				Move move = new Move(this.game.getTalon(), this.game.getPlayingStacks()[i], 1);
+				this.executeMove(move);
+			}
+		}
+		// acesUpAUI.refreshAll();
+	}
+
+	/**
+	 * returns current game
+	 * 
+	 * @return game
+	 */
+	public AcesUp getGame() {
+
+		return this.game;
+	}
+
+	/**
+	 * @param acesUpAUI
+	 *            sets private atrribute acesUpAUI to given parameter
+	 */
+	public void setAcesUpAUI(AcesUpAUI acesUpAUI) {
+		this.acesUpAUI = acesUpAUI;
+	}
+
+	/**
+	 * @return AcesUpAUI - private attribute acesUpAUI
+	 */
+	public AcesUpAUI getAcesUpAUI() {
+		return this.acesUpAUI;
+	}
+
+	/**
+	 * sets game, talon, timer and plays first four cards
+	 * 
+	 * @see controller.GameController#initGame()
+	 */
+	@Override
+	public void initGame() {
+		this.game = (AcesUp) this.patienceController.getPatience().getGame();
+		if (game.isNewGame()) {
+			this.game.getTalon().clear();
+			this.game.getTalon().addAll(game.getStartStack());
+			//this.game.setHistory(new Stack<Move>());
+			try {
+				this.aIController.setGame(game);
+			} catch (IllegalGameArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//this.setStartTime((new Date()).getTime());
+			
+		}
+		this.acesUpAUI.initializeStacks();
+		if(game.isNewGame()){
+			this.drawCards();
+			this.game.setNewGame(false);
+		}
+	}
+
+	/**
+	 * @see controller.GameController#isDraggable(Cardstack, Card)
+	 */
+	@Override
+	public boolean isDraggable(Cardstack stack, Card card) {
+		Type stacktype = stack.getType();
+		if (stacktype.equals(Type.PLAYINGSTACK)) {
+			return stack.peek().equals(card);
+		} else {
+			if (stacktype.equals(Type.ELIMINATIONSTACK)) {
+				return false;
+			} else {// stacktype = Type.Talon --> maybe double click =
+					// drawCards()
+					// this.drawCards();
+				return false;
+			}
+		}
+	}
+
+	/**
+	 * @see controller.GameController#isDroppable(Cardstack)
+	 */
+	@Override
+	public boolean isDroppable(Cardstack stack) {
+		// System.out.println("is droppable "+ stack.hashCode());
+		Type stacktype = stack.getType();
+		if (stacktype.equals(Type.PLAYINGSTACK)) {
+			return stack.isEmpty();
+		} else {
+			if (stacktype.equals(Type.ELIMINATIONSTACK)) {
+				int maximaleAnzahlZiehbarerKarten = 1;
+				if (this.stackToDrag.size() == maximaleAnzahlZiehbarerKarten) {
+					Card cardToMove = this.stackToDrag.firstElement();
+					for (Cardstack playingStack : game.getPlayingStacks()) {
+						if (existsHigherRankSameSuit(cardToMove, playingStack)) {
+							return true;
+						}
+					}
+					return false;
+
+				} else {// should never be reached, otherwise error in dragging
+						// throw new WrongAmountOfDraggedCardsException();
+					return false;
+				}
+			} else {// stacktype = type.TALON
+				return false;
+			}
+		}
+	}
+
+	/**
+	 * @param card,
+	 *            playingStack
+	 * @return True, if the given playingStack's toplevel card has the same Suit
+	 *         and a higher Rank as the given card False, otherwise
+	 */
+	public boolean existsHigherRankSameSuit(Card card, Cardstack playingStack) {
+		if (playingStack.size() > 0) {
+			Card playingStackTop = playingStack.peek();
+
+			if (card.getRank().equals(Rank.ACE)) {
+				return false;
+			}
+
+			if (card.isSameSuit(playingStackTop)) {
+				if (card.hasLowerRankAs(playingStackTop)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return false;
+	}
+
+	/**
+	 * @return True, if there is an Ace on the bottom of each playingStack and
+	 *         an empty Talon
+	 * @see controller.GameController#isFinished()
+	 */
+	@Override
+	public boolean isFinished() {
+		for (int i = 0; i < 4; i++) {
+			if (!this.game.getPlayingStacks()[i].get(0).getRank().equals(Rank.ACE)) {
+				return false;
+			}
+		}
+		// return movePossible();
+		return game.getTalon().isEmpty();
+	}
+
+	/**
+	 * @see controller.GameController#autoPlay()
+	 */
+	@Override
+	public void autoPlay() {
+		allMove = true;
+		this.movePossible();
+		/*
+		 * long timeNow = System.currentTimeMillis();; long timeDelta = 0; long
+		 * timeNowOld = 0; while(autoplay){ if(!this.movePossible()){ break; }
+		 * while(timeDelta < 500){ timeNowOld = timeNow; timeNow =
+		 * System.currentTimeMillis(); timeDelta+= timeNow-timeNowOld; }
+		 * timeDelta -= 500; System.out.println("MOVED"); }
+		 */
+	}
+
+	@Override
+	public void showTipp() {
+		this.movePossible();
+		allMove = false;
+	}
+
+	private boolean movePossible() {
+		try {
+			Move nextMove;
+			// System.out.println("AI: "+aIController);
+			nextMove = aIController.getNextMove();
+			// System.out.println("NextMove: "+nextMove);
+			// System.out.println("NextMove.to.getType():
+			// "+nextMove.getTo().getType());
+			// System.out.println("NextMove.from.getType():
+			// "+nextMove.getFrom().getType());
+			// System.out.println();
+			executeMove(nextMove);
+		} catch (NotEnoughCardsOnPlaystacksException e) {
+			this.drawCards();
+			return true;
+		} catch (NoMovesPossibleException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @see controller.GameController#undoMove()
+	 */
+	@Override
+	public void undoMove() {
+
+		if (!game.getHistory().isEmpty()) {
+			Cardstack source = game.getHistory().peek().getFrom();
+			ArrayList<Move> moves = new ArrayList<Move>();
+
+			if (source.getType().equals(Type.TALON)) {
+				for (int i = 0; i < 4; i++) {
+					Move lastMove = game.getHistory().pop();
+					moves.add(lastMove.revertMove());
+				}
+				for (int i = 0; i < 4; i++) {
+					this.executeMove(moves.get(i));
+					game.getHistory().pop();
+				}
+			} else {
+				Move lastMove = game.getHistory().pop();
+				this.executeMove(lastMove.revertMove());
+				game.getHistory().pop();
+			}
+		}
+	}
+
+	/**
+	 * @see controller.GameController#addStatistics()
+	 */
+	@Override
+	public void addStatistics() {
+		SingleplayerStatistics statistic = this.game.getStatistics();
+		patienceController.getPatience().getStatistics().addAcesUpStatistic(statistic);
+		patienceController.getiOController().saveStatistics();
+	}
+
+	/**
+	 * @see controller.GameController#restartGame()
+	 */
+	@Override
+	public void restartGame() {
+		this.patienceController.getPatience().setGame(new AcesUp(game.getStartStack()));
+		this.game = (AcesUp) this.patienceController.getPatience().getGame();
+	}
+
+	/**
+	 * @see controller.GameController#cancelGame()
+	 */
+	@Override
+	public void cancelGame() {
+		addStatistics();
+		this.game = null;
+	}
+
+	/**
+	 * @see controller.GameController#refreshKarte()
+	 */
+	@Override
+	public void refreshKarte() {
+		acesUpAUI.refreshAll();
+	}
+
+	/**
+	 * @see controller.GameController#executeMove(Move)
+	 */
+	@Override
+	public void executeMove(Move move) {
+		acesUpAUI.animateMove(move,allMove);
+		this.game.getHistory().add(move);
+		move.getTo().push(move.getFrom().pop());
+		if (isFinished()) {
+			acesUpAUI.openFinishedWindow("AcesUp", 0);
+		}
+		// acesUpAUI.refreshAll();
+	}
+
+	/**
+	 * @author Luise
+	 * @param acesUp
+	 *            sets private attribute game Only used for Testing
+	 */
+	public void setGame(AcesUp acesUp) {
+		this.game = acesUp;
+	}
+
+	public void setAnimationFinished(boolean animationFinished) {
+		this.animationFinished = animationFinished;
+	}
+
+	public boolean getAnimationFinished() {
+		return animationFinished;
+	}
+}

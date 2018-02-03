@@ -1,0 +1,270 @@
+package application;
+
+import controller.DragDropCrontroller;
+import controller.DragOverController;
+import controller.DragStartController;
+import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
+import model.Karte;
+import model.Sort;
+import model.Stapel;
+import model.Stapel.Type;
+import model.Wert;
+
+public class FreeCellController {
+	@FXML
+	AnchorPane HauptPane;
+
+	@FXML
+	Pane freecell1;
+	@FXML
+	Pane freecell2;
+	@FXML
+	Pane freecell3;
+	@FXML
+	Pane freecell4;
+
+	@FXML
+	Pane homecell1;
+	@FXML
+	Pane homecell2;
+	@FXML
+	Pane homecell3;
+	@FXML
+	Pane homecell4;
+
+	@FXML
+	Pane spalte1;
+	@FXML
+	Pane spalte2;
+	@FXML
+	Pane spalte3;
+	@FXML
+	Pane spalte4;
+	@FXML
+	Pane spalte5;
+	@FXML
+	Pane spalte6;
+	@FXML
+	Pane spalte7;
+	@FXML
+	Pane spalte8;
+
+	private Stapel[] stapeln;
+	private Stapel stapelToDrag;
+	private Stapel ziehHerkunft;
+	private Stapel zielStapel;
+
+	public Stapel getZielStapel() {
+		return zielStapel;
+	}
+
+	public void setZielStapel(Stapel zielStapel) {
+		this.zielStapel = zielStapel;
+	}
+
+	public Stapel getStapelToDrag() {
+		return stapelToDrag;
+	}
+
+	public void setStapelToDrag(Stapel stapelToDrag) {
+		this.stapelToDrag = stapelToDrag;
+	}
+
+	public Stapel getZiehHerkunft() {
+		return ziehHerkunft;
+	}
+
+	public void setZiehHerkunft(Stapel ziehHerkunft) {
+		this.ziehHerkunft = ziehHerkunft;
+	}
+
+	public void initialize() {
+		stapeln = new Stapel[16];
+		karteTeilung();
+		initializeSpalten(stapeln);
+//		HauptPane.setOnDragOver(new DragOverController(this, new Stapel(Type.DEFAULT)));
+//		HauptPane.setOnDragDropped(new DragDropCrontroller(this));
+	}
+
+	/**
+	 *  Teilt alle Karten in Stapeln. Typ: Random
+	 *  Freecells, Homecells : leerer Stapel
+	 */
+	private void karteTeilung() {
+		Stapel hauptStapel = new Stapel(Type.DEFAULT);
+
+		for (Wert wert : Wert.values())
+			for (Sort sort : Sort.values())
+				hauptStapel.add(new Karte(wert, sort));
+		
+		for (int i = 0; i < 8; i++)
+			stapeln[i] = new Stapel(Type.SPIELFELD);
+		for (int i = 8; i < 12; i++)
+			stapeln[i] = new Stapel(Type.FREECELL);
+		for (int i = 12; i < 16; i++)
+			stapeln[i] = new Stapel(Type.HOMECELL);
+		
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 7; j++)
+				stapeln[i].add(hauptStapel.randomPick());
+
+		for (int i = 4; i < 8; i++)
+			for (int j = 0; j < 6; j++)
+				stapeln[i].add(hauptStapel.randomPick());
+	}
+
+	/**
+	 * setzt ein Stapel in einer Spalte
+	 * @param stapeln
+	 */
+	private void initializeSpalten(Stapel[] stapeln) {
+		setStapel(spalte1, stapeln[0]);
+		setStapel(spalte2, stapeln[1]);
+		setStapel(spalte3, stapeln[2]);
+		setStapel(spalte4, stapeln[3]);
+		setStapel(spalte5, stapeln[4]);
+		setStapel(spalte6, stapeln[5]);
+		setStapel(spalte7, stapeln[6]);
+		setStapel(spalte8, stapeln[7]);
+		setStapel(freecell1, stapeln[8]);
+		setStapel(freecell2, stapeln[9]);
+		setStapel(freecell3, stapeln[10]);
+		setStapel(freecell4, stapeln[11]);
+		setStapel(homecell1, stapeln[12]);
+		setStapel(homecell2, stapeln[13]);
+		setStapel(homecell3, stapeln[14]);
+		setStapel(homecell4, stapeln[15]);
+	}
+
+	/**
+	 * alle Karte soll untereinander gesetzt werden
+	 * DragController für jede Karte setzen
+	 * @param spalte
+	 * @param stapel
+	 */
+	private void setStapel(Pane spalte, Stapel stapel) {
+		if(stapel.getType().equals(Type.FREECELL) || stapel.getType().equals(Type.HOMECELL)) {
+			Rectangle rect = new Rectangle();
+			rect.setHeight(153.0);
+			rect.setWidth(105);
+			rect.setStyle("-fx-fill: #00000044;");
+			rect.setStroke(Color.BLACK);
+			rect.setStrokeType(StrokeType.INSIDE);
+			spalte.getChildren().add(rect);
+		}
+		for (int i = 0; i < stapel.size(); i++) {
+			Karte karte = stapel.get(i);
+			Image karteImg = karte.getFaceImage();
+			ImageView karteImgView = new ImageView(karteImg);
+			spalte.getChildren().add(karteImgView);
+			// bestimmt die Position für ein Bild
+			if(stapel.getType().equals(Type.SPIELFELD)) {
+				karteImgView.setLayoutY(i * 30);
+			}
+			// setzt DragController für eine Karte
+			karteImgView.setOnDragDetected(new DragStartController(this, karteImgView, stapel, karte));
+		}
+		spalte.setOnDragOver(new DragOverController(this, stapel));
+		spalte.setOnDragDropped(new DragDropCrontroller(this));
+	}
+
+	/**
+	 * kann von Drag/ Drop-Controller geruft werden
+	 */
+	public void refreshKarte() {
+		spalte1.getChildren().clear();
+		spalte2.getChildren().clear();
+		spalte3.getChildren().clear();
+		spalte4.getChildren().clear();
+		spalte5.getChildren().clear();
+		spalte6.getChildren().clear();
+		spalte7.getChildren().clear();
+		spalte8.getChildren().clear();
+		freecell1.getChildren().clear();
+		freecell2.getChildren().clear();
+		freecell3.getChildren().clear();
+		freecell4.getChildren().clear();
+		homecell1.getChildren().clear();
+		homecell2.getChildren().clear();
+		homecell3.getChildren().clear();
+		homecell4.getChildren().clear();
+		initializeSpalten(stapeln);
+	}
+
+	/**
+	 * die Methode soll jeder Controller haben, damit DragStartController sie
+	 * rufen kann
+	 * 
+	 * @return
+	 */
+	public boolean isDraggable(Stapel stapel, Karte karte) {
+		if(stapel.getType().equals(Type.SPIELFELD)) {
+			// TODO: prüft, wieviele FreeCells frei sind
+			int freecells = 4;
+			// die Länge der Strasse
+			int length = stapel.strasseLaenge(karte);
+			if (length <= freecells + 1 && length > 0)
+				return true;
+			else
+				return false;
+		}
+		else if(stapel.getType().equals(Type.FREECELL)) {
+			System.out.println("drag free cell");
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * die Methode soll jeder Controller haben, damit DragStartController sie
+	 * rufen kann
+	 * 
+	 * @return
+	 */
+	public boolean isDroppable(Stapel zielStapel) {
+		Karte root = this.stapelToDrag.firstElement();
+		if (zielStapel.getType().equals(Type.SPIELFELD)) {
+			if(zielStapel.size()==0) {
+				return true;
+			}
+			else {
+				return zielStapel.peek().inStrasseAbsteigend(root) ?  true :  false; 
+			}
+		}
+		else if(zielStapel.getType().equals(Type.FREECELL)) {
+			if(stapelToDrag.size()!=1) {
+				return false;
+			}
+			return zielStapel.size()==0 ? true : false;
+		}
+		else if(zielStapel.getType().equals(Type.HOMECELL)) {
+			if(stapelToDrag.size()!=1) {
+				return false;
+			}
+			else {
+				if(zielStapel.size()==0) {
+					if(root.getWert().equals(Wert.ASS)) {
+						return true;
+					}
+				}
+				else {
+					if(zielStapel.peek().inGleichSortAufsteigend(root)) {
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+}

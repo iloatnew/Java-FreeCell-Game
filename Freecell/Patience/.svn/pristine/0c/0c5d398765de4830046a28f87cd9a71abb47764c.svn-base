@@ -1,0 +1,307 @@
+package application;
+import java.util.ArrayList;
+
+import controller.PatienceController;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import model.MultiplayerStatistics;
+import model.SingleplayerStatistics;
+
+public class StatistikController {
+	
+	private PatienceController patienceController;
+	private ArrayList<SingleplayerStatistics> acesUpStatistics;
+	private ArrayList<SingleplayerStatistics> freeCellStatistics;
+	private ArrayList<MultiplayerStatistics> zankStatistics;
+
+    @FXML
+    private Tab acesUpTab;
+
+    @FXML
+    private Label acesUpNumberOfGamesLabel;
+
+    @FXML
+    private Label acesUpWonGamesLabel;
+
+    @FXML
+    private Label acesUpWinRateLabel;
+
+    @FXML
+    private Label acesUpSolutionRank1Label;
+
+    @FXML
+    private Label acesUpSolutionRank4Label;
+
+    @FXML
+    private Label acesUpSolutionRank3Label;
+
+    @FXML
+    private Label acesUpSolutionRank2Label;
+
+    @FXML
+    private Label acesUpLostGamesLabel;
+
+    @FXML
+    private Label acesUpAverageTimeLabel;
+
+    @FXML
+    private Tab freecellTab;
+
+    @FXML
+    private Label freecellNumberOfGamesLabel;
+
+    @FXML
+    private Label freecellWonGamesLabel;
+
+    @FXML
+    private Label freecellWinRateLabel;
+
+    @FXML
+    private Label freecellSolutionRank4Label;
+
+    @FXML
+    private Label freecellSolutionRank3Label;
+
+    @FXML
+    private Label freecellSolutionRank2Label;
+
+    @FXML
+    private Label freecellSolutionRank1Label;
+
+    @FXML
+    private Label freecellLostGamesLabel;
+
+    @FXML
+    private Label freecellAverageTimeLabel;
+
+    @FXML
+    private Tab zankPatienceTab;
+
+    @FXML
+    private Label zankNumberOfGamesLabel;
+
+    @FXML
+    private Label zankWinRateLabel;
+
+    @FXML
+    private Label zankStatisticsCom1Label;
+
+    @FXML
+    private Label zankStatisticsCom2Label;
+
+    @FXML
+    private Label zankStatisticsCom3Label;
+
+    @FXML
+    private Label zankStatisticsPlayer2Label;
+
+    //TODO: init Methode(), werte berechnung
+
+//    public void setPatienceController(PatienceController patienceController) {
+//		this.patienceController = patienceController;
+//		//registerAbstractUserInterfaces();
+//	}
+    
+    public void initialize(){
+    	
+    }
+    
+    public void updateStatistics(){
+    	setAcesUpStat();
+    	setFreeCellStat();
+    	setZankStat();
+    }
+    
+    private void setAcesUpStat(){
+//    	  double games = acesUpStatistics.size()
+    	
+//    	  acesUpNumberOfGamesLabel.setAccessibleText(games);	
+//    	
+//    	  double wonGames = calculateWonGamesSinglePlay(acesUpStatistics);
+//
+//        acesUpWonGamesLabel.setAccessibleText(wonGames);
+//
+//        acesUpWinRateLabel.setAccessibleText(wonGames/games * 100 + "%"); // double/ double !
+//
+//    	
+//    	  int[] ranks = calculateRanks(acesUpStatistics);
+//    	
+//        acesUpSolutionRank1Label.setAccessibleText(ranks[0]);
+//
+//        acesUpSolutionRank2Label.setAccessibleText(ranks[1]);
+//    	
+//        acesUpSolutionRank3Label.setAccessibleText(ranks[2]);
+//
+//        acesUpSolutionRank4Label.setAccessibleText(ranks[3]);
+//
+//        acesUpLostGamesLabel.setAccessibleText(games-wonGames);
+//
+//    	  double averageTime = calculateAverageTime(acesUpStatistics); // in minutes or seconds?? -> eventually casting to minutes
+//    	
+//        acesUpAverageTimeLabel.setAccessibleText(averageTime);
+
+    }
+    
+//    private int calculateWonGamesSinglePlay( ArrayList<SinglePlayerStatistics> list){
+//    	int result =0;
+//    	int maxEliminatedCards = 52;
+//    	for(SinglePlayerStatistics gameStat:list){
+//    		if(gameStat.getEliminatedCards() == maxEliminatedCards){
+//    			result++;
+//    		}
+//    	}
+//    	return result;
+//    }
+    
+//    private int[] calculateRanks(ArrayList<SinglePlayerStatistics> list){
+//    	int [] ranks = new int[acesUpStatistics.size()];
+//    	int maxRank1 = 12;
+//    	int maxRank2 = 25;
+//    	int maxRank3 = 38;
+//    	int maxRank4 = 51;
+//    	for(SinglePlayerStatistics gameStat : list){
+//    		int eliminatedCards = gameStat.getEliminatedCards();
+//    		if(eliminatedCards <=maxRank1){
+//    			ranks[0]++;
+//    		}
+//    		else if(eliminatedCards <=maxRank2){
+//    			ranks[1]++;
+//    		}
+//    		else if(eliminatedCards <= maxRank3){
+//    			ranks[2]++;
+//    		}
+//    		else if(eliminatedCards<= maxRank4){
+//    			ranks[3]++;
+//    		}
+//    	}
+//    	return ranks;
+//    }
+    
+//    private double calulateAverageTime(ArrayList<SinglePlayerStatistics> list){
+//    	double games = list.size();
+//    	double playTime = 0;
+//    	for(SinglePlayerStatistics gameStat : list){
+//    		playTime+= gameStat.getNeededTime();
+//    	}
+//    	return playTime/games;
+//    }
+    
+    public void setFreeCellStat(){
+
+//  	double games = freeCellStatistics.size()
+//    	
+//    	freecellNumberOfGamesLabel.setAccessibleText(games+"");
+//
+//  	double wonGames = calculateWonGamesSinglePlay(freeCellStatistics);
+//    	
+//      freecellWonGamesLabel.setAccessibleText(wonGames+"");
+//
+//      freecellWinRateLabel.setAccessibleText(wonGames/games* 100 +"%");
+//      
+//      int[] ranks = calculateRanks(freeCellStatistics);
+//        
+//      freecellSolutionRank1Label.setAccessibleText(ranks[0]+"");
+//
+//      freecellSolutionRank2Label.setAccessibleText(ranks[1]+"");
+//
+//      freecellSolutionRank3Label.setAccessibleText(ranks[2]+"");
+//        
+//      freecellSolutionRank4Label.setAccessibleText(ranks[3]+"");
+//
+//      freecellLostGamesLabel.setAccessibleText(games-wonGames+"");
+//
+//      double averageTime = calculateAverageTime(acesUpStatistics); // in minutes or seconds?? -> eventually casting to minutes
+//        
+//      freecellAverageTimeLabel.setAccessibleText(averageTime+"");
+    }
+    
+    public void setZankStat(){
+
+//  	double games = zankStatistics.size()
+//    	
+//    	zankNumberOfGamesLabel.setAccessibleText(games+"");
+//
+//    	double wonGames = calculateWonGamesMultiPlay(zankStatistics);
+//    	
+//    	zankWinRateLabel.setAccessibleText(wonGames+"");
+//
+//    	int[][] wonGamesRival = calculateWonGamesPerRival();//played|won
+//    	
+//    	zankStatisticsCom1Label.setAccessibleText(wonGames[0][0] +"|"+wonGamesRival[0][1]+"");
+//
+//    	zankStatisticsCom2Label.setAccessibleText(wonGames[1][0] +"|"+wonGamesRival[1][1]+"");
+//
+//    	zankStatisticsCom3Label.setAccessibleText(wonGames[2][0] +"|"+wonGamesRival[2][1]+"");
+//
+//    	zankStatisticsPlayer2Label.setAccessibleText(wonGames[3][0] +"|"+wonGamesRival[3][1]+"");
+//    	
+    }
+
+	/**
+	 * @return the patienceController
+	 */
+	public PatienceController getPatienceController() {
+		return patienceController;
+	}
+
+	/**
+	 * @param patienceController the patienceController to set
+	 */
+	public void setPatienceController(PatienceController patienceController) {
+		this.patienceController = patienceController;
+		this.freeCellStatistics = this.patienceController.getPatience().getStatistics().getFreecellStatistics();
+		this.acesUpStatistics = this.patienceController.getPatience().getStatistics().getAcesUpStatistics();
+		this.zankStatistics = this.patienceController.getPatience().getStatistics().getZankStatistics();
+	}
+    
+
+//  private int calculateWonGamesMultiPlay( ArrayList<MultiPlayerStatistics> list){
+//  	int result =0;
+//		int maxEliminatedCards = 52;
+//		for(MultiPlayerStatistics gameStat:list){
+//			if(gameStat.getCardsPalyer1() == maxEliminatedCards){
+//				result++;
+//			}
+//		}
+//		return result;
+//  }
+    
+//    private int[][] calculateWonGamesPerRival(){
+//    	int amountOfRivals = 4;//player2|AIeasy|AInormal|AIpro
+//    	int separations = 2;//played|won
+//    	int[][] multiStat = new int[amountOfRivals][separations];
+//    	int winningCardAmount = 0;
+//    	for(MultiPlayerStatistics gameStat : zankStatistics){
+//    		int remainingCards = gameStat.getCardsPlayer1;
+//
+//    		if(gameStat.getRival().equals("PLAYER2")){
+//    		 	multiStat[0][0]++; //games vs Player2
+//    			if(remainingCards == 0);{
+//    				multiStat[0][1]++; // games won vs Player2
+//    			}
+//    		}
+//    		else if(gameStat.getRival().equals("AIEASY")){
+//    			multiStat[1][0]++; //games vs AIeasy
+//    			if(remainingCards == 0);{
+//    				multiStat[1][1]++; // games won vs AIeasy
+//    			}
+//    		}
+//    		else if(gameStat.getRival().equals("AINORMAL")){
+//    			multiStat[2][0]++; //games vs AInormal
+//    			if(remainingCards == 0);{
+//    				multiStat[2][1]++; // games won vs AInormal
+//    			}
+//    		}
+//    		else if(gameStat.getRival().equals("AIPRO")){
+//    			multiStat[3][0]++; //games vs AInormal
+//    			if(remainingCards == 0);{
+//    				multiStat[3][1]++; // games won vs AInormal
+//    			}
+//    		}
+//    	}
+//    	return multiStat;
+//    }
+    
+    
+}

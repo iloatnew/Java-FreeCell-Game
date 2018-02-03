@@ -1,0 +1,26 @@
+package aicontroller;
+
+import controller.PatienceController;
+import exceptions.IllegalGameArgumentException;
+import exceptions.NoMovesPossibleException;
+import exceptions.NotEnoughCardsOnPlaystacksException;
+import model.Game;
+import model.Move;
+
+public class FreeCellAIController extends AIController {
+
+	private PatienceController patienceController;
+
+	@Override
+	public void setGame(Game game) throws IllegalGameArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Move getNextMove() throws NotEnoughCardsOnPlaystacksException, NoMovesPossibleException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -1,0 +1,45 @@
+package model;
+
+public class Move {
+	private Stapel from;
+	private Stapel to;
+	private int numberOfCards;
+
+	/**
+	 * 
+	 * @param prevFro, the Type and index of the prevFro,/Herkunft
+	 * @param prevTo the Type and index of the prevTo
+	 * @param numberWithCards wieviele Karten wurden bewegt
+	 */
+	public Move(Stapel prevFrom,Stapel prevTo, int numberWithCards){
+		this.setFrom(prevFrom);
+		this.setTo(prevTo);
+		this.setNumberOfCards(numberWithCards);
+	}
+	
+	public Stapel getFrom() {
+		return from;
+	}
+
+	public void setFrom(Stapel from) {
+		this.from = from;
+	}
+
+	public Stapel getTo() {
+		return to;
+	}
+
+	public void setTo(Stapel to) {
+		this.to = to;
+	}
+
+	public int getNumberOfCards() {
+		return numberOfCards;
+	}
+
+	public void setNumberOfCards(int numberOfCards) {
+		this.numberOfCards = numberOfCards;
+	}
+
+
+}

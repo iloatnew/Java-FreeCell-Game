@@ -1,0 +1,24 @@
+package model;
+
+import javafx.scene.paint.Color;
+
+public enum Suit {
+
+	SPADE,DIAMOND,HEART,CLUB;
+
+//	private String SPADE;
+//
+//	private String DIAMOND;
+//
+//	private String HEART;
+//
+//	private String CLUB;
+
+	/**
+	 * Black or red.
+	 */
+	public Color farbe() {
+		return (this == SPADE || this == CLUB) ? Color.BLACK : Color.RED;
+	}
+	
+}

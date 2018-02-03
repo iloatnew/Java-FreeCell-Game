@@ -1,0 +1,13 @@
+package controller;
+
+public class AcesUpController extends GameController {
+
+	private PatienceController patienceController;
+
+	private AcesUpAIController acesUpAIController;
+
+	public void drawCards() {
+
+	}
+
+}

@@ -1,0 +1,62 @@
+package controller;
+
+import javax.smartcardio.Card;
+
+import model.Cardstack;
+import model.Move;
+
+public class GameController {
+
+	public void initGame() {
+
+	}
+
+	public boolean isDraggable(Card card, Cardstack source) {
+		return false;
+	}
+
+	public boolean isDroppable(Cardstack target) {
+		return false;
+	}
+
+	public boolean isFinished() {
+		return false;
+	}
+
+	private void showMove(Move moveToShow) {
+
+	}
+
+	private void refreshHistory() {
+
+	}
+
+	public void autoPlay() {
+
+	}
+
+	public void revertMove() {
+
+	}
+
+	public void addStatistics() {
+
+	}
+
+	public void restartGame() {
+
+	}
+
+	public void cancelGame() {
+
+	}
+
+	public void startTimer() {
+
+	}
+
+	public void executeMove(Move moveToExecute) {
+
+	}
+
+}

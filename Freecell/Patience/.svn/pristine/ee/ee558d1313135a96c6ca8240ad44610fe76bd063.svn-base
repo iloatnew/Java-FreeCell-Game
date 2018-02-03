@@ -1,0 +1,12 @@
+package model;
+
+import java.util.Collection;
+
+public class SingleplayerStatistics {
+
+	private int numberMoves;
+
+	private int numberEliminatedCards;
+
+	private int neededTime;
+}

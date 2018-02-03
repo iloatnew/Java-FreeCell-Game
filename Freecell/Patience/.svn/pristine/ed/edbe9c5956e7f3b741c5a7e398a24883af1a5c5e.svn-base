@@ -1,0 +1,109 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Stack;
+
+import javafx.scene.paint.Color;
+
+public class Stapel extends Stack<Karte>{
+	
+
+	/**
+	 * zieht eine zufällige Karte aus dem Stapel
+	 * @return
+	 */
+	public Karte randomPick(){
+		int i = this.size();
+		Random rand = new Random();
+		Karte tmp = this.get(rand.nextInt(i));
+		this.remove(tmp);
+		return tmp;
+	}
+	
+	/**
+	 * Beispiel: Stapel:	  PIK 8 - HERZ 7 - PIK 6 - END
+	 * 			 Staßelänge:    3   -    2   -    1
+	 *           Stapel:	  PIK 10 - HERZ 9 - PIK 6 - HERZ 5  - END
+	 * 			 Staßelänge:    0   -    0   -    2   -   1
+	 * @param karte
+	 * @return
+	 */
+	public int strasseLaenge(Karte karte) {
+		if(!this.contains(karte)) {
+			return -1;
+		}
+		else {
+			int cnt =0;
+			// if karte onTop, hat die Länge 1
+			if(!this.hasNext(karte)){
+				return 1;
+			}
+			// else if Karte in einer Straße bis Top?  
+			while(karte.inStrasseAbsteigend(this.next(karte))){
+					cnt++;
+					karte = this.next(karte);
+					if(!this.hasNext(karte)){
+						return ++cnt;
+					}
+			}
+			// wenn nicht bis Top, ist cnt 0.
+			return 0;
+		}
+		
+	}
+	
+	/**
+	 * ist die Karte in Stapel aber nicht onTop?
+	 * @param karte
+	 * @return
+	 */
+	public boolean hasNext(Karte karte) {
+		if(this.contains(karte) && this.indexOf(karte)!=this.size()-1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * gibt nächste Karte zurück
+	 * @param karte
+	 * @return
+	 */
+	public Karte next(Karte karte) {
+		if(this.hasNext(karte)) {
+			return this.get(this.indexOf(karte)+1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 *  zieht alle Karten, die hinter der Karte liegen
+	 * @param karte
+	 */
+	public void removeAllBelow(Karte karte) {
+		while(this.hasNext(karte)){
+			this.remove(this.next(karte));
+		}
+		this.remove(karte);
+	}
+	
+	/**
+	 * erzeugt ein Klone für alle Karten, die hinter der Karte liegen
+	 * @param karte
+	 * @return
+	 */
+	public Stapel cloneAllBelow(Karte karte){
+		Stapel stapel = new Stapel();
+		while(this.hasNext(karte)){
+			stapel.add(karte);
+			karte = this.next(karte);
+		}
+		stapel.add(karte);
+		return stapel;
+	}
+}

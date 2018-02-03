@@ -1,0 +1,142 @@
+package controller;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import model.Game;
+import model.Move;
+import model.Statistics;
+
+public class IOController {
+
+	private PatienceController patienceController;
+
+	/**
+	 * @return the patienceController
+	 */
+	public PatienceController getPatienceController() {
+		return patienceController;
+	}
+
+	/**
+	 * @param patienceController the patienceController to set
+	 */
+	public void setPatienceController(PatienceController patienceController) {
+		this.patienceController = patienceController;
+	}
+
+	// TODO:
+	// game implements Serializable + testen
+	public void saveGame(Game game, String fileName) {
+		FileOutputStream fileOut = null;
+		ObjectOutputStream out = null;
+		try {
+			fileOut = new FileOutputStream(fileName);
+			out = new ObjectOutputStream(fileOut);
+			out.writeObject(game);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+				}
+			if (fileOut != null)
+				try {
+					fileOut.close();
+				} catch (IOException e) {
+				}
+		}
+	}
+
+	public void loadGame(String filePath) {
+		ObjectInputStream ois = null;
+		FileInputStream fis = null;
+		try {
+		  fis = new FileInputStream(filePath);
+		  ois = new ObjectInputStream(fis);
+		  Object obj = ois.readObject();
+		  // Einlesen todo
+		  if (obj instanceof Game) {
+		    Game so = (Game)obj;
+		    System.out.println(so.toString()); // String
+		  }
+		}
+		catch (IOException e) {
+		  e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+		  e.printStackTrace();
+		}
+		finally {
+		  if (ois != null) try { ois.close(); } catch (IOException e) {}
+		  if (fis != null) try { fis.close(); } catch (IOException e) {}
+		}
+
+	}
+	
+	public void saveStatistics() {
+		FileOutputStream fileOut = null;
+		ObjectOutputStream out = null;
+		try {
+			fileOut = new FileOutputStream("statistic.ser");
+			out = new ObjectOutputStream(fileOut);
+			out.writeObject(this.patienceController.getPatience().getStatistics());
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+				}
+			if (fileOut != null)
+				try {
+					fileOut.close();
+				} catch (IOException e) {
+				}
+		}
+	}
+	
+	public void loadStatistics() {
+		ObjectInputStream ois = null;
+		FileInputStream fis = null;
+		try {
+		  fis = new FileInputStream("statistic.ser");
+		  ois = new ObjectInputStream(fis);
+		  Object obj = ois.readObject();
+		  // Einlesen todo
+		  if (obj instanceof Statistics) {
+		    Statistics so = (Statistics)obj;
+		    this.patienceController.getPatience().setStatistics(so);
+		  }
+		}
+		catch (IOException e) {
+		  e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+		  e.printStackTrace();
+		}
+		finally {
+		  if (ois != null) try { ois.close(); } catch (IOException e) {}
+		  if (fis != null) try { fis.close(); } catch (IOException e) {}
+		}
+
+	}
+
+	public Move stringToMove(String string) {
+		return null;
+	}
+
+	public String moveToString(Move move) {
+		return null;
+	}
+
+}

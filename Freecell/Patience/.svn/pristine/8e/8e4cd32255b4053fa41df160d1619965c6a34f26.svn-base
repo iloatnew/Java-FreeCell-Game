@@ -1,0 +1,32 @@
+package controller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import model.Card;
+import model.Cardstack;
+import model.Rank;
+import model.Suit;
+
+public class DeckController {
+
+	private PatienceController patienceController;
+
+	public Cardstack randomDeck() {
+		
+		ArrayList<Card> rdmDeck = new ArrayList<Card>();
+		
+		for(Suit s : Suit.values()){
+			for(Rank r : Rank.values()){
+				rdmDeck.add(new Card(s,r));				
+			}
+		}
+		Collections.shuffle(rdmDeck);
+		return new Cardstack(rdmDeck);
+	}
+
+	public Cardstack deckFromString(String string) {
+		return null;
+	}
+
+}

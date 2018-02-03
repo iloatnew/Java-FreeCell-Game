@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="hauptPane" pickOnBounds="false" prefHeight="900.0" prefWidth="1000.0" style="-fx-background-color: #009900;" styleClass="background" stylesheets="@Hauptfenster.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FreeCellGUIController">
+   <children>
+      <Pane fx:id="spalte1" layoutX="10.0" layoutY="190.0" prefHeight="700.0" prefWidth="105.0" />
+      <Pane fx:id="spalte2" layoutX="125.0" layoutY="190.0" prefHeight="700.0" prefWidth="105.0" />
+      <Pane fx:id="spalte3" layoutX="240.0" layoutY="190.0" prefHeight="700.0" prefWidth="105.0" />
+      <Pane fx:id="spalte4" layoutX="355.0" layoutY="190.0" prefHeight="700.0" prefWidth="105.0" />
+      <Pane fx:id="spalte5" layoutX="540.0" layoutY="190.0" prefHeight="700.0" prefWidth="105.0" />
+      <Pane fx:id="spalte6" layoutX="655.0" layoutY="190.0" prefHeight="700.0" prefWidth="105.0" />
+      <Pane fx:id="spalte7" layoutX="770.0" layoutY="190.0" prefHeight="700.0" prefWidth="105.0" />
+      <Pane fx:id="spalte8" layoutX="885.0" layoutY="190.0" prefHeight="700.0" prefWidth="105.0" />
+      <Pane fx:id="freecell1" layoutX="10.0" layoutY="16.0" prefHeight="153.0" prefWidth="105.0" style="-fx-background-color: ffffff44; -fx-border-color: white;" />
+      <Pane fx:id="freecell2" layoutX="125.0" layoutY="16.0" prefHeight="153.0" prefWidth="105.0" style="-fx-background-color: ffffff44; -fx-border-color: white;" />
+      <Pane fx:id="freecell3" layoutX="240.0" layoutY="16.0" prefHeight="153.0" prefWidth="105.0" style="-fx-background-color: ffffff44; -fx-border-color: white;" />
+      <Pane fx:id="freecell4" layoutX="355.0" layoutY="16.0" prefHeight="153.0" prefWidth="105.0" style="-fx-background-color: ffffff44; -fx-border-color: white;" />
+      <Pane fx:id="homecell1" layoutX="540.0" layoutY="16.0" prefHeight="153.0" prefWidth="105.0" style="-fx-background-color: ffffff44; -fx-border-color: white;" />
+      <Pane fx:id="homecell2" layoutX="655.0" layoutY="16.0" prefHeight="153.0" prefWidth="105.0" style="-fx-background-color: ffffff44; -fx-border-color: white;" />
+      <Pane fx:id="homecell3" layoutX="770.0" layoutY="16.0" prefHeight="153.0" prefWidth="105.0" style="-fx-background-color: ffffff44; -fx-border-color: white;" />
+      <Pane fx:id="homecell4" layoutX="885.0" layoutY="16.0" prefHeight="153.0" prefWidth="105.0" style="-fx-background-color: ffffff44; -fx-border-color: white;" />
+      <Button fx:id="undo" layoutX="469.0" layoutY="58.0" mnemonicParsing="false"  text="undo" onAction="#undo"/>
+   </children>
+</Pane>

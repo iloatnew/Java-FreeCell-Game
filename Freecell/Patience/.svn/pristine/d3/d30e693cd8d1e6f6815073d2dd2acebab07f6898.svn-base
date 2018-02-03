@@ -1,0 +1,84 @@
+package application;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+
+public class StatistikController {
+	
+	    @FXML
+	    private Tab idiotenPatienceTab;
+
+	    @FXML
+	    private Label idiotenAnzahlSpieleLabel;
+
+	    @FXML
+	    private Label idiotenAnzahlGewonnenLabel;
+
+	    @FXML
+	    private Label idiotenGewinnrateLabel;
+
+	    @FXML
+	    private Label idiotenLoesungsgrad1Label;
+
+	    @FXML
+	    private Label idiotenLoesungsgrad4Label;
+
+	    @FXML
+	    private Label idiotenLoesungsgrad3Label;
+
+	    @FXML
+	    private Label loesungsgraidiotenLoesungsgrad2Labeld2Label;
+
+	    @FXML
+	    private Label idiotenAnzahlVerlorenLabel;
+
+	    @FXML
+	    private Tab freecellTab;
+
+	    @FXML
+	    private Label freecellAnzahlSpieleLabel;
+
+	    @FXML
+	    private Label freecellAnzahlGewonnenLabel;
+
+	    @FXML
+	    private Label freecellGewinnrateLabel;
+
+	    @FXML
+	    private Label freecellLoesungsgrad4Label;
+
+	    @FXML
+	    private Label freecellLoesungsgrad3Label;
+
+	    @FXML
+	    private Label freecellLoesungsgrad2Label;
+
+	    @FXML
+	    private Label freecellLoesungsgrad1Label;
+
+	    @FXML
+	    private Label freecellAnzahlVerlorenLabel;
+
+	    @FXML
+	    private Tab zankPatienceTab;
+
+	    @FXML
+	    private Label zankAnzahlSpieleLabel;
+
+	    @FXML
+	    private Label zankGewinnrateLabel;
+
+	    @FXML
+	    private Label zankStatistikCom1Label;
+
+	    @FXML
+	    private Label zankStatistikCom2Label;
+
+	    @FXML
+	    private Label zankStatistikCom3Label;
+
+	    @FXML
+	    private Label zankStatistikMenschLabel;
+	
+	
+}

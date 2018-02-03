@@ -1,0 +1,95 @@
+package controller;
+
+import application.FreeCellController;
+import application.GameController;
+import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import model.Karte;
+import model.Stapel;
+import model.Stapel.StapelType;
+
+/**
+ * DragStartController aktiviert, wenn das Image einer Karte gezieht wird der
+ * Controller hat als parameter ein Karte und ihr Image
+ * 
+ * @author wentao
+ *
+ */
+public class DragStartController implements EventHandler<MouseEvent> {
+
+	private Karte karte;
+	private Stapel stapel;
+	private ImageView karteImgView;
+	private GameController controller;
+
+	/**
+	 * Noch nicht gemacht: Controller sollte für alle Typen anpassen
+	 * 
+	 * @param stapel
+	 * @param karte
+	 * @param karteImgView
+	 * @param controller
+	 */
+	public DragStartController(GameController controller, ImageView karteImgView, Stapel stapel, Karte karte) {
+		this.karte = karte;
+		this.karteImgView = karteImgView;
+		this.stapel = stapel;
+		this.controller = controller;
+	}
+
+	public void handle(MouseEvent event) {
+		if(!cardsLegal()) {
+			System.out.println("cheat");
+			controller.getZiehHerkunft().addAll(controller.getStapelToDrag());
+			controller.setStapelToDrag(new Stapel(StapelType.DEFAULT, 0));
+		}
+		else {
+			// zieht die Karte aus ihres Stapels
+			if (controller.isDraggable(stapel, karte)) {
+				Dragboard db = karteImgView.startDragAndDrop(TransferMode.MOVE);
+				ClipboardContent content = new ClipboardContent();
+				// speizifiert für FreeCell:
+				if (controller.getClass().equals(new FreeCellController().getClass())) {
+					content = setFreeCellContent(content);
+				}
+				db.setContent(content);
+
+				stapel.removeAllBelow(karte);
+				event.consume();
+			}
+		}
+		
+
+		controller.refreshKarte();
+	}
+
+	private boolean cardsLegal() {
+		if(controller.getStapelToDrag().getStapelType().equals(StapelType.DEFAULT) )
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * setzt bild für das geziehte Stapel und gibt das Stapel zurück in
+	 * Controller anderer Controller kann dann das Stapel auch in Controller
+	 * zugreifen
+	 * 
+	 * @param content
+	 * @return
+	 */
+	private ClipboardContent setFreeCellContent(ClipboardContent content) {
+		Stapel stapelToDrag = stapel.cloneAllBelow(karte);
+		controller.setStapelToDrag(stapelToDrag);
+		controller.setZiehHerkunft(stapel);
+		// erzeugt das Bild für mehrere Karten
+		MergeImages mergeImage = new MergeImages(stapelToDrag);
+		content.putImage(mergeImage.getImage());
+		return content;
+	}
+
+}

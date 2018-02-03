@@ -1,0 +1,30 @@
+package model;
+
+import java.util.ArrayList;
+
+import application.FreeCellController;
+
+public class FreeCellSpielZug {
+	private ArrayList<Stapel> spielStapeln;
+	private ArrayList<Stapel> freeCellStapeln;
+	private ArrayList<Stapel> homeStapeln;
+	
+	public FreeCellSpielZug(ArrayList<Stapel> spielStapeln,ArrayList<Stapel> freeCellStapeln, ArrayList<Stapel> homeStapeln){
+		this.spielStapeln = spielStapeln;
+		this.freeCellStapeln = freeCellStapeln;
+		this.homeStapeln = homeStapeln;
+	}
+	
+	public ArrayList<Stapel> getSpielStapeln(){
+		return spielStapeln;
+	}
+	
+	public ArrayList<Stapel> getFreeCellStapeln(){
+		return freeCellStapeln;
+	}
+	
+	public ArrayList<Stapel> getHomeStapeln(){
+		return homeStapeln;
+	}
+	
+}

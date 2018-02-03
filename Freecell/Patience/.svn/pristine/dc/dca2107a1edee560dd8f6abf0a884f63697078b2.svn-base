@@ -1,0 +1,190 @@
+package aicontroller;
+
+import java.util.ArrayList;
+
+import controller.AutoMoveController;
+import javafx.scene.input.KeyCombination.ModifierValue;
+import model.AcesUp;
+import model.Card;
+import model.Cardstack;
+import model.FreeCell;
+import model.Move;
+import model.Rank;
+import model.Type;
+
+/**
+ * @author sopr047
+ *
+ */
+public class FreeCellAI {
+
+	public ArrayList<Move> getMoves() {
+		return moves;
+	}
+
+	public void setMoves(ArrayList<Move> moves) {
+		this.moves = moves;
+	}
+
+	private ArrayList<Cardstack> movabelStack;
+	private FreeCell freeCell;
+	private ArrayList<Move> moves;
+	// private AcesUpController acesUpController;
+	private FreeCellAIController freeCellAIController;
+	private AutoMoveController moveController;
+
+	private final int EMPTY = 0;
+
+	public FreeCellAI(FreeCellAIController aiController, AutoMoveController moveController) {
+		this.freeCellAIController = aiController;
+		moves = new ArrayList<Move>();
+		this.moveController = moveController;
+		movabelStack = new ArrayList();
+		
+		
+
+	}
+
+	public Move getNextMove() {
+		moveAces();
+
+		if (moves.size() > EMPTY) {
+			return moves.remove(0);
+		} else {
+
+		}
+
+	}
+
+	public void setGame(FreeCell game) {
+		this.freeCell = game;
+		
+		for (Cardstack cardstack : freeCell.getFreeCells()) {
+			if(!cardstack.isEmpty()){
+			movabelStack.add(cardstack);
+			}
+		}
+		
+		for (Cardstack cardstack : freeCell.getPlayingStacks()) {
+			if(!cardstack.isEmpty())
+			{
+				movabelStack.add(cardstack);
+			}
+		}
+	}
+
+	public FreeCell getGame() {
+		return this.freeCell;
+	}
+
+	/**
+	 * adds one Move Object to moves Arraylist, wich moves Acces to free
+	 * Homecells
+	 * 
+	 */
+	public void moveAces() {
+
+		for (Cardstack cardstack : freeCell.getPlayingStacks()) {
+
+			if (!cardstack.isEmpty()) {
+
+				if (cardstack.firstElement().getRank().equals(Rank.ACE)) {
+
+					for (Cardstack homecells : freeCell.getHomeCells()) {
+
+						if (homecells.size() == 0) {
+							moves.add(new Move(cardstack, homecells, 1));
+						}
+						break;
+					}
+
+				}
+
+			}
+		}
+	}
+
+	/**
+	 * @return true if at least one move possible
+	 * 
+	 *         A move to HomeCell is not included, because these moves are done
+	 *         by AutomoveController
+	 */
+
+	public boolean isMovePossible() {
+		if (freeCell.getCardsOnBoard() > 0) {
+			if (differentColorAndRank() || isFreeCellEmpty()) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	/**
+	 * @return true if there are cards with different color and rank difference
+	 *         of one on top of each playingstack
+	 */
+	public boolean differentColorAndRank() {
+		for (Cardstack stackMain : this.movabelStack) {
+			for (Cardstack stackCompare : this.movabelStack) {
+				if (!stackMain.equals(stackCompare)) {
+					if (!stackCompare.isEmpty() && !stackMain.isEmpty()) {
+						if (differentColor(stackMain, stackCompare)) {
+							return rankOneOverOrUnder(stackMain, stackCompare);
+						}
+					}
+				}
+
+			}
+
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return true if at least one FreeCell is Empty
+	 */
+	private boolean isFreeCellEmpty() {
+		for (Cardstack freecell : freeCell.getFreeCells()) {
+			if (freecell.size() == 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param stack
+	 *            first stack to compare
+	 * @param compare
+	 *            second stack to compare
+	 * @return true if first cards colors are different
+	 */
+	private boolean differentColor(Cardstack stack, Cardstack compare) {
+		if (stack.firstElement().getColor() != compare.firstElement().getColor()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param stack
+	 *            first stack to compare
+	 * @param compare
+	 *            second stack to compare
+	 * @return true if first cards rank has a difference of one
+	 */
+
+	private boolean rankOneOverOrUnder(Cardstack stack, Cardstack compare) {
+		if (stack.firstElement().getRank().ordinal() == compare.firstElement().getRank().ordinal() + 1
+				|| stack.firstElement().getRank().ordinal() + 1 == compare.firstElement().getRank().ordinal()) {
+			return true;
+		}
+		return false;
+
+	}
+
+}

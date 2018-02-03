@@ -1,0 +1,154 @@
+package controller;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.util.Collection;
+import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import model.AcesUp;
+import model.Card;
+import model.Cardstack;
+import model.Move;
+import model.Rank;
+import model.Suit;
+import model.Type;
+
+
+/**
+ * @author Luise
+ * this class tests the functionality of the AcesUpController
+ */
+public class AcesUpControllerTest {
+	
+	private AcesUp acesUp;
+	private AcesUpController acesUpController;
+	private PatienceController patienceController;
+	private Move moveFromTalon;
+	private Move moveWithinPlayingStacks;
+	private Move moveToEliminiationStack;
+
+	@Before
+	public void setUp() throws Exception {
+		this.patienceController = new PatienceController(); //setzt patience und erzeugt leere Controller
+		this.patienceController.initController();
+		this.acesUpController = this.patienceController.getAcesUpController();
+		
+		Cardstack startStack = new Cardstack(Type.TALON);
+		Collection<Card> cards = (new DeckController()).randomDeck(); // needs to be tested successfully
+		startStack.addAll(cards);
+		this.acesUp = new AcesUp(startStack);
+		this.patienceController.getPatience().setGame(acesUp);
+		
+		this.moveFromTalon = new Move(acesUp.getTalon(), acesUp.getPlayingStacks()[1], 1);
+		this.moveWithinPlayingStacks = new Move(acesUp.getPlayingStacks()[0], acesUp.getPlayingStacks()[1],1);
+		this.moveToEliminiationStack = new Move(acesUp.getPlayingStacks()[2], acesUp.getEliminationStack(),1);
+	}
+
+	@Test
+	public void testInitGame() {
+		this.acesUpController.initGame();
+		assertEquals("Durch das Initialisieren des Spiels muss das private Attribut game gesetzt sein", acesUp, this.acesUpController.getGame() );		
+		assertEquals("Durch das Initialisieren des Spiels muss der Talon der ganze startStack sein, bei dem die obersten vier Karten entfernt wurden",48 , this.acesUpController.getGame().getTalon().size());
+		assertEquals("Die Startzeit muss gemerkt worden sein",new Date().getTime() , this.acesUpController.getStartTime());
+	}
+
+	
+	//for testing this a known card sitiation is necessary 
+	//-> reading a hole cardset in and prepaing the situation 
+	//so that a legal and an illegal situation is checked 
+	@Test
+	public void testIsDraggable() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testIsDroppable() {
+		fail("Not yet implemented");
+	}
+
+	
+	
+	@Test
+	public void testIsFinished() {
+		fail("Not yet implemented");
+		Cardstack talon = new Cardstack(Type.TALON);
+		Cardstack playing1 = new Cardstack(Type.PLAYINGSTACK);
+		playing1.add(new Card(Rank.ACE, Suit.CLUB));
+		Cardstack playing2 = new Cardstack(Type.PLAYINGSTACK);
+		playing2.add(new Card(Rank.ACE, Suit.DIAMOND));
+		Cardstack playing3 = new Cardstack(Type.PLAYINGSTACK);
+		playing3.add(new Card(Rank.ACE, Suit.HEART));
+		Cardstack playing4 = new Cardstack(Type.PLAYINGSTACK);
+		playing4.add(new Card(Rank.ACE, Suit.SPADE));		
+		assertEquals(true,this.acesUpController.isFinished());
+	}
+
+	@Test
+	public void testAutoPlay() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testUndoMove() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testAddStatistics() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testRestartGame() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testCancelGame() {
+		fail("Not yet implemented");
+	}
+	
+	/**
+	 * tests if executeMove adjusts the affected stacks correctly and 
+	 * the card-object actually moves from source to target
+	 */
+	@Test
+	public void testExecuteMove() {
+		this.acesUpController.setGame((AcesUp)this.patienceController.getPatience().getGame());
+		this.acesUpController.drawCards();
+		
+		Cardstack prevTalon = this.acesUp.getTalon();
+		int prevTalonSize = prevTalon.size();
+		Card cardToMove = prevTalon.peek();
+		Cardstack targetStack = moveFromTalon.getTo();
+		int prevTargetSize = targetStack.size();		
+		
+		this.acesUpController.executeMove(moveFromTalon);
+
+		assertEquals("The card which previous was the top of the Talon needs to be now the top of the TargetStack",cardToMove, acesUp.getPlayingStacks()[1].peek());
+		assertEquals(prevTalonSize-1, this.acesUp.getTalon().size());
+		assertEquals(prevTargetSize+1, this.acesUp.getPlayingStacks()[1].size());
+	}	
+
+//	calls the GUI -> not necessary to test
+//	@Test
+//	public void testRefreshKarte() {
+//		fail("Not yet implemented");
+//	}
+
+	@Test
+	public void testDrawCards() {	
+		// only tests for empty playing stacks and full talon if cards are discard
+		this.acesUpController.setGame((AcesUp)this.patienceController.getPatience().getGame());
+		this.acesUpController.drawCards();
+		assertEquals("Draw cards needs to delete four cards from the talon and put them on top of the playing stacks", this.acesUpController.getGame().getStartStack().size()-4, this.acesUpController.getGame().getTalon().size());
+		for(Cardstack playingStack: this.acesUpController.getGame().getPlayingStacks()){ 
+			assertEquals(1,playingStack.size());
+			}
+	}
+
+}

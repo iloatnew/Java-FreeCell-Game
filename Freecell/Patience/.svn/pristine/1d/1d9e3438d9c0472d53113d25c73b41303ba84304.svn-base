@@ -1,0 +1,17 @@
+package controller;
+
+public class ZankController extends GameController {
+
+	private PatienceController patienceController;
+
+	private ZankAIController zankAIController;
+
+	public void flipCard() {
+
+	}
+
+	private void eliminateCards() {
+
+	}
+
+}

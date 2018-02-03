@@ -1,0 +1,12 @@
+package controller;
+
+public class IdiotenKiController {
+	/*
+	 * macheZug(){
+	 * 	executeMove(moveList.next())
+	 * }
+	 * berechneZug(){
+	 * 	...
+	 * }
+	 */
+}

@@ -1,0 +1,460 @@
+/**
+ * Sample Skeleton for 'Hauptfenster.fxml' Controller Class
+ */
+
+package application;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.ResourceBundle;
+
+import controller.AcesUpController;
+import controller.FreeCellController;
+import controller.PatienceController;
+import controller.ZankController;
+import javafx.animation.AnimationTimer;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import model.AcesUp;
+import model.FreeCell;
+import model.Game;
+import model.Move;
+import model.Zank;
+
+public class HauptfensterController{
+
+	private GameGUIController gameCtrl;
+	private PatienceController patienceCtrl;
+	private AnimationTimer timer;
+	private String fxmlfile;
+	private ZankCLIController zankGLICtrl;
+	private String cliContent = "";
+
+	@FXML // ResourceBundle that was given to the FXMLLoader
+	private ResourceBundle resources;
+
+	@FXML // URL location of the FXML file that was given to the FXMLLoader
+	private URL location;
+
+	@FXML // fx:id="anchorPane"
+	private AnchorPane anchorPane; // Value injected by FXMLLoader
+
+	@FXML // fx:id="varianteText"
+	private Label varianteText; // Value injected by FXMLLoader
+
+	@FXML // fx:id="hauptmenueButton"
+	private Button hauptmenueButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="newButton"
+	private Button newButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="revertButton"
+	private Button revertButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="tippButton"
+	private Button tippButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="statistikButton"
+	private Button statistikButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="helpButton"
+	private Button helpButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="spielfeld"
+	private AnchorPane spielfeld; // Value injected by FXMLLoader
+
+	@FXML // fx:id="vorspielenButton"
+	private Button vorspielenButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="time"
+	private Label time; // Value injected by FXMLLoader
+
+	@FXML // fx:id="saveButton"
+	private Button saveButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="weiterButton"
+	private Button weiterButton; // Value injected by FXMLLoader
+
+	@FXML // fx:id="pauseButton"
+	private Button pauseButton; // Value injected by FXMLLoader
+	
+	@FXML // fx:id="cliButton"
+    private Button cliButton; // Value injected by FXMLLoader
+	
+	@FXML // fx:id="passenButton"
+    private Button passenButton; // Value injected by FXMLLoader
+
+    @FXML
+    void cliButtonClicked(ActionEvent event) {
+    	Stage primaryStage = new Stage();
+		AnchorPane root = new AnchorPane();
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ZankCLI.fxml"));
+		
+		try {
+			root = fxmlLoader.load();
+			zankGLICtrl = fxmlLoader.getController();
+			zankGLICtrl.setPatienceController(patienceCtrl);
+			zankGLICtrl.setConsoleContent(cliContent);
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(Main.class.getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.setResizable(false);
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			      public void handle(WindowEvent we) {
+			          cliButton.setDisable(false);
+			          cliContent = zankGLICtrl.getConsoleContent();
+			      }});
+			primaryStage.initOwner(anchorPane.getScene().getWindow());
+			primaryStage.setTitle("Befehle");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		primaryStage.show();
+		cliButton.setDisable(true);
+		zankGLICtrl.addStringtoConsole("nein");
+    }
+
+	@FXML
+	void hauptmenueClicked(ActionEvent event) {
+		Stage primaryStage = new Stage();
+		AnchorPane root = new AnchorPane();
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Hauptmenue.fxml"));
+		try {
+			root = fxmlLoader.load();
+			HauptmenueController hauptmenueController = (HauptmenueController) fxmlLoader.getController();
+			hauptmenueController.setPatienceController(this.patienceCtrl);
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(Main.class.getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.setMinHeight(root.getPrefHeight());
+			primaryStage.setMinWidth(root.getPrefWidth());
+			primaryStage.setResizable(false);
+			primaryStage.setTitle("Unser tolles Spiel");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		primaryStage.show();
+		Stage window = (Stage) anchorPane.getScene().getWindow();
+		window.close();
+
+	}
+
+	@FXML
+	void helpButtonClicked(ActionEvent event) {
+		
+	}
+
+	@FXML
+	void newClicked(ActionEvent event) {
+		timer.stop();
+		timer = null;
+		time.setText("0:00");
+		this.gameCtrl = null;
+		//Cardstack startStack = this.patienceCtrl.getPatience().getGame().getStartStack();
+		if(this.patienceCtrl.getPatience().getGame().getClass().equals(AcesUp.class)){
+			AcesUpController acesUpController = this.patienceCtrl.getAcesUpController();
+			acesUpController.restartGame();
+		}
+		if(this.patienceCtrl.getPatience().getGame().getClass().equals(FreeCell.class)){
+			FreeCellController freeCellController = this.patienceCtrl.getFreeCellController();
+			freeCellController.restartGame();
+		}
+		if(this.patienceCtrl.getPatience().getGame().getClass().equals(Zank.class)){
+			ZankController zankController = this.patienceCtrl.getZankController();
+			zankController.restartGame();
+		}	
+		try {
+			this.initSpielfeld(fxmlfile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+//		Stage primaryStage = new Stage();
+//		AnchorPane root = new AnchorPane();
+//		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SpielLaden.fxml"));
+//		try{
+//			root = fxmlLoader.load();
+//			SpielLadenController spielLadenController = (SpielLadenController) fxmlLoader.getController();
+//			spielLadenController.setpCtrl(this.patienceCtrl);
+//			if(gameCtrl instanceof AcesUpGUIController){
+//				spielLadenController.setSpielTyp("Idioten");
+//				spielLadenController.getSpielLadenPane().setPrefHeight(240);
+//			}else if(gameCtrl instanceof FreeCellGUIController){
+//				spielLadenController.setSpielTyp("FreeCell");
+//				spielLadenController.getSpielLadenPane().setPrefHeight(240);
+//			}else{
+//				spielLadenController.setSpielTyp("Zank");
+//				spielLadenController.getSpielLadenPane().setPrefHeight(420);
+//			}	
+//			Scene scene = new Scene(root);
+//			scene.getStylesheets().add(Main.class.getResource("application.css").toExternalForm());
+//			primaryStage.setScene(scene);
+//			primaryStage.setMinHeight(root.getPrefHeight());
+//			primaryStage.setMinWidth(root.getPrefWidth());
+//			primaryStage.setResizable(false);
+//			primaryStage.setTitle("Unser tolles Spiel");
+//			primaryStage.initOwner(anchorPane.getScene().getWindow());
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		primaryStage.show();
+		
+		
+		
+	}
+
+	@FXML
+	void pauseButtonClicked(ActionEvent event) {
+		if (timer != null) {
+			timer.stop();
+			spielfeld.setDisable(true);
+			spielfeld.setVisible(false);
+			pauseButton.setDisable(true);
+			weiterButton.setDisable(false);
+		}
+		
+
+	}
+
+	@FXML
+	void revertClicked(ActionEvent event) {
+		// System.out.println(this.gameCtrl==null);
+		// if(this.gameCtrl instanceof FreeCellController){
+		// ((FreeCellController) this.gameCtrl).undo(event);
+		// }		
+		if(this.patienceCtrl.getPatience().getGame() instanceof AcesUp){
+			this.patienceCtrl.getAcesUpController().undoMove();
+		}
+		if(this.patienceCtrl.getPatience().getGame() instanceof FreeCell){
+			this.patienceCtrl.getFreeCellController().undoMove();
+		}
+		if(this.patienceCtrl.getPatience().getGame() instanceof Zank){
+			this.patienceCtrl.getZankController().undoMove();
+		}
+	}
+
+	@FXML
+	void saveButtonClicked(ActionEvent event) {
+		// TODO
+		// this.patienceCtrl.getiOController().saveGame(game, fileName);
+		timer.stop();
+		Stage stage = (Stage) anchorPane.getScene().getWindow();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("Patience Spielstand", "*.patience"));
+		fileChooser.setInitialFileName(varianteText.getText()+ LocalDateTime.now().toString() + ".patience");
+		fileChooser.setTitle("Spielstand speichern");
+		File file = fileChooser.showSaveDialog(stage);
+		if (file != null) {
+			Game game = this.patienceCtrl.getPatience().getGame();
+			this.patienceCtrl.getiOController().saveGame(game, file.getAbsolutePath());
+		}
+		timer.start();
+	}
+
+	@FXML
+	void statistikButtonClicked(ActionEvent event) {
+		Stage primaryStage = new Stage();
+		AnchorPane root = new AnchorPane();
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Statistik.fxml"));
+		try {
+			root = fxmlLoader.load();
+			StatistikController statController = (StatistikController) fxmlLoader.getController();
+			statController.setPatienceController(this.patienceCtrl);
+			statController.initStatistics();
+			statController.updateStatistics();
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(Main.class.getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.setMinHeight(root.getPrefHeight());
+			primaryStage.setMinWidth(root.getPrefWidth());
+			primaryStage.setResizable(false);
+			primaryStage.setTitle("Statistik");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		primaryStage.show();
+	}
+
+	@FXML
+	void tippButtonClicked(ActionEvent event) {
+		if(gameCtrl instanceof AcesUpGUIController){
+			patienceCtrl.getAcesUpController().showTipp();
+		}else if(gameCtrl instanceof FreeCellGUIController){
+			patienceCtrl.getFreeCellController().showTipp();
+		}else{
+			patienceCtrl.getZankController().showTipp();
+		}
+	}
+
+	@FXML
+	void vorspielenButtonClicked(ActionEvent event) {
+		if(gameCtrl instanceof AcesUpGUIController){
+			patienceCtrl.getAcesUpController().switchAutplay();
+			patienceCtrl.getAcesUpController().autoPlay();
+		}else if(gameCtrl instanceof FreeCellGUIController){
+			patienceCtrl.getFreeCellController().switchAutplay();
+			patienceCtrl.getFreeCellController().autoPlay();
+		}else{
+			patienceCtrl.getZankController().switchAutplay();
+			patienceCtrl.getZankController().autoPlay();
+		}
+	}
+
+	@FXML
+	void weiterButtonClicked(ActionEvent event) {
+		if (timer != null) {
+			timer.start();
+			spielfeld.setDisable(false);
+			spielfeld.setVisible(true);
+			pauseButton.setDisable(false);
+			weiterButton.setDisable(true);
+		}
+	}
+	
+    @FXML
+    void zugAussetzen(ActionEvent event) {
+    	if(this.patienceCtrl.getZankController().getActivePlayer() == 0){
+    		if(((Zank)this.patienceCtrl.getPatience().getGame()).getHands()[0].isEmpty() && ((Zank)this.patienceCtrl.getPatience().getGame()).getWastePiles()[0].isEmpty()){
+    			this.patienceCtrl.getZankController().switchPlayer();
+    		}
+    		else{
+    			this.patienceCtrl.getZankController().executeMove(new Move(((Zank)this.patienceCtrl.getPatience().getGame()).getHands()[0],((Zank)this.patienceCtrl.getPatience().getGame()).getWastePiles()[0],1));
+    		}
+    	}else{
+    		if(((Zank)this.patienceCtrl.getPatience().getGame()).getHands()[1].isEmpty() && ((Zank)this.patienceCtrl.getPatience().getGame()).getWastePiles()[1].isEmpty()){
+    			this.patienceCtrl.getZankController().switchPlayer();
+    		}
+    		else{
+    			this.patienceCtrl.getZankController().executeMove(new Move(((Zank)this.patienceCtrl.getPatience().getGame()).getHands()[1],((Zank)this.patienceCtrl.getPatience().getGame()).getWastePiles()[1],1));
+    		}
+    	}
+    	
+    	
+    }
+
+	@FXML // This method is called by the FXMLLoader when initialization is
+			// complete
+	void initialize() {
+		assert anchorPane != null : "fx:id=\"anchorPane\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert varianteText != null : "fx:id=\"varianteText\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert hauptmenueButton != null : "fx:id=\"hauptmenueButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert newButton != null : "fx:id=\"newButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert revertButton != null : "fx:id=\"revertButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert tippButton != null : "fx:id=\"tippButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert statistikButton != null : "fx:id=\"statistikButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert helpButton != null : "fx:id=\"helpButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert spielfeld != null : "fx:id=\"spielfeld\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert vorspielenButton != null : "fx:id=\"vorspielenButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert time != null : "fx:id=\"time\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert saveButton != null : "fx:id=\"saveButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert weiterButton != null : "fx:id=\"weiterButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert pauseButton != null : "fx:id=\"pauseButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		assert passenButton != null : "fx:id=\"passenButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+		weiterButton.setDisable(true);
+		try {
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void initSpielfeld(String fxmlFile) throws IOException {
+		this.fxmlfile = fxmlFile;
+		Node node;
+		FXMLLoader fxmlLdr = new FXMLLoader(getClass().getResource(fxmlFile));
+		node = (Node) fxmlLdr.load();
+		this.gameCtrl = fxmlLdr.getController();
+		gameCtrl.setPatienceController(this.patienceCtrl);
+		gameCtrl.init();
+		System.out.println(node.toString());
+		spielfeld.getChildren().setAll(node);
+		this.varianteText.setText(fxmlFile.substring(0, fxmlFile.length() - 5));
+		if (this.patienceCtrl != null) {
+			initTimer();
+			timer.start();
+		}
+		if(!(this.gameCtrl instanceof ZankGUIController)){
+			this.passenButton.setVisible(false);
+			this.cliButton.setVisible(false);
+		}
+	}
+
+	/**
+	 * @return the patienceCtrl
+	 */
+	public PatienceController getPatienceCtrl() {
+		return patienceCtrl;
+	}
+
+	/**
+	 * @param patienceCtrl
+	 *            the patienceCtrl to set
+	 */
+	public void setPatienceCtrl(PatienceController patienceCotrl) {
+		this.patienceCtrl = patienceCotrl;
+	}
+
+	private void initTimer() {
+		timer = new AnimationTimer() {
+			private long timestamp;
+			private long time = patienceCtrl.getPatience().getGame().getTime();
+			private String timeMin;
+			private String timeSec;
+			private long fraction = patienceCtrl.getPatience().getGame().getFraction();
+
+			@Override
+			public void start() {
+				// current time adjusted by remaining time from last run
+				timestamp = System.currentTimeMillis() - fraction;
+				super.start();
+			}
+
+			@Override
+			public void stop() {
+				super.stop();
+				// save leftover time not handled with the last update
+				fraction = System.currentTimeMillis() - timestamp;
+				patienceCtrl.getPatience().getGame().setFraction(fraction);
+				patienceCtrl.getPatience().getGame().setTime(time);
+			}
+
+			@Override
+			public void handle(long now) {
+				long newTime = System.currentTimeMillis();
+				if (timestamp + 1000 <= newTime) {
+					long deltaT = (newTime - timestamp) / 1000;
+					time += deltaT;
+					timestamp += 1000 * deltaT;
+					timeMin = Long.toString(time / 60);
+					timeSec = Long.toString(time % 60);
+					if (timeSec.length() < 2) {
+						timeSec = "0" + timeSec;
+					}
+
+					HauptfensterController.this.time.setText(timeMin + ":" + timeSec);
+				}
+			}
+		};
+	}
+	
+	public AnimationTimer getTimer(){
+		return timer;
+	}
+}

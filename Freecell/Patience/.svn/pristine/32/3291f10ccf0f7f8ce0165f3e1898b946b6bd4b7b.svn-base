@@ -1,0 +1,14 @@
+package model;
+
+import javafx.scene.paint.Color;
+
+public enum Sort {
+	PIK,HERZ,KARO,KREUZ;
+
+	/**
+	 * Black or red.
+	 */
+	public Color farbe() {
+		return (this == PIK || this == KREUZ) ? Color.BLACK : Color.RED;
+	}
+}

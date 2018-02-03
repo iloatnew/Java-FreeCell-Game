@@ -1,0 +1,114 @@
+package controller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import model.Card;
+import model.Cardstack;
+import model.Type;
+import model.Rank;
+import model.Suit;
+
+public class DeckController {
+
+	private PatienceController patienceController;
+
+	/**
+	 * creates random Deck, with StapelType Default
+	 * @return shuffeld Cardstack with 52 Cards
+	 */
+	public Cardstack randomDeck() {
+		
+		Cardstack rdmDeck = new Cardstack(Type.DEFAULT);
+		
+		for(Suit s : Suit.values()){
+			for(Rank r : Rank.values()){
+				rdmDeck.add(new Card(r,s));				
+			}
+		}
+		Collections.shuffle(rdmDeck);
+		
+		return rdmDeck;
+	}
+
+	/**
+	 * creates new Deck from String input, StapelType is DEFAULT
+	 * @param string
+	 * @return cardstack
+	 */
+	public Cardstack deckFromString(String string) {
+		String [] inhalt = string.split(" ");
+		Cardstack deck = new Cardstack(Type.DEFAULT);
+		for(int i = inhalt.length-1 ; i>=0; i--){
+			deck.add(convertToCard(inhalt[i]));
+		}		
+		return deck;
+	}
+	
+	/**
+	 * converts String into Card Object
+	 * @param string
+	 * @return card
+	 */
+	public Card convertToCard(String string){
+		String [] inhalt = string.split("-");
+		Suit suit = null;
+		Rank rank = null;
+		switch(inhalt[0]){
+			case "Pik":
+				suit = Suit.SPADE;			
+			case "Kreuz":
+				suit = Suit.CLUB;
+			case "Herz":
+				suit = Suit.HEART;
+			case "Karo":
+				suit = Suit.DIAMOND;	
+		}
+		switch(inhalt[1]){
+			case "Ass":
+				rank = Rank.ACE;
+			case "Koenig":
+				rank = Rank.KING;
+			case "Dame":
+				rank = Rank.QUEEN;
+			case "Bube":
+				rank = Rank.JACK;
+			case "10":
+				rank = Rank.TEN;
+			case "9":
+				rank = Rank.NINE;
+			case "8":
+				rank = Rank.EIGHT;
+			case "7":
+				rank = Rank.SEVEN;
+			case "6":
+				rank = Rank.SIX;
+			case "5":
+				rank = Rank.FIVE;
+			case "4":
+				rank = Rank.FOUR;
+			case "3":
+				rank = Rank.THREE;
+			case "2":
+				rank = Rank.TWO;
+		}		
+		return new Card(rank,suit);
+	}
+
+	/**
+	 * getter
+	 * @return
+	 */
+	public PatienceController getPatienceController() {
+		return patienceController;
+	}
+
+	/**
+	 * setter
+	 * @param patienceController
+	 */
+	public void setPatienceController(PatienceController patienceController) {
+		this.patienceController = patienceController;
+	}
+
+}

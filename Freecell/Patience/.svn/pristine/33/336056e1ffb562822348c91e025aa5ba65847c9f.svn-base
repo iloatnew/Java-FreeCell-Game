@@ -1,0 +1,120 @@
+package controller;
+
+import model.Card;
+import model.Cardstack;
+import model.FreeCell;
+import model.Game;
+import model.Move;
+import model.Type;
+import model.Zank;
+import controller.GameController;
+
+public class AutoMoveController {
+
+	private GameController controller;
+	
+	
+	public AutoMoveController(GameController controller) {
+		this.controller = controller;
+	}
+
+	/**
+	 * die Methode zieht die hochzielbare Karte hoch
+	 */
+	public void move(){
+		
+	}
+
+	/**
+	 * die Methode prüft, ob jetzt eine hochziehbare Karte in SpielStapel steht
+	 * @return
+	 */
+	public boolean autoMoveSuccess() {
+		Game currentGame = controller.getPatienceController().getPatience().getGame();
+		if(currentGame instanceof FreeCell){
+			return autoMoveFreeCell((FreeCell)currentGame);
+		}
+		else if(currentGame instanceof Zank){
+			return autoMoveZank((Zank)currentGame);
+		}
+		return false;
+		
+	}
+
+	private boolean autoMoveZank(Zank currentGame) {
+		for(Cardstack spielStapel : currentGame.getPlayingStacks()){
+			for(Cardstack homeStapel : currentGame.getEliminationStacks()){
+				if(homeStapel.size()!=0 && spielStapel.size()!=0){
+					Card karteTop = spielStapel.peek();
+					Card karteHome = homeStapel.peek();
+					if( moveZank(currentGame, spielStapel, homeStapel, karteTop, karteHome)){
+						return true;
+					}
+				}
+			}
+		}
+		controller.setStackToDrag(new Cardstack(Type.DEFAULT));
+		controller.refreshKarte();
+		return false;
+	}
+
+	private boolean moveZank(Zank currentGame, Cardstack spielStapel, Cardstack homeStapel, Card karteTop,
+			Card karteHome) {
+		if(karteHome.sameColorSorted(karteTop)){
+			controller.setSourceStack(spielStapel);
+			controller.setTargetStack(homeStapel);
+			controller.setStackToDrag(controller.getSourceStack().cloneAllBelow(karteTop));
+			controller.getSourceStack().removeAll(controller.getStackToDrag());
+			controller.getTargetStack().addAll(controller.getStackToDrag());
+			Move tmpMove = new Move(controller.getSourceStack(), controller.getTargetStack(),1);
+			controller.getPatienceController().getPatience().getGame().getHistory().push(tmpMove);
+			return true;
+		}
+		return false;
+	}
+
+	private boolean autoMoveFreeCell(FreeCell currentGame) {
+		for(Cardstack spielStapel : currentGame.getPlayingStacks()){
+			for(Cardstack homeStapel : currentGame.getHomeCells()){
+				if(homeStapel.size()!=0 && spielStapel.size()!=0){
+					Card karteTop = spielStapel.peek();
+					Card karteHome = homeStapel.peek();
+					if( moveFreeCell(currentGame, spielStapel, homeStapel, karteTop, karteHome)){
+						return true;
+					}
+				}
+			}
+		}
+		controller.setStackToDrag(new Cardstack(Type.DEFAULT));
+		controller.refreshKarte();
+		return false;
+	}
+
+	private boolean moveFreeCell(FreeCell currentGame, Cardstack spielStapel, Cardstack homeStapel, Card karteTop,
+			Card karteHome) {
+		if(karteHome.sameColorSorted(karteTop)){
+			if(smallest(currentGame,karteTop)){
+				controller.setSourceStack(spielStapel);
+				controller.setTargetStack(homeStapel);
+				controller.setStackToDrag(controller.getSourceStack().cloneAllBelow(karteTop));
+				controller.getSourceStack().removeAll(controller.getStackToDrag());
+				controller.getTargetStack().addAll(controller.getStackToDrag());
+				Move tmpMove = new Move(controller.getSourceStack(), controller.getTargetStack(),1);
+				controller.getPatienceController().getPatience().getGame().getHistory().push(tmpMove);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean smallest(FreeCell currentGame,Card karteTop) {
+		for(Cardstack spielStapel : currentGame.getPlayingStacks()){
+			for(Card eachCard : spielStapel){
+				if(eachCard.getRank().ordinal()< karteTop.getRank().ordinal()){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

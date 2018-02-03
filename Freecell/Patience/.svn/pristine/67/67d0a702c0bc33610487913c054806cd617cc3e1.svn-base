@@ -1,0 +1,9 @@
+package aui;
+
+import model.Move;
+
+public interface FreeCellAUI {
+	public void initializeStacks(); 
+	public void refreshAll();
+	public void refreshMove(Move move);
+}

@@ -1,0 +1,79 @@
+package application;
+
+import java.io.IOException;
+
+import com.sun.glass.ui.Window;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+public class SpielLadenController {
+
+    @FXML
+    private Button gleicheKartenSpiel;
+
+    @FXML
+    private Button neueSpielvarianteStarten;
+
+    @FXML
+    private Button spielImportieren;
+
+    @FXML
+    private Button neuesSpielStarten;
+
+    
+    private String spielTyp;
+    
+
+	@FXML
+    void gleicheKarten(ActionEvent event) {
+    	
+    }
+
+    @FXML
+    void neueSpielvariante(ActionEvent event) {
+
+    }
+
+    @FXML
+    void neuesSpiel(ActionEvent event) {
+    	
+    }
+
+    @FXML
+    void spielImport(ActionEvent event) {
+
+    }
+    
+    @FXML
+    public void initialize(){
+    	
+    }
+    
+    public void öffneFenster(javafx.stage.Window owner ) throws IOException{
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SpielLaden.fxml"));
+		Parent root = (Parent) fxmlLoader.load();
+		
+		fxmlLoader.setController(this);
+		
+		Stage stage = new Stage();
+		stage.setScene(new Scene(root));
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initOwner(owner);
+		stage.showAndWait();
+    }
+
+    public String getSpielTyp() {
+		return spielTyp;
+	}
+
+	public void setSpielTyp(String spielTyp) {
+		this.spielTyp = spielTyp;
+	}
+}

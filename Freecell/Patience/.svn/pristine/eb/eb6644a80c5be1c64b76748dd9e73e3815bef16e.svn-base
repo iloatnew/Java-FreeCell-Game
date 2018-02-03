@@ -1,0 +1,22 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.input.DragEvent;
+import model.Stapel;
+
+public class DragDropEnteredController implements EventHandler<DragEvent> {
+	FreeCellController controller;
+	Stapel stapel;
+	public DragDropEnteredController(FreeCellController controller,Stapel stapel) {
+		this.controller = controller;
+		this.stapel = stapel;
+	}
+
+	@Override
+	public void handle(DragEvent event) {
+		controller.setZielStapel(stapel);
+
+	}
+
+}

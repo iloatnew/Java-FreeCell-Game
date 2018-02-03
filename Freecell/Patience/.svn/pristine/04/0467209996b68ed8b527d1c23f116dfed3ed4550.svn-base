@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="hauptmenuePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" style="-fx-background-color: #006400;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.HauptmenueController">
+   <padding>
+      <Insets bottom="300.0" left="200.0" right="200.0" top="100.0" />
+   </padding>
+   <children>
+      <Label layoutX="250.0" layoutY="57.0" prefHeight="48.0" prefWidth="332.0" text="Solitaire Collection" textFill="#d6a002">
+         <font>
+            <Font name="DejaVu Serif Condensed Bold" size="31.0" />
+         </font>
+      </Label>
+      <Label layoutX="74.0" layoutY="161.0" text="Idioten Patience " textFill="#d6a002">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="593.0" layoutY="161.0" text="Zank Patience" textFill="#d6a002">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
+      <Label layoutX="328.0" layoutY="161.0" text="Free Cell Patience" textFill="#d6a002">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
+      <ImageView fx:id="idiotenImage" fitHeight="123.0" fitWidth="200.0" layoutX="50.0" layoutY="187.0" onMouseClicked="#openIdioten" onMouseEntered="#hoverIdiotenImage">
+         <image>
+            <Image url="@../../resources/IdiotenPatience.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="freeCellImage" fitHeight="123.0" fitWidth="200.0" layoutX="300.0" layoutY="187.0" onMouseClicked="#openFreeCell" onMouseEntered="#hoverFreeCellImage">
+         <image>
+            <Image url="@../../resources/IdiotenPatience.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="zankImage" fitHeight="123.0" fitWidth="200.0" layoutX="550.0" layoutY="187.0" onMouseClicked="#openZank" onMouseEntered="#hoverZankImage">
+         <image>
+            <Image url="@../../resources/IdiotenPatience.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

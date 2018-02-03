@@ -1,0 +1,293 @@
+package application;
+
+import java.io.File;
+import java.io.IOException;
+
+import controller.DeckController;
+import controller.PatienceController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+import model.AcesUp;
+import model.Cardstack;
+import model.FreeCell;
+import model.Player;
+import model.Zank;
+
+public class SpielLadenController {
+
+
+    @FXML
+    private AnchorPane spielLadenPane;
+
+    @FXML
+    private Button neuesSpielStarten;
+
+    @FXML
+    private Button eigeneKartenButton;
+
+    @FXML
+    private Label varianteLabel;
+
+	private String spielTyp;
+
+	private HauptmenueController hauptmenueCtr;
+
+	private PatienceController pCtrl;
+
+
+    @FXML
+    void eigeneKartenButtonClicked(ActionEvent event) {
+    	FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Wähle eine Kartenset-Datei aus");
+    	File file = fileChooser.showOpenDialog(this.spielLadenPane.getScene().getWindow());
+    	if(file != null){
+			Cardstack cs = this.pCtrl.getiOController().readCardstackFromFile(file.getPath());
+			
+			String type = this.spielTyp + ".fxml";
+		
+			switch (spielTyp) {
+			case ("FreeCell"):
+				pCtrl.getPatience().setGame(new FreeCell(cs));
+				break;
+			case ("Idioten"):
+				pCtrl.getPatience().setGame(new AcesUp(cs));
+				break;
+			case ("Zank"):
+				pCtrl.getPatience().setGame(new Zank(cs, new DeckController().randomDeck(), Player.PLAYER, Player.PLAYER, true));
+				break;
+			}
+		
+			try {
+				AnchorPane root = new AnchorPane();
+				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Hauptfenster.fxml"));
+				root = (AnchorPane) fxmlLoader.load();
+				root.setId("pane");
+				HauptfensterController hauptfensterCtrl = fxmlLoader.getController();
+				hauptfensterCtrl.setPatienceCtrl(pCtrl);
+				hauptfensterCtrl.initSpielfeld(type);
+				Scene scene = new Scene(root);
+				Stage window = new Stage();
+				window.setScene(scene);
+				window.setResizable(false);
+				window.setTitle(spielTyp+" Patience");
+				window.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				    @Override 
+				    public void handle(WindowEvent event) {
+				    	System.out.println("Stage is closing");	
+				    	hauptfensterCtrl.pauseButtonClicked(null);
+				    	openClosingRequestWindow(window, event, hauptfensterCtrl);		   				    	
+				    }
+				});
+				window.show();
+		
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Stage stage = (Stage) spielLadenPane.getScene().getWindow();
+			stage.close();
+			Stage parentwindow = (Stage) stage.getOwner();
+			parentwindow.close();
+    	}
+    }
+
+	public HauptmenueController getHauptmenueCtr() {
+		return hauptmenueCtr;
+	}
+
+	public void setHauptmenueCtr(HauptmenueController hauptmenueCtr) {
+		this.hauptmenueCtr = hauptmenueCtr;
+	}
+
+//	@FXML
+//	void gleicheKarten(ActionEvent event) {
+//		if(inGame){
+//			Cardstack startStack = this.pCtrl.getPatience().getGame().getStartStack();
+//			if(this.pCtrl.getPatience().getGame().getClass().equals(AcesUp.class)){
+//				AcesUpController acesUpController = this.pCtrl.getAcesUpController();
+//				acesUpController.restartGame();
+//			}
+//			if(this.pCtrl.getPatience().getGame().getClass().equals(FreeCell.class)){
+//				FreeCellController freeCellController = this.pCtrl.getFreeCellController();
+//				freeCellController.restartGame();
+//			}
+//			if(this.pCtrl.getPatience().getGame().getClass().equals(Zank.class)){
+//				ZankController zankController = this.pCtrl.getZankController();
+//				zankController.restartGame();
+//			}	
+//			Stage stage = (Stage) spielLadenPane.getScene().getWindow();
+//			stage.close();			
+//		}
+//	}
+
+//	@FXML
+//	void neueSpielvariante(ActionEvent event) throws IOException {
+//		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Hauptmenue.fxml"));
+//		Parent root1 = (Parent) fxmlLoader.load();
+//		Stage stage = new Stage();
+//		stage.setScene(new Scene(root1));
+//		stage.initModality(Modality.APPLICATION_MODAL);
+//		stage.initOwner(spielLadenPane.getScene().getWindow());
+//		stage.show();
+//		Stage window = (Stage) spielLadenPane.getScene().getWindow();
+//		window.close();
+//	}
+
+	@FXML
+	void neuesSpiel(ActionEvent event) {
+
+		String type = this.spielTyp + ".fxml";
+
+		switch (spielTyp) {
+		case ("FreeCell"):
+			pCtrl.getPatience().setGame(new FreeCell(new DeckController().randomDeck()));
+			break;
+		case ("Idioten"):
+			pCtrl.getPatience().setGame(new AcesUp(new DeckController().randomDeck()));
+			break;
+		case ("Zank"):
+			pCtrl.getPatience().setGame(new Zank(new DeckController().randomDeck(), new DeckController().randomDeck(), Player.PLAYER, Player.PLAYER, true));
+			break;
+		}
+
+		try {
+			AnchorPane root = new AnchorPane();
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Hauptfenster.fxml"));
+			root = (AnchorPane) fxmlLoader.load();
+			root.setId("pane");
+			HauptfensterController hauptfensterCtrl = fxmlLoader.getController();
+			hauptfensterCtrl.setPatienceCtrl(pCtrl);
+			hauptfensterCtrl.initSpielfeld(type);
+			Scene scene = new Scene(root);
+			Stage window = new Stage();
+			window.setScene(scene);
+			window.setResizable(false);
+			window.setTitle(spielTyp+" Patience");
+			window.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			    @Override 
+			    public void handle(WindowEvent event) {
+			    	System.out.println("Stage is closing");	
+			    	hauptfensterCtrl.pauseButtonClicked(null);
+			    	openClosingRequestWindow(window, event, hauptfensterCtrl);		   				    	
+			    }
+			});
+			window.show();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Stage stage = (Stage) spielLadenPane.getScene().getWindow();
+		stage.close();
+		Stage parentwindow = (Stage) stage.getOwner();
+		parentwindow.close();
+
+	}	
+	
+	/**
+	 * @param window, event
+	 * opens a modal dialog which asks the user if the game should be dismissed or saved.
+	 * For more information @see application.SpielBeendenController 
+	 */
+	private void openClosingRequestWindow(Stage window, WindowEvent event, HauptfensterController hautfensterController){
+		try{
+			AnchorPane closingRequestPane = new AnchorPane();
+	    	FXMLLoader closingRequestLoader = new FXMLLoader(getClass().getResource("ClosingRequest.fxml"));
+	    	closingRequestPane = (AnchorPane) closingRequestLoader.load();
+	    	SpielBeendenController spielBeendenController = closingRequestLoader.getController();
+	    	spielBeendenController.setPatienceController(this.pCtrl);
+	    	spielBeendenController.setEvent(event);	   
+	    	spielBeendenController.setWindow(window);
+	    	spielBeendenController.setHauptfensterController(hautfensterController);
+	    	Scene closingRequestScene = new Scene(closingRequestPane);
+	    	Stage closingRequestStage = new Stage();	    	
+	    	closingRequestStage.setScene(closingRequestScene);
+	    	closingRequestStage.setResizable(false);
+	    	closingRequestStage.initStyle(StageStyle.UNDECORATED);
+	    	closingRequestStage.initModality(Modality.APPLICATION_MODAL);
+	    	closingRequestStage.setTitle("Wollen Sie wirklich schon aufhören?");
+	    	closingRequestStage.showAndWait();
+	    }
+    	catch(IOException exception){
+    		exception.printStackTrace();
+    	}
+	}
+
+	@FXML
+	public void initialize() {	
+		
+	}
+
+
+	/**
+	 * @return spielTyp : type of the selected Game 
+	 * 
+	 */
+	public String getSpielTyp() {
+		return spielTyp;
+	}
+
+	/**
+	 * @param spielTyp
+	 * sets the type of the selected game and loads the according Pane
+	 */
+	public void setSpielTyp(String spielTyp) {
+		this.spielTyp = spielTyp;
+//		if(this.getSpielTyp() == "Idioten" || this.getSpielTyp() == "FreeCell"){
+//    		this.getSpielLadenPane().setPrefHeight(240);
+//    	}
+//		else{
+//			this.getSpielLadenPane().setPrefHeight(420);
+//		}
+	}
+//
+//	/**
+//	 * @return gleicheKartenSpiel : Button, on which a selection is possible, wether the game should be started with a special deck
+//	 */
+//	public Button getGleicheKartenSpiel() {
+//		return gleicheKartenSpiel;
+//	}
+//
+//	/**
+//	 * @param gleicheKartenSpiel : sets the Button, on which a selection is possible, wether the game should be started with a special deck 
+//	 */
+//	public void setGleicheKartenSpiel(Button gleicheKartenSpiel) {
+//		this.gleicheKartenSpiel = gleicheKartenSpiel;
+//	}
+
+	/**
+	 * @return private attribute patienceController
+	 */
+	public PatienceController getpCtrl() {
+		return pCtrl;
+	}
+
+	/**
+	 * @param pCtrl 
+	 * sets the private attribute PatienceController pCtrl 
+	 */
+	public void setpCtrl(PatienceController pCtrl) {
+		this.pCtrl = pCtrl;
+	}
+		
+	public AnchorPane getSpielLadenPane() {
+		return spielLadenPane;
+	}
+
+	public void setSpielLadenPane(AnchorPane spielLadenPane) {
+		this.spielLadenPane = spielLadenPane;
+	}
+	
+	public void setSpielVarianteLabel(String spielTyp){
+		this.varianteLabel.setText(spielTyp);
+	}
+}

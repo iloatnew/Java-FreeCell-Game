@@ -1,0 +1,29 @@
+package model;
+
+import java.io.Serializable;
+
+public class SingleplayerStatistics implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private int numberMoves;
+
+	private int numberEliminatedCards;
+
+	private int neededTime;
+	
+
+	/**
+	 * @param numberMoves
+	 * @param numberEliminatedCards
+	 * @param neededTime
+	 */
+	public SingleplayerStatistics(int numberMoves, int numberEliminatedCards, int neededTime) {
+		this.numberMoves = numberMoves;
+		this.numberEliminatedCards = numberEliminatedCards;
+		this.neededTime = neededTime;
+	}
+}

@@ -1,0 +1,29 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
+
+public class DragDoneController implements EventHandler<DragEvent>{
+	FreeCellController controller;
+	public DragDoneController(FreeCellController controller) {
+		this.controller = controller;
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void handle(DragEvent event) {
+		
+		if (event.getTransferMode() == TransferMode.MOVE) {
+            
+        }
+		else{
+			
+				controller.getZiehHerkunft().addAll(controller.getStapelToDrag());
+		
+		}
+		
+	}
+
+}

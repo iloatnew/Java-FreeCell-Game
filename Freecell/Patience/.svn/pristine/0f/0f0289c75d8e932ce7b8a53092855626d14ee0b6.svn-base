@@ -1,0 +1,75 @@
+package application;
+
+import javafx.fxml.FXML;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+
+public class ZankController {
+
+    @FXML
+    private Pane ersatzstapelGegner;
+
+    @FXML
+    private Pane nachziehstabelGegner;
+
+    @FXML
+    private Pane ablegestapelGegner;
+
+    @FXML
+    private Pane anlegestapel1;
+
+    @FXML
+    private Pane anlegestapel2;
+
+    @FXML
+    private Pane anlegestapel3;
+
+    @FXML
+    private Pane anlegestapel4;
+
+    @FXML
+    private Pane anlegestapel5;
+
+    @FXML
+    private Pane anlegestapel6;
+
+    @FXML
+    private Pane anlegestapel7;
+
+    @FXML
+    private Pane anlegestapel8;
+
+    @FXML
+    private Pane mitteKaro1;
+
+    @FXML
+    private Pane mitteKaro2;
+
+    @FXML
+    private Pane mittePik1;
+
+    @FXML
+    private Pane mittePik2;
+
+    @FXML
+    private Pane mitteKreuz1;
+
+    @FXML
+    private Pane mitteKreuz2;
+
+    @FXML
+    private Pane mitteHerz1;
+
+    @FXML
+    private Pane mitteHerz2;
+
+    @FXML
+    private Rectangle ablegestapelSpieler;
+
+    @FXML
+    private Rectangle nachziehstapelSpieler;
+
+    @FXML
+    private Rectangle ersatzstapelSpieler;
+
+}

@@ -1,0 +1,46 @@
+package controller;
+
+import application.FreeCellController;
+import model.Karte;
+import model.Stapel;
+
+public class AutoMoveController {
+
+	private FreeCellController controller;
+	
+	public AutoMoveController(FreeCellController freeCellController) {
+		this.controller = freeCellController;
+	}
+
+	/**
+	 * die Methode zieht die hochzielbare Karte hoch
+	 */
+	public void move(){
+		Stapel toAutoDrag = controller.getZiehHerkunft().cloneAllBelow(1);
+		controller.setStapelToDrag(toAutoDrag);
+		controller.getZiehHerkunft().removeAll(controller.getStapelToDrag());
+		controller.getZielStapel().addAll(controller.getStapelToDrag());
+		controller.refreshKarte();
+	}
+
+	/**
+	 * die Methode prüft, ob jetzt eine hochziehbare Karte in SpielStapel steht
+	 * @return
+	 */
+	public boolean autoMoveable() {
+		for(Stapel spielStapel : controller.spielStapeln){
+			for(Stapel homeStapel : controller.homeStapeln){
+				if(homeStapel.size()!=0 && spielStapel.size()!=0){
+					Karte karteTop = spielStapel.peek();
+					Karte karteHome = homeStapel.peek();
+					if(karteHome.inGleichSortAufsteigend(karteTop)){
+						controller.setZiehHerkunft(spielStapel);
+						controller.setZielStapel(homeStapel);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+}

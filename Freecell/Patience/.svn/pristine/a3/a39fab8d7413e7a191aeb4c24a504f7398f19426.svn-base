@@ -1,0 +1,55 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
+public class SpielLadenController {
+
+    @FXML
+    private Button gleicheKartenSpiel;
+
+    @FXML
+    private Button neueSpielvarianteStarten;
+
+    @FXML
+    private Button spielImportieren;
+
+    @FXML
+    private Button neuesSpielStarten;
+
+    
+    private String spielTyp;
+    
+    public SpielLadenController(String type){
+    	this.spielTyp = type;
+    }
+
+    @FXML
+    void gleicheKarten(ActionEvent event) {
+    	
+    }
+
+    @FXML
+    void neueSpielvariante(ActionEvent event) {
+
+    }
+
+    @FXML
+    void neuesSpiel(ActionEvent event) {
+    	
+    }
+
+    @FXML
+    void spielImport(ActionEvent event) {
+
+    }
+    
+    public void initialize(){
+    	
+    }
+}

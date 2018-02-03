@@ -1,0 +1,13 @@
+package model;
+
+public class FreeCell extends Game {
+
+	private Cardstack[] homeCell;
+
+	private Card[] freeCell;
+
+	private Cardstack[] playingStacks;
+
+	private SingleplayerStatistics singleplayerStatistics;
+
+}

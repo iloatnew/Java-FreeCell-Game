@@ -1,0 +1,151 @@
+package controller;
+
+import model.Patience;
+
+public class PatienceController {
+
+	private Patience patience;
+
+	/**
+	 * @return the patience
+	 */
+	public Patience getPatience() {
+		return patience;
+	}
+
+	/**
+	 * @param patience the patience to set
+	 */
+	public void setPatience(Patience patience) {
+		this.patience = patience;
+	}
+
+	/**
+	 * @return the iOController
+	 */
+	public IOController getiOController() {
+		return iOController;
+	}
+
+	/**
+	 * @param iOController the iOController to set
+	 */
+	public void setiOController(IOController iOController) {
+		this.iOController = iOController;
+	}
+
+	/**
+	 * @return the zankController
+	 */
+	public ZankController getZankController() {
+		return zankController;
+	}
+
+	/**
+	 * @param zankController the zankController to set
+	 */
+	public void setZankController(ZankController zankController) {
+		this.zankController = zankController;
+	}
+
+	/**
+	 * @return the freeCellController
+	 */
+	public FreeCellController getFreeCellController() {
+		return freeCellController;
+	}
+
+	/**
+	 * @param freeCellController the freeCellController to set
+	 */
+	public void setFreeCellController(FreeCellController freeCellController) {
+		this.freeCellController = freeCellController;
+	}
+
+	/**
+	 * @return the acesUpController
+	 */
+	public AcesUpController getAcesUpController() {
+		return acesUpController;
+	}
+
+	/**
+	 * @param acesUpController the acesUpController to set
+	 */
+	public void setAcesUpController(AcesUpController acesUpController) {
+		this.acesUpController = acesUpController;
+	}
+
+	/**
+	 * @return the deckController
+	 */
+	public DeckController getDeckController() {
+		return deckController;
+	}
+
+	/**
+	 * @param deckController the deckController to set
+	 */
+	public void setDeckController(DeckController deckController) {
+		this.deckController = deckController;
+	}
+
+	/**
+	 * @return the zankAIController
+	 */
+	public ZankAIController getZankAIController() {
+		return zankAIController;
+	}
+
+	/**
+	 * @param zankAIController the zankAIController to set
+	 */
+	public void setZankAIController(ZankAIController zankAIController) {
+		this.zankAIController = zankAIController;
+	}
+
+	/**
+	 * @return the freeCellAIController
+	 */
+	public FreeCellAIController getFreeCellAIController() {
+		return freeCellAIController;
+	}
+
+	/**
+	 * @param freeCellAIController the freeCellAIController to set
+	 */
+	public void setFreeCellAIController(FreeCellAIController freeCellAIController) {
+		this.freeCellAIController = freeCellAIController;
+	}
+
+	/**
+	 * @return the acesUpAIController
+	 */
+	public AcesUpAIController getAcesUpAIController() {
+		return acesUpAIController;
+	}
+
+	/**
+	 * @param acesUpAIController the acesUpAIController to set
+	 */
+	public void setAcesUpAIController(AcesUpAIController acesUpAIController) {
+		this.acesUpAIController = acesUpAIController;
+	}
+
+	private IOController iOController;
+
+	private ZankController zankController;
+
+	private FreeCellController freeCellController;
+
+	private AcesUpController acesUpController;
+
+	private DeckController deckController;
+
+	private ZankAIController zankAIController;
+
+	private FreeCellAIController freeCellAIController;
+
+	private AcesUpAIController acesUpAIController;
+
+}

@@ -1,0 +1,33 @@
+package model;
+
+public enum Rank {
+
+	ACE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,TEN,JACK,QUEEN,KING;
+
+//	private String ACE;
+//
+//	private String TWO;
+//
+//	private String THREE;
+//
+//	private String FOUR;
+//
+//	private String FIVE;
+//
+//	private String SIX;
+//
+//	private String SEVEN;
+//
+//	private String EIGHT;
+//
+//	private String NINE;
+//
+//	private String TEN;
+//
+//	private String JACK;
+//
+//	private String QUEEN;
+//
+//	private String KING;
+
+}

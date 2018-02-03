@@ -1,0 +1,134 @@
+/**
+ * Sample Skeleton for 'Hauptfenster.fxml' Controller Class
+ */
+
+package application;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+
+public class HauptfensterController {
+
+    @FXML // ResourceBundle that was given to the FXMLLoader
+    private ResourceBundle resources;
+
+    @FXML // URL location of the FXML file that was given to the FXMLLoader
+    private URL location;
+
+    @FXML // fx:id="anchorPane"
+    private AnchorPane anchorPane; // Value injected by FXMLLoader
+
+    @FXML // fx:id="varianteText"
+    private Label varianteText; // Value injected by FXMLLoader
+
+    @FXML // fx:id="hauptmenueButton"
+    private Button hauptmenueButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="newButton"
+    private Button newButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="revertButton"
+    private Button revertButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="tippButton"
+    private Button tippButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="statistikButton"
+    private Button statistikButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="helpButton"
+    private Button helpButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="spielfeld"
+    private Pane spielfeld; // Value injected by FXMLLoader
+
+    @FXML // fx:id="vorspielenButton"
+    private Button vorspielenButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="time"
+    private Label time; // Value injected by FXMLLoader
+
+    @FXML // fx:id="saveButton"
+    private Button saveButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="weiterButton"
+    private Button weiterButton; // Value injected by FXMLLoader
+
+    @FXML // fx:id="pauseButton"
+    private Button pauseButton; // Value injected by FXMLLoader
+
+    @FXML
+    void hauptmenueClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void helpButtonClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void newClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void pauseButtonClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void revertClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void saveButtonClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void statistikButtonClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void tippButtonClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void vorspielenButtonClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    void weiterButtonClicked(ActionEvent event) {
+
+    }
+
+    @FXML // This method is called by the FXMLLoader when initialization is complete
+    void initialize() {
+        assert anchorPane != null : "fx:id=\"anchorPane\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert varianteText != null : "fx:id=\"varianteText\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert hauptmenueButton != null : "fx:id=\"hauptmenueButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert newButton != null : "fx:id=\"newButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert revertButton != null : "fx:id=\"revertButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert tippButton != null : "fx:id=\"tippButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert statistikButton != null : "fx:id=\"statistikButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert helpButton != null : "fx:id=\"helpButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert spielfeld != null : "fx:id=\"spielfeld\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert vorspielenButton != null : "fx:id=\"vorspielenButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert time != null : "fx:id=\"time\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert saveButton != null : "fx:id=\"saveButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert weiterButton != null : "fx:id=\"weiterButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+        assert pauseButton != null : "fx:id=\"pauseButton\" was not injected: check your FXML file 'Hauptfenster.fxml'.";
+
+    }
+}

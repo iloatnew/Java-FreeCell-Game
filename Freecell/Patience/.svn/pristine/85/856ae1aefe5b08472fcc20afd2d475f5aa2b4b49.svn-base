@@ -1,0 +1,11 @@
+package controller;
+
+import java.util.ArrayList;
+
+public abstract class AIController {
+
+	public ArrayList getMoves() {
+		return null;
+	}
+
+}

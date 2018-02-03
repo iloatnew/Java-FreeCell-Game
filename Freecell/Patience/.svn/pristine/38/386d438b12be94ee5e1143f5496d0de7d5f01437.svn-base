@@ -1,0 +1,36 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.layout.Pane;
+import model.Stapel;
+import model.Stapel.StapelType;
+
+public class DragDropExitController implements EventHandler<DragEvent> {
+
+	Pane pane;
+	FreeCellController controller;
+
+	public DragDropExitController(FreeCellController controller, Pane pane) {
+		// TODO Auto-generated constructor stub
+		this.controller = controller;
+		this.pane = pane;
+	}
+
+	@Override
+	public void handle(DragEvent event) {
+		// TODO Auto-generated method stub
+		if(controller.getZielStapel().getStapelType().equals(StapelType.SPIELFELD)){
+			System.out.println("exit pane");
+			if(controller.getZielStapel().size()>0){
+				ImageView view = (ImageView) pane.getChildren().get(pane.getChildren().size()-1);
+				view.setEffect(null);
+			}
+		}
+		controller.setZielStapel(new Stapel(StapelType.DEFAULT,0));
+
+	}
+
+}

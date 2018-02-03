@@ -1,0 +1,20 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class Cardstack {
+
+	private ArrayList<Card> card;
+
+	private Type type;
+	
+	public Cardstack(ArrayList<Card> cardlist){
+		this.card = cardlist;
+	}
+
+	public void flipStack() {
+
+	}
+
+}

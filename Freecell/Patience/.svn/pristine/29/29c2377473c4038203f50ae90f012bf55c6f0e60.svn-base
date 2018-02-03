@@ -1,0 +1,19 @@
+package model;
+
+public class Zank extends Game {
+
+	private Cardstack[] reserve;
+
+	private Cardstack[] hand;
+
+	private Cardstack[] wastePile;
+
+	private Cardstack[] playingStacks;
+
+	private Cardstack[] eliminationStacks;
+
+	private MultiplayerStatistics multiplayerStatistics;
+
+	private Cardstack cardstack;
+
+}

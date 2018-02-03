@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="pane" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #006400;" styleClass="background" stylesheets="@Hauptfenster.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SpielBeendenController">
+   <children>
+      <Button fx:id="savingGameButton" layoutX="22.0" layoutY="80.0" mnemonicParsing="false" onAction="#savingGameButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Spiel speichern" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="80.0" />
+      <Button fx:id="cancelGameButton" layoutX="208.0" layoutY="80.0" mnemonicParsing="false" onAction="#cancelGameButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Spiel verwerfen" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="80.0" />
+      <Label layoutX="25.0" layoutY="31.0" text="Wollen Sie das Spiel speichern oder verwerfen?" textFill="#f8c312" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="30.0">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Button fx:id="cancelButton" layoutX="291.0" layoutY="155.0" mnemonicParsing="false" onAction="#cancelButtonClicked" prefHeight="28.0" prefWidth="95.0" style="-fx-background-radius: 30;" styleClass="shiny-orange-color" stylesheets="@Statistics.css" text="Abbrechen" textFill="#654b00" AnchorPane.leftAnchor="270.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="150.0">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

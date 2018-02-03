@@ -1,0 +1,18 @@
+package model;
+
+public class MultiplayerStatistics {
+
+	private int cardsPlayer1;
+
+	private int cardsPlayer2;
+
+	private Player player;
+	
+	public MultiplayerStatistics(int cardsPlayer1, int cardsPlayer2, Player player) {
+		this.cardsPlayer1 = cardsPlayer1;
+		this.cardsPlayer2 = cardsPlayer2;
+		this.player = player;
+	}
+	
+	
+}

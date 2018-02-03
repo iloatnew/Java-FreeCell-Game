@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1000.0" style="-fx-background-color: #009900;" styleClass="background" stylesheets="@Hauptfenster.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ZankGUIController">
+   <children>
+      <Pane fx:id="ersatzstapelGegner" layoutX="285.0" layoutY="18.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" AnchorPane.topAnchor="18.0" />
+      <Pane fx:id="nachziehstapelGegner" layoutX="458.0" layoutY="18.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="ablegestapelGegner" layoutX="610.0" layoutY="18.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="anlegestapel1" layoutX="255.0" layoutY="171.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="anlegestapel2" layoutX="255.0" layoutY="311.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="anlegestapel3" layoutX="255.0" layoutY="451.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="anlegestapel4" layoutX="255.0" layoutY="591.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="anlegestapel5" layoutX="650.0" layoutY="171.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="anlegestapel6" layoutX="650.0" layoutY="311.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="anlegestapel7" layoutX="650.0" layoutY="451.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="anlegestapel8" layoutX="650.0" layoutY="591.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="mitteKaro1" layoutX="400.0" layoutY="171.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="mitteKaro2" layoutX="505.0" layoutY="171.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="mittePik1" layoutX="400.0" layoutY="311.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="mittePik2" layoutX="505.0" layoutY="311.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="mitteKreuz1" layoutX="400.0" layoutY="451.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="mitteKreuz2" layoutX="505.0" layoutY="451.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="mitteHerz1" layoutX="400.0" layoutY="591.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="mitteHerz2" layoutX="505.0" layoutY="591.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="ablegestapelSpieler" layoutX="285.0" layoutY="744.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="nachziehstapelSpieler" layoutX="448.0" layoutY="744.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+      <Pane fx:id="ersatzstapelSpieler" layoutX="610.0" layoutY="744.0" prefHeight="138.0" prefWidth="95.0" style="-fx-background-color: ffffff45; -fx-border-color: ffffff;" />
+   </children>
+</AnchorPane>

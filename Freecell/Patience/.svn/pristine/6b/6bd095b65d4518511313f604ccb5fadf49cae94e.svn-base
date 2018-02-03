@@ -1,0 +1,13 @@
+package controller;
+
+public class FreeCellController extends GameController {
+
+	private PatienceController patienceController;
+
+	private FreeCellAIController freeCellAIController;
+
+	private void eliminateCards() {
+
+	}
+
+}

@@ -1,0 +1,72 @@
+package movecontroller;
+
+import controller.AcesUpController;
+import controller.AutoMoveController;
+import controller.FreeCellController;
+import controller.GameController;
+import controller.ZankController;
+import javafx.event.EventHandler;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Pane;
+import model.Cardstack;
+import model.Move;
+import model.Type;
+
+/**
+ * @author sopr047 legt gezogene Karten auf den Stapel, falls möglich
+ *
+ */
+public class DragDropCrontroller implements EventHandler<DragEvent> {
+
+	private GameController controller;
+
+	public DragDropCrontroller(GameController controller) {
+		this.controller = controller;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+	 */
+	public void handle(DragEvent event) {
+		event.acceptTransferModes(TransferMode.MOVE);
+
+		if (!(event.getGestureTarget() instanceof Pane)
+				|| !controller.getTargetStack().getType().equals(Type.PLAYINGSTACK)
+				|| controller.getTargetStack().size() == 0) {
+			if (controller.isDroppable(controller.getTargetStack())) {
+				System.out.println("drop true");
+				controller.getTargetStack().addAll(controller.getStackToDrag());
+				Cardstack tmpfrom = controller.getSourceStack();
+				Cardstack tmpto = controller.getTargetStack();
+				int tmpsize = controller.getStackToDrag().size();
+				Move tmp = new Move(tmpfrom, tmpto, tmpsize);
+				controller.getPatienceController().getPatience().getGame().getHistory().push(tmp);
+				event.consume();
+			} 
+			else {
+				System.out.println("drop false");
+				controller.getSourceStack().addAll(controller.getStackToDrag());
+				event.consume();
+			}
+		}
+
+		
+		// }
+
+		if (controller instanceof FreeCellController) {
+			((FreeCellController) controller).eliminateCards();
+		}
+		if (controller instanceof ZankController) {
+			((ZankController) controller).eliminateCards();
+		}
+
+		// controller.setStackToDrag(new Cardstack(Type.DEFAULT));
+
+		event.consume();
+	}
+
+}

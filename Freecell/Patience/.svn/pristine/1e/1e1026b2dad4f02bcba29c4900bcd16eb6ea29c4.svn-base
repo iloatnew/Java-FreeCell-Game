@@ -1,0 +1,385 @@
+package aicontroller;
+
+import java.util.ArrayList;
+
+import controller.AutoMoveController;
+import exceptions.NoMovesPossibleException;
+import exceptions.NotEnoughCardsOnPlaystacksException;
+import exceptions.TimeoutException;
+import model.AcesUp;
+import model.Card;
+import model.Cardstack;
+import model.Move;
+import model.Zank;
+
+public class ZankAI{
+
+	private Zank zank;
+	private Card[] topLevelCardsBoard;
+	private ArrayList<Move> moves;
+	private ArrayList<Move> backtrackingMoves;
+	//private AcesUpController acesUpController;
+	private ZankAIController zankAIController;
+	private AutoMoveController autoMoveController;
+	private int activePlayer;
+	private int enemyPlayer;
+	private final int MAX_BACKTRACKING_TIME_IN_MILLIS = 15000;
+	private final int TOO_MANY_CARDS_ON_PLAYINGSTACKS_FOR_BACKTRACKING = 6;
+	private ArrayList<Card> receivedReverse; //TODO muss geworfen werden vom ZankController, sobald ein spieler
+	//erreichte minimale anzahl an Karten vom Ersatzkartenstapel; 
+	//ist mRC = 5 und zank.getReserver()[AP].size() > 5 wissen wir, uns wurden karten drauf gelegt; 
+	//benötigt für backtracking
+	private long startingTime; //backtracking
+	
+	private final int empty = 0;
+
+	public ZankAI(ZankAIController zankAIController, Zank zank, AutoMoveController autoMoveController){
+		this.zank = zank;
+		this.zankAIController = zankAIController;
+		this.autoMoveController = autoMoveController;
+		topLevelCardsBoard = new Card[8];		
+		moves = new ArrayList<Move>();
+		backtrackingMoves = new ArrayList<Move>();
+		startingTime = System.currentTimeMillis();
+	}	
+
+	////////////////////
+	//getNextMoveBlock
+	////////////////////
+	public Move getNextMove() throws NotEnoughCardsOnPlaystacksException{
+		//TODO zankController muss jedesmal zuerst setAktivPlayer aufrufen!
+		if(moves.size()>empty){
+			return moves.remove(0);
+		}
+		else{
+			return this.gnmTryShiftCardsBeforeBacktracking();
+		}
+	}
+	private Move gnmTryShiftCardsBeforeBacktracking(){
+		if(isMoveableReserveToEnemyReserve()){
+			return this.createMove("reserve", "enemyReserve");
+		}
+		else if(isMoveableReserveToEnemyWaste()){
+			return this.createMove("reserve", "enemyWaste");			
+		}
+		else{
+			if(isMoveableHandToEnemyReserve()){
+				return this.createMove("hand", "enemyReserve");
+			}
+			else if(isMoveableHandToEnemyWaste()){
+				return this.createMove("hand", "enemyWaste");
+			}
+			else{
+				return this.gnmStartBacktracking();
+			}
+		}
+	}
+	private Move gnmStartBacktracking(){
+		createFreeStacks();//Backtracking;
+		if(!moves.isEmpty()){
+			return moves.remove(0);
+		}
+		else{
+			if(isPossibleMoveAllKnownReserve()){
+				//Backtrackartig
+				//mit try-catch (SystemInterruptException) ->möglich paar Karten loszuwerden
+				//ODER: möglich, Teilstapel loszuwerden ohne dass Gegner Karten zurück gibt;
+				//5,6,7,8 -> 5 aufs feld, 6 gegner, 7 vom Feld auf gegner, kann 5 nicht zurückgeben
+				return moves.remove(0);
+			}
+			else{
+				return this.gnmTryShiftCardsAfterBacktracking();
+			}						
+		}
+	}
+	private Move gnmTryShiftCardsAfterBacktracking(){
+		if(isMoveableHandOrWasteToEnemyWasteOrReserve()){
+			return moves.get(0);
+		}
+		else{
+			if(isMoveableHandOrWasteToField()){
+				return moves.get(0);
+			}
+			else{
+				if(isMoveableFieldToEnemy()){
+					return moves.get(0);
+				}
+				else{
+					return this.gnmFinishTurn();
+				}
+			}
+		}
+	}
+	private Move gnmFinishTurn(){
+		return this.createMove("hand", "waste");
+	}
+	///////////////////
+	//Ende gnm-Block
+	///////////////////
+	
+	///////////////////
+	//is-Booleanmethoden, die Moves aktualisieren
+	///////////////////
+	private boolean isMoveableFieldToEnemy() {
+		Cardstack enemyHandStack = zank.getHands()[enemyPlayer];
+		Cardstack enemyWasteStack = zank.getWastePiles()[enemyPlayer];
+		Cardstack enemyReserveStack = zank.getReserves()[enemyPlayer];
+		Card enemyHand = this.getToplevelCard(enemyHandStack);
+		Card enemyWaste = this.getToplevelCard(enemyWasteStack);
+		Card enemyReserve = this.getToplevelCard(enemyReserveStack);
+		for(Cardstack playingstack : zank.getPlayingStacks()){
+			if(isMoveable(playingstack.peek(), enemyHand)){
+				moves.add(new Move(playingstack, enemyHandStack, 1));
+				return true;
+			}
+			if(isMoveable(playingstack.peek(), enemyWaste)){
+				moves.add(new Move(playingstack, enemyWasteStack, 1));
+				return true;
+			}
+			if(isMoveable(playingstack.peek(), enemyReserve)){
+				moves.add(new Move(playingstack, enemyReserveStack, 1));
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isMoveableHandOrWasteToField() {
+		Cardstack ourHandStack = zank.getHands()[activePlayer];
+		Cardstack ourWasteStack = zank.getWastePiles()[activePlayer];
+		Card ourHand = this.getToplevelCard(ourHandStack);
+		Card ourWaste = this.getToplevelCard(ourWasteStack);
+		Card ourReserve = this.getToplevelCard(zank.getReserves()[activePlayer]);
+		//Kann die Karte im nächsten Zug auf unseren Reserve gelegt werden?
+		boolean checkHand = !isMoveable(ourHand, ourReserve);
+		boolean checkWaste = !isMoveable(ourWaste, ourReserve);
+		
+		for(Cardstack playingstack : zank.getPlayingStacks()){
+			if(checkHand){
+				if(isMoveable(ourHand, playingstack.peek())){
+						moves.add(new Move(ourHandStack,playingstack, 1));
+						return true;
+				}
+			}
+			if(checkWaste){ 
+				if(isMoveable(ourWaste, playingstack.peek())){
+					moves.add(new Move(ourWasteStack, playingstack, 1));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+		
+	private boolean isMoveableHandOrWasteToEnemyWasteOrReserve() {
+		if(isMoveableHandToEnemyReserve()){
+			moves.add(this.createMove("hand", "enemyReserve"));
+			return true;
+		}
+		if(isMoveableHandToEnemyWaste()){
+			moves.add(this.createMove("hand", "enemyWaste"));
+			return true;
+		}
+		if(isMoveableWasteToEnemyReserve()){
+			moves.add(this.createMove("waste", "enemyReserve"));
+			return true;
+		}
+		if(isMoveableWasteToEnemyWaste()){
+			moves.add(this.createMove("waste", "enemyWaste"));
+			return true;
+		}
+		return false;
+	}
+	///////////////////
+	//reine is-Booleanmethoden
+	///////////////////
+	private boolean isMoveableWasteToEnemyWaste(){
+		Card ourWaste = this.getToplevelCard(zank.getWastePiles()[activePlayer]);
+		Card enemyWaste = this.getToplevelCard(zank.getWastePiles()[enemyPlayer]);
+		return isMoveable(ourWaste, enemyWaste);
+	}
+	
+	private boolean isMoveableWasteToEnemyReserve(){
+		Card ourWaste = this.getToplevelCard(zank.getWastePiles()[activePlayer]);
+		Card enemyReserve = this.getToplevelCard(zank.getReserves()[enemyPlayer]);
+		return isMoveable(ourWaste, enemyReserve);
+	}
+	
+	private boolean isMoveableHandToEnemyWaste() {
+		Card ourHand = this.getToplevelCard(zank.getHands()[activePlayer]);
+		Card enemyWaste = this.getToplevelCard(zank.getWastePiles()[enemyPlayer]);
+		return isMoveable(ourHand, enemyWaste);
+	}
+	
+	private boolean isMoveableHandToEnemyReserve() {
+		Card ourHand = this.getToplevelCard(zank.getHands()[activePlayer]);
+		Card enemyReserve = this.getToplevelCard(zank.getReserves()[enemyPlayer]);
+		return isMoveable(ourHand, enemyReserve);
+	}
+
+	private boolean isMoveableReserveToEnemyWaste() {
+		Card ourReserve = this.getToplevelCard(zank.getReserves()[activePlayer]);
+		Card enemyWaste = this.getToplevelCard(zank.getWastePiles()[enemyPlayer]);
+		return isMoveable(ourReserve, enemyWaste);
+	}
+
+	private boolean isMoveableReserveToEnemyReserve() {
+		Card ourReserve = this.getToplevelCard(zank.getReserves()[activePlayer]);
+		Card enemyReserve = this.getToplevelCard(zank.getReserves()[enemyPlayer]);
+		return isMoveable(ourReserve, enemyReserve);
+	}
+
+	private boolean isMoveable(Card from, Card target){
+		if(from == null || target == null){return false;}
+		if(from.getSuit().name().equals(target.getSuit().name())){
+			if(from.getRank().ordinal() == target.getRank().ordinal()+1 
+					|| from.getRank().ordinal() == target.getRank().ordinal()-1){
+				return true;
+			}
+		}
+		return false;
+	}
+	///////////////////
+	//Hilsfmethoden
+	///////////////////
+	private Card getToplevelCard(Cardstack cardstack){
+		return cardstack.peek();
+	}
+	
+	private Move createMove(String from, String target){
+		return new Move(this.stringToStack(from), this.stringToStack(target), 1);
+	}
+	
+	private Cardstack stringToStack(String input){
+		switch(input){
+		case "hand": return zank.getHands()[activePlayer]; 
+		case "waste": return zank.getWastePiles()[activePlayer];
+		case "reserve": return zank.getReserves()[activePlayer];
+		case "enemyHand": return zank.getHands()[enemyPlayer]; 
+		case "enemyWaste": return zank.getWastePiles()[enemyPlayer];
+		case "enemyReserve": return zank.getReserves()[enemyPlayer];
+		default :System.out.println("ERROR in aiController.ZankAI.stringToStack->switch(input); input: "+input);return null;		
+		}
+	}
+	
+	public void setActivePlayer(int playerID){
+		this.activePlayer = playerID;
+		this.enemyPlayer = (playerID+1)%2;
+	}
+	
+	//Muss jedes mal vom GameController geworfen werden, wenn der Gegner eine Karte auf den Ersatzkartenstapel legt
+	public void addReceivedReverse(Card card){
+		receivedReverse.add(card);
+	}
+	
+	/////////////////////////
+	//Backtracking
+	/////////////////////////
+	
+	private boolean isPossibleMoveAllKnownReserve(){
+		//TODO
+		//erstmal nur eine
+		Card topCardReserve = zank.getReservesToplevelCard(activePlayer);
+		for(Cardstack cardStack : zank.getPlayingStacks()){
+			if(isMoveable(topCardReserve, cardStack.peek())){
+				moves.add(new Move(zank.getReserves()[activePlayer], cardStack, 1));
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void createFreeStacks(){
+		this.setStartingTime(System.currentTimeMillis());
+		try{
+			ZankAI backtrackingAI;
+			for(Cardstack currentStack : zank.getPlayingStacks()){
+				//überprüfe nach jedem Stack ob Zeitüberschreitung vorliegt
+				if(System.currentTimeMillis() - startingTime > MAX_BACKTRACKING_TIME_IN_MILLIS){
+					throw new TimeoutException();
+				}
+				if(currentStack.size() >= TOO_MANY_CARDS_ON_PLAYINGSTACKS_FOR_BACKTRACKING){ continue;} //TODO feinschliff
+				backtrackingAI = new ZankAI(this.zankAIController, (Zank) zank.clone(), autoMoveController);
+				backtrackingAI.setStartingTime(startingTime);
+				if(backtrackingAI.tryEmptyCardstack(currentStack)){
+					moves.addAll(backtrackingAI.getBacktrackingMoves());
+					return;
+				}//passe Movelist an
+			}
+		}
+		catch(TimeoutException e){
+			return; //Falls kein Ergebnis erzielt werden konnte in der maximalen Zeit, brich ab ohne moves zu verändern (?)
+		}
+	}
+	
+	private boolean tryEmptyCardstack(Cardstack workingStack) throws TimeoutException{
+		Card topCard;
+		while((topCard = workingStack.pop()) != null){
+			//überprüfe nach jeder Kartenbewegung ob Zeitüberschreitung vorliegt
+			if(System.currentTimeMillis() - startingTime > MAX_BACKTRACKING_TIME_IN_MILLIS){
+				throw new TimeoutException();
+			}
+			//TODO: 
+			int stackSizeBeforeAutomove = workingStack.size();
+			while(autoMoveController.autoMoveZank(zank)){
+				int stackSizeAfterAutomove = workingStack.size();
+				int difference = stackSizeBeforeAutomove - stackSizeAfterAutomove;
+				while(difference > 0){
+					topCard = workingStack.pop(); //nächste Karte
+				}
+				if(topCard == null){ return true; } //Stapel leer
+			}
+			if(!this.tryShiftCardToOtherStack(workingStack, topCard)){ //Versuche, Karte zu verschieben
+				return false;
+			}
+		}
+		return true;
+	}
+	//Bewege Zielkarte vom Zielstapel zu irgendeinem anderen stapel. 
+	//return: ist mölgich -> falls false: abbruch für backtracking
+	private boolean tryShiftCardToOtherStack(Cardstack workingStack, Card topCard){
+		//Teste jeden Playingstack, ob topCard dort angelegt werden kann
+		for(Cardstack playingstack : zank.getPlayingStacks()){
+			if(playingstack.equals(workingStack)){ continue; }
+			if(isMoveable(topCard, playingstack.peek())){
+				backtrackingMoves.add(new Move(workingStack, playingstack, 1));
+				playingstack.add(topCard);
+				return true;
+			}
+		}
+		//Teste enemyStacks; falls dort ebenfalls nicht ablegbar, gibt es keine ablagemöglichkeit
+		return wasMoveCardToEnemySuccsesfull(workingStack, topCard);
+	}
+	private boolean wasMoveCardToEnemySuccsesfull(Cardstack workingStack, Card topCard){
+		if(isMoveable(topCard, zank.getHandsToplevelCard(enemyPlayer))){
+			adjustBacktrackingMovesAndRemoveToplevelcard(workingStack, zank.getHands()[enemyPlayer]);
+			return true;
+		}
+		if(isMoveable(topCard, zank.getReservesToplevelCard(enemyPlayer))){
+			adjustBacktrackingMovesAndRemoveToplevelcard(workingStack, zank.getReserves()[enemyPlayer]);
+			return true;
+		}
+		if(isMoveable(topCard, zank.getWastesToplevelCard(enemyPlayer))){
+			adjustBacktrackingMovesAndRemoveToplevelcard(workingStack, zank.getWastePiles()[enemyPlayer]);
+			return true;
+		}
+		return false;
+	}
+	private void adjustBacktrackingMovesAndRemoveToplevelcard(Cardstack workingStack, Cardstack targetStack){
+		this.backtrackingMoves.add(new Move(workingStack, targetStack, 1));
+		this.removeToplevelCard(workingStack);
+	}
+	private void removeToplevelCard(Cardstack cardstack){
+		cardstack.pop();
+	}
+	private void setStartingTime(long startingTime){
+		this.startingTime = startingTime;
+	}
+	private long getStartingTime(){
+		return this.startingTime;
+	}
+
+	private ArrayList<Move> getBacktrackingMoves(){
+		return this.backtrackingMoves;
+	}
+}

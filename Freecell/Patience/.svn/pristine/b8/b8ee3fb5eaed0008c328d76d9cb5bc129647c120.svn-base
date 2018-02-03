@@ -1,0 +1,346 @@
+package controller;
+
+import aui.ZankAUI;
+import exceptions.NoMovesPossibleException;
+import exceptions.NotEnoughCardsOnPlaystacksException;
+import model.Card;
+import model.Cardstack;
+import model.Move;
+import model.Rank;
+import model.Suit;
+import model.Type;
+import model.Zank;
+
+public class ZankController extends GameController {
+
+	private int activePlayer;
+
+	private Zank game;
+
+	private ZankAUI zankAUI;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#initGame()
+	 */
+	@Override
+	public void initGame() {
+		game = (Zank) patienceController.getPatience().getGame();
+
+		if (game.isStartPlayer1()) {
+			activePlayer = 0;
+		} else {
+			activePlayer = 1;
+		}
+
+		Cardstack startStackPlayer1 = game.getStartStack();
+		Cardstack startStackPlayer2 = game.getStartStackPlayer2();
+
+		game.getHands()[0].addAll(startStackPlayer1);
+		game.getHands()[1].addAll(startStackPlayer2);
+
+		game.getReserves()[0].addAll(game.getHands()[1].pop(13));
+		game.getReserves()[0].flipStack();
+		game.getReserves()[1].addAll(game.getHands()[0].pop(13));
+		game.getReserves()[1].flipStack();
+
+		for (int i = 0; i < 4; i++) {
+			game.getPlayingStacks()[i].add(game.getHands()[0].pop());
+			game.getPlayingStacks()[i + 4].add(game.getHands()[1].pop());
+		}
+
+		this.zankAUI.refreshAll();
+		System.out.println(autoMoveController.autoMoveSuccess());
+	}
+
+	public void setZankAUI(ZankAUI zankAUI) {
+		this.zankAUI = zankAUI;
+	}
+
+	public ZankAUI getZankAUI() {
+		return this.zankAUI;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#isDraggable(model.Cardstack, model.Card)
+	 */
+	@Override
+	public boolean isDraggable(Cardstack stack, Card card) {
+		if (!isOnTop(stack, card)) {
+			return false;
+		} else if (!isValidStack(stack)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * is the stack a valid stack for the plkayer to use
+	 * 
+	 * @param stack
+	 *            to check
+	 * @return true if is valid
+	 */
+	private boolean isValidStack(Cardstack stack) {
+		return !isOtherPlayerStack(stack) && !isEliminationStack(stack);
+	}
+
+	/**
+	 * is card on top of the stack?
+	 * 
+	 * @param stack
+	 *            to check
+	 * @param card
+	 *            to check
+	 * @return truen is card is on top
+	 */
+	private boolean isOnTop(Cardstack stack, Card card) {
+		return !stack.isEmpty() && card == stack.peek();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#isDroppable(model.Cardstack)
+	 */
+	@Override
+	public boolean isDroppable(Cardstack stack) {
+		Card cardToDrop = getStackToDrag().firstElement();
+		if (isEliminationStack(stack)) {
+			return isDroppableOnElimination(stack, cardToDrop);
+		} else if (isOtherPlayerStack(stack)) {
+			return isDroppableOnPlayerStack(stack, cardToDrop);
+		} else if (stack.getType() == Type.PLAYINGSTACK) {
+			return isDroppableOnPlayingstack(stack, cardToDrop);
+		} else if (stack.getType() == Type.WASTEPILE) {
+			return sourceStack == game.getHands()[getActivePlayer()];
+		} else {
+			return false;
+		}
+		// return true;
+	}
+
+	private boolean isDroppableOnPlayingstack(Cardstack stack, Card cardToDrop) {
+		return stack.isEmpty() || (cardToDrop.getColor() != stack.peek().getColor()
+				&& cardToDrop.getRank().value == stack.peek().getRank().value - 1);
+	}
+
+	private boolean isDroppableOnPlayerStack(Cardstack stack, Card cardToDrop) {
+		return stack.getType() != Type.HAND && cardToDrop.getSuit() == stack.peek().getSuit()
+				&& Math.abs(cardToDrop.getRank().value - stack.peek().getRank().value) == 1;
+	}
+
+	/**
+	 * isplayerStack
+	 * 
+	 * @param stack
+	 *            isplayerStack
+	 * @return isplayerStack
+	 */
+	private boolean isOtherPlayerStack(Cardstack stack) {
+		if (stack == game.getHands()[(getActivePlayer() + 1) % 2]) {
+			return true;
+		} else if (stack == game.getReserves()[(getActivePlayer() + 1) % 2]) {
+			return true;
+		} else if (stack == game.getWastePiles()[(getActivePlayer() + 1) % 2]) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * isDroppableOnElimination
+	 * 
+	 * @param stack
+	 *            to drop
+	 * @param cardToDrop
+	 *            to drop
+	 * @return isDroppableOnElimination
+	 */
+	private boolean isDroppableOnElimination(Cardstack stack, Card cardToDrop) {
+		if (stack.isEmpty()) {
+			return cardToDrop.getRank() == Rank.ACE && equalsSuit(cardToDrop, stack);
+		} else {
+			return cardToDrop.getRank().value == stack.peek().getRank().value + 1;
+		}
+	}
+
+	/**
+	 * isEliminationStack
+	 * 
+	 * @param stack
+	 *            isEliminationStack
+	 * @return isEliminationStack
+	 */
+	private boolean isEliminationStack(Cardstack stack) {
+		for (Cardstack eliminationStack : game.getEliminationStacks()) {
+			if (stack == eliminationStack) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * checks if card fits on stack
+	 * 
+	 * @param card
+	 *            card to fit
+	 * @param stack
+	 *            stack to check
+	 * @return true if it fits else false
+	 */
+	private boolean equalsSuit(Card card, Cardstack stack) {
+		return (card.getSuit() == Suit.CLUB && stack.getType() == Type.ELIMINATIONSTACKCLUB)
+				|| (card.getSuit() == Suit.DIAMOND && stack.getType() == Type.ELIMINATIONSTACKDIAMOND)
+				|| (card.getSuit() == Suit.HEART && stack.getType() == Type.ELIMINATIONSTACKHEART)
+				|| (card.getSuit() == Suit.SPADE && stack.getType() == Type.ELIMINATIONSTACKSPADE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#isFinished()
+	 */
+	@Override
+	public boolean isFinished() {
+		return game.cardsOfPlayer1() == 0 || game.cardsOfPlayer2() == 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#autoPlay()
+	 */
+	@Override
+	public void autoPlay() {
+		while (true) { // TODO interrupt durch button o.ä.
+			showTipp();
+		}
+	}
+
+	@Override
+	public void showTipp() {
+		try {
+			executeMove(aIController.getNextMove());
+		} catch (NotEnoughCardsOnPlaystacksException e) {
+			// gibts nicht
+			e.printStackTrace();
+		} catch (NoMovesPossibleException e) {
+			// TODO beende Zug e.printStackTrace();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#revertMove()
+	 */
+	@Override
+	public void undoMove() {
+		if (!game.getHistory().isEmpty()) {
+			this.executeMove(game.getHistory().pop().revertMove());
+			game.getHistory().pop();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#executeMove(model.Move)
+	 */
+	@Override
+	public void executeMove(Move moveToExecute) {
+		if ((moveToExecute.getFrom() == game.getHands()[getActivePlayer()]
+				&& moveToExecute.getTo() == game.getWastePiles()[getActivePlayer()])
+				|| moveToExecute.getTo() == game.getHands()[(getActivePlayer() + 1) % 2]
+						&& moveToExecute.getFrom() == game.getWastePiles()[(getActivePlayer() + 1) % 2]) {
+			switchPlayer();
+		}
+		moveToExecute.getTo().add(moveToExecute.getFrom().pop());
+		game.getHistory().push(moveToExecute);
+		autoMoveController.autoMoveSuccess();
+		// TODO show move in gui with animation
+		zankAUI.refreshAll();
+	}
+
+	/**
+	 * switches activePlayer
+	 */
+	public void switchPlayer() {
+		if (getActivePlayer() == 0) {
+			// activePlayer = game.getPlayer2();
+			activePlayer = 1;
+		} else {
+			// activePlayer = game.getPlayer1();
+			activePlayer = 0;
+		}
+		zankAUI.refreshAll();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#addStatistics()
+	 */
+	@Override
+	public void addStatistics() {
+		patienceController.getPatience().getStatistics().addZankStatistic(game.getMultiplayerStatistics());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#restartGame()
+	 */
+	@Override
+	public void restartGame() {
+		this.addStatistics();
+		this.initGame();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#cancelGame()
+	 */
+	@Override
+	public void cancelGame() {
+		this.addStatistics();
+		this.game = null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see controller.GameController#refreshKarte()
+	 */
+	@Override
+	public void refreshKarte() {
+		zankAUI.refreshAll();
+	}
+
+	/**
+	 * @return 0 for player1 active 1 for player2 active
+	 */
+	public int getActivePlayer() {
+		return activePlayer;
+	}
+
+	/**
+	 * puts cards from wastepile to hand and flips them
+	 */
+	public void wastePileToHand() {
+		if (game.getHands()[getActivePlayer()].isEmpty()) {
+			game.getHands()[getActivePlayer()].addAll(game.getWastePiles()[getActivePlayer()]);
+			game.getHands()[getActivePlayer()].flipStack();
+			game.getWastePiles()[getActivePlayer()].removeAllElements();
+			zankAUI.refreshAll();
+		}
+	}
+}

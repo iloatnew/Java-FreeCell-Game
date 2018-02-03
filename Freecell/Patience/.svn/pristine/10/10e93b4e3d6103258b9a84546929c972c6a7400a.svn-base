@@ -1,0 +1,126 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+
+
+public class SpielLadenController {
+
+    @FXML
+    private Button gleicheKartenSpiel;
+
+    @FXML
+    private Button neueSpielvarianteStarten;
+
+    @FXML
+    private Button spielImportieren;
+
+    @FXML
+    private Button neuesSpielStarten;
+
+
+    @FXML
+    private RadioButton mensch;
+
+    @FXML
+    private ToggleGroup gegnerauswahl;
+
+    @FXML
+    private RadioButton kiLeicht;
+
+    @FXML
+    private RadioButton kiSchwer;
+
+    @FXML
+    private RadioButton kiMittel;
+    
+    private String spielTyp;
+    
+    private HauptmenueController hauptmenueCtr;
+    
+
+	public HauptmenueController getHauptmenueCtr() {
+		return hauptmenueCtr;
+	}
+
+	public void setHauptmenueCtr(HauptmenueController hauptmenueCtr) {
+		this.hauptmenueCtr = hauptmenueCtr;
+	}
+
+	@FXML
+    void gleicheKarten(ActionEvent event) {
+    	
+    }
+
+    @FXML
+    void neueSpielvariante(ActionEvent event) {
+
+    }
+
+    @FXML
+    void neuesSpiel(ActionEvent event) {
+    	
+    }
+
+    @FXML
+    void spielImport(ActionEvent event) {
+
+    }
+        
+    @FXML
+    public void initialize(){    	
+    	
+    }   
+    
+
+    public String getSpielTyp() {
+		return spielTyp;
+	}
+
+	public void setSpielTyp(String spielTyp) {
+		this.spielTyp = spielTyp;		
+	}
+
+	public Button getGleicheKartenSpiel() {
+		return gleicheKartenSpiel;
+	}
+
+	public void setGleicheKartenSpiel(Button gleicheKartenSpiel) {
+		this.gleicheKartenSpiel = gleicheKartenSpiel;
+	}
+
+	public RadioButton getMensch() {
+		return mensch;
+	}
+
+	public void setMensch(RadioButton mensch) {
+		this.mensch = mensch;
+	}
+
+	public RadioButton getKiLeicht() {
+		return kiLeicht;
+	}
+
+	public void setKiLeicht(RadioButton kiLeicht) {
+		this.kiLeicht = kiLeicht;
+	}
+
+	public RadioButton getKiSchwer() {
+		return kiSchwer;
+	}
+
+	public void setKiSchwer(RadioButton kiSchwer) {
+		this.kiSchwer = kiSchwer;
+	}
+
+	public RadioButton getKiMittel() {
+		return kiMittel;
+	}
+
+	public void setKiMittel(RadioButton kiMittel) {
+		this.kiMittel = kiMittel;
+	}
+}

@@ -1,0 +1,43 @@
+package application;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
+
+public class IdiotenController {
+
+    @FXML
+    private ResourceBundle resources;
+    @FXML
+    private URL location;
+    @FXML
+    private Rectangle nachziehStapel;
+    @FXML
+    private Rectangle spielStapel1;
+    @FXML
+    private Rectangle spielStapel4;
+    @FXML
+    private Rectangle spielStapel3;
+    @FXML
+    private Rectangle spielStapel2;
+    @FXML
+    private Rectangle ablegeStapel;
+    
+    @FXML
+    void test(MouseEvent event) {
+    	System.out.println("Click");
+    }
+
+    @FXML
+    void initialize() {
+        assert nachziehStapel != null : "fx:id=\"nachziehStapel\" was not injected: check your FXML file 'Idioten.fxml'.";
+        assert spielStapel1 != null : "fx:id=\"spielStapel1\" was not injected: check your FXML file 'Idioten.fxml'.";
+        assert spielStapel4 != null : "fx:id=\"spielStapel4\" was not injected: check your FXML file 'Idioten.fxml'.";
+        assert spielStapel3 != null : "fx:id=\"spielStapel3\" was not injected: check your FXML file 'Idioten.fxml'.";
+        assert spielStapel2 != null : "fx:id=\"spielStapel2\" was not injected: check your FXML file 'Idioten.fxml'.";
+        assert ablegeStapel != null : "fx:id=\"ablegeStapel\" was not injected: check your FXML file 'Idioten.fxml'.";
+        System.out.println("test2");
+        }
+}

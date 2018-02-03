@@ -1,0 +1,190 @@
+package controller;
+
+import model.Card;
+import model.Cardstack;
+import model.FreeCell;
+import model.Game;
+import model.Move;
+import model.Rank;
+import model.Suit;
+import model.Type;
+import model.Zank;
+import controller.GameController;
+import java.util.ArrayList;
+
+public class AutoMoveController {
+
+	private GameController controller;
+	private PatienceController patienceController;
+	private final int EMPTY = 0;
+	
+	
+	public AutoMoveController() {
+	}
+	
+	public void setPatienceController(PatienceController patienceController){
+		this.patienceController = patienceController;
+	}
+	
+	public PatienceController getPatienceController(){
+		return patienceController;
+	}
+
+	public void setGameController(GameController controller){
+		this.controller = controller;
+	}
+	
+	public GameController getGameController(){
+		return controller;
+	}
+	
+	/**
+	 * die Methode zieht die hochzielbare Karte hoch
+	 */
+	public void move(){
+		
+	}
+
+	/**
+	 * die Methode prüft, ob jetzt eine hochziehbare Karte in SpielStapel steht
+	 * ggf. wird der Move ausgeführt
+	 * @return
+	 */
+	public boolean autoMoveSuccess() {
+		Game currentGame = patienceController.getPatience().getGame();
+		if(currentGame instanceof FreeCell){
+			controller = patienceController.getFreeCellController();
+			return autoMoveFreeCell((FreeCell)currentGame);
+		}
+		else if(currentGame instanceof Zank){
+			controller = patienceController.getZankController();
+			return autoMoveZank((Zank)currentGame);
+		}
+		return false;
+		
+	}
+
+	public boolean autoMoveZank(Zank currentGame) {
+		Card eleminationStackTopCard, otherStackTopCard;
+		//Alle stacks in einer Liste zusammenfassen
+
+		ArrayList<Cardstack> stacks = new ArrayList<Cardstack>();
+		for(Cardstack stack : currentGame.getPlayingStacks()){
+			stacks.add(stack);
+		}
+		for(Cardstack stack : currentGame.getHands()){
+			stacks.add(stack);
+		}
+		for(Cardstack stack : currentGame.getWastePiles()){
+			stacks.add(stack);
+		}
+		for(Cardstack stack : currentGame.getReserves()){
+			stacks.add(stack);
+		}
+		
+		//alle Stacks überprüfen */
+		Cardstack[] eliminationStacks = currentGame.getEliminationStacks();
+		for(int i = 0; i < eliminationStacks.length; i++){
+			Cardstack eliminationStack = eliminationStacks[i];
+			//Falls leer, überprüfe auf Asse
+			if(eliminationStack.size() == EMPTY){
+				//überprüfe jeden stack..
+				for(Cardstack otherStack : stacks){
+					//.. der nicht leer ist
+					if(otherStack.size() != EMPTY){
+						otherStackTopCard = otherStack.peek();
+						//Ist die oberste Karte ein Ass?
+						if(otherStackTopCard.getRank().equals(Rank.ACE)){
+							//Ist der Typ gleich?
+							if((eliminationStack.getType().equals(Type.ELIMINATIONSTACKCLUB) && otherStackTopCard.getSuit().equals(Suit.CLUB))
+									||(eliminationStack.getType().equals(Type.ELIMINATIONSTACKDIAMOND) && otherStackTopCard.getSuit().equals(Suit.DIAMOND))
+									||(eliminationStack.getType().equals(Type.ELIMINATIONSTACKHEART) && otherStackTopCard.getSuit().equals(Suit.HEART))
+									||(eliminationStack.getType().equals(Type.ELIMINATIONSTACKSPADE) && otherStackTopCard.getSuit().equals(Suit.SPADE))){
+								moveZankAceToEliminationstack(currentGame, otherStack, eliminationStack, otherStackTopCard);
+								controller.refreshKarte();
+								return true;
+							}
+						}
+					}
+				}
+			}
+			//Sonst überprüfe auf nächste Karte
+			else{
+				eleminationStackTopCard = eliminationStack.peek();
+				for(Cardstack otherStack : stacks){
+					if(otherStack.isEmpty()){continue;}
+					otherStackTopCard = otherStack.peek();
+					if(eliminationStack.size()!=0 && otherStack.size()!=0){
+						return moveZank(currentGame, otherStack, eliminationStack, otherStackTopCard, eleminationStackTopCard);
+					}
+				}
+			}
+		}
+		
+		controller.refreshKarte();
+		return false;
+	}
+	
+	private void moveZankAceToEliminationstack(Zank currentGame, Cardstack otherStack, Cardstack eliminationStack, Card karteTop){
+		if(patienceController.getPatience().getGame().equals(currentGame)){
+			controller.executeMove(new Move(otherStack, eliminationStack, 1));
+		}
+	}
+
+	private boolean moveZank(Zank currentGame, Cardstack spielStapel, Cardstack homeStapel, Card karteTop,	Card karteHome) {
+		if(karteHome.sameColorSorted(karteTop)){
+			if(patienceController.getPatience().getGame().equals(currentGame)){
+				controller.executeMove(new Move(spielStapel, homeStapel, 1));
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private boolean autoMoveFreeCell(FreeCell currentGame) {
+		for(Cardstack homeStapel : currentGame.getHomeCells()){
+			for(Cardstack spielStapel : currentGame.getPlayingStacks()){
+				if(homeStapel.size()!= EMPTY && spielStapel.size()!=EMPTY){
+					Card karteTop = spielStapel.peek();
+					Card karteHome = homeStapel.peek();
+					if( moveFreeCell(currentGame, spielStapel, homeStapel, karteTop, karteHome)){
+						return true;
+					}
+				}
+			}
+			for(Cardstack freeCell : currentGame.getFreeCells()){
+				if(homeStapel.size()!=EMPTY && freeCell.size()!=EMPTY){
+					Card karteTop = freeCell.peek();
+					Card karteHome = homeStapel.peek();
+					if( moveFreeCell(currentGame, freeCell, homeStapel, karteTop, karteHome)){
+						return true;
+					}
+				}
+			}
+		}
+//		controller.refreshKarte();
+		return false;
+	}
+
+	private boolean moveFreeCell(FreeCell currentGame, Cardstack spielStapel, Cardstack homeStapel, Card karteTop,
+			Card karteHome) {
+		if(karteHome.sameColorSorted(karteTop)){
+//			if(smallest(currentGame,karteTop)){
+				controller.executeMove(new Move(spielStapel, homeStapel, 1));
+				return true;
+//			}
+		}
+		return false;
+	}
+
+	private boolean smallest(FreeCell currentGame,Card karteTop) {
+		for(Cardstack spielStapel : currentGame.getPlayingStacks()){
+			for(Card eachCard : spielStapel){
+				if(eachCard.getRank().ordinal()< karteTop.getRank().ordinal()){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

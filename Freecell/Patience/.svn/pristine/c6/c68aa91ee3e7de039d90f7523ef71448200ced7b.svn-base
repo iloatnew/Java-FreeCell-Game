@@ -1,0 +1,80 @@
+package application;
+
+import javafx.scene.layout.Pane;
+import model.Karte;
+import model.Stapel;
+
+public abstract class GameController {
+	
+	private Stapel zielStapel;
+	private Stapel stapelToDrag;
+	private Stapel ziehHerkunft;
+	
+
+	public abstract void initGame();
+
+	public abstract boolean isDraggable(Stapel stack, Karte card);
+
+	public abstract boolean isDroppable(Stapel stack);
+
+	public abstract boolean isFinished();
+
+	public abstract void autoPlay();
+	
+	public 	abstract void revertMove();
+	
+	public abstract void addStatistics();
+	
+	public 	abstract void restartGame();
+	
+	public 	abstract void cancelGame();
+	
+	public abstract void setStapel(Pane pane, Stapel stapel);
+	
+	
+	public abstract void refreshKarte();
+	
+	
+	
+
+	private void showMove() {
+		// TODO
+	}
+
+	private void refreshHistory() {
+		// TODO
+	}
+	
+	
+	public Stapel getZielStapel() {
+		return zielStapel;
+	}
+	
+	
+	public void setZielStapel(Stapel zielStapel) {
+		this.zielStapel = zielStapel;
+	}
+
+	
+	public Stapel getStapelToDrag() {
+		return stapelToDrag;
+	}
+
+	
+	public void setStapelToDrag(Stapel stapelToDrag) {
+		this.stapelToDrag = stapelToDrag;
+	}
+
+	
+	public Stapel getZiehHerkunft() {
+		return ziehHerkunft;
+	}
+
+	
+	public void setZiehHerkunft(Stapel ziehHerkunft) {
+		this.ziehHerkunft = ziehHerkunft;
+	}
+	
+	
+
+}

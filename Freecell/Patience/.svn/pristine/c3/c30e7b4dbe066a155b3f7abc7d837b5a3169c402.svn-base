@@ -1,0 +1,22 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.input.DragEvent;
+
+public class DragDropExitController implements EventHandler<DragEvent>{
+	
+	FreeCellController controller;
+	public DragDropExitController(FreeCellController controller) {
+		// TODO Auto-generated constructor stub
+		this.controller = controller;
+	}
+
+	@Override
+	public void handle(DragEvent event) {
+		// TODO Auto-generated method stub
+		controller.setZielStapel(null);
+		
+	}
+
+}

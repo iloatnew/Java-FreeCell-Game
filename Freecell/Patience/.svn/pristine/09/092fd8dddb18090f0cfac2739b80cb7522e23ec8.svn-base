@@ -1,0 +1,15 @@
+package controller;
+
+import java.util.ArrayList;
+
+public class AcesUpAIController extends AIController {
+
+	private ArrayList moves;
+
+	private PatienceController patienceController;
+
+	private void backtrackMoves() {
+
+	}
+
+}

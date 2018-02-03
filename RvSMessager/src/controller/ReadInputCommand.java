@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import model.*;
 import application.*;
@@ -46,23 +47,54 @@ public class ReadInputCommand extends Thread{
 	 */
 	private void checkFormat(String format) {
 		switch (format) {
-		case "MX": 		handleMX();
-						break;
-		case "M":		handleM();
-						break;
-		case "CONNECT": handelConnect();
-						break;
-		case "end":		messager.close();
-						break;
-		default: 		System.out.println("unavailable");
-						break;
+		case "MX": 			handleMX();
+							break;
+		case "M":			handleM();
+							break;
+		case "CONNECT": 	handelConnect();
+							break;
+		case "DISCONNECT":	handelDisconnect(); 
+							break;
+		case "EXIT":		handelDisconnect();
+							messager.close();
+							break;
+		case "HELP":        showTextWithFrame("");
+							showTextWithFrame("M 'NAME' 'TEXT' : ");
+							showTextWithFrame("--Send 'TEXT' to contact with 'NAME' in the peer list");
+							showTextWithFrame(" ");
+							showTextWithFrame("MX 'IP' 'PORT' 'TEXT' :");
+							showTextWithFrame("--Send 'TEXT' to 'IP' + 'PORT'");
+							showTextWithFrame(" ");
+							showTextWithFrame("CONNECT 'IP' 'PORT' :");
+							showTextWithFrame("--Add contact with 'IP' 'PORT' to peer list");
+							showTextWithFrame(" ");
+							showTextWithFrame("DISCONNECT :");
+							showTextWithFrame("--Remove this peer from the peer lists from all users");
+							showTextWithFrame(" ");
+							showTextWithFrame("EXIT : ");
+							showTextWithFrame("--Disconnect and end the program");
+							showTextWithFrame("");
+							break;
+		default: 			System.out.println("unavailable");
+							break;
 		}
 	}
 
 
+	/**
+	 * handler for DISCONNECT commands
+	 * it create and send "DISCONNECT" message to all peers in the peerlist
+	 */
+	private void handelDisconnect() {
+		send(messager.getPeerList(), creatDCMessage());
+		// let deletePeer() in messager send the DISCONNECT message. here will the message not be send
+		messager.deletePeer(messager.getLocalPeer());
+		
+	}
+
 
 	/**
-	 * handler for M conmmands. 
+	 * handler for M commands. 
 	 * it calls {@link #createMMessage()} to create standard MESSAGE type message
 	 */
 	private void handleM() {
@@ -75,7 +107,7 @@ public class ReadInputCommand extends Thread{
 	}
 
 	/**
-	 * handler for MX conmmands. 
+	 * handler for MX commands. 
 	 * it calls {@link #createMXMessage()} to create standard MESSAGE type message
 	 */
 	private void handleMX() {
@@ -97,6 +129,7 @@ public class ReadInputCommand extends Thread{
 		ArrayList<Peer> targetPeers = messager.searchPeers(musterPeer);
 		String message = creatPokeMessage();
 		send(targetPeers, message);
+		messager.getSender().startPoking();
 	}
 	
 	private String creatPokeMessage() {
@@ -116,12 +149,44 @@ public class ReadInputCommand extends Thread{
 		text = "MESSAGE " + messager.getLocalPeer().toString()+" "+text;
 		return text;
 	}
+
+	private String creatDCMessage() {
+		return "DISCONNECT " + messager.getLocalPeer().toString();
+	}
 	
-	private void send(ArrayList<Peer> targetPeers, String something){
-		System.out.println("sending "+something);
+	/**
+	 * the main send activity. all messages, include POKE, MESSAGE, DISCONNECT will be send use this method
+	 * @param targetPeers = the receiver
+	 * @param something = the message
+	 */
+	public void send(List<Peer> targetPeers, String something){
+//		System.out.println("sending "+something);
 		for(Peer targetPeer : targetPeers) {
 			messager.getSender().sendMessage(targetPeer,something);
-			System.out.println("to "+targetPeer.toString());
+//			System.out.println(" to "+targetPeer.toString());
+		}
+	}
+	
+	private static void showTextWithFrame(String text) {
+		if(text.length()==0) {
+			for(int i=0;i<40;i++) {
+				System.out.print("*");
+			}
+			System.out.println("");	
+		}
+		else if(text.length()<36) {
+			String first = "* "+text;
+			System.out.print(first);
+			for(int i =(40-first.length())-1;i>0;i--) {
+				System.out.print(" ");
+			}
+			System.out.println("*");
+		}
+		else {
+			String first = text.substring(0, 35);
+			String last = text.substring(35, text.length());
+			showTextWithFrame(first);
+			showTextWithFrame(last);
 		}
 	}
 }

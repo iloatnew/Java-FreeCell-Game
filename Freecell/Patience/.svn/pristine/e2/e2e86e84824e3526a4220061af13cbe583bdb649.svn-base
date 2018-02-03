@@ -1,0 +1,260 @@
+package application;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+import aui.AcesUpAUI;
+import controller.AcesUpController;
+import controller.GameController;
+import controller.PatienceController;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+import model.AcesUp;
+import model.Card;
+import model.Cardstack;
+import model.Move;
+import model.Rank;
+import model.SingleplayerStatistics;
+import model.Suit;
+import model.Type;
+import movecontroller.DragDoneController;
+import movecontroller.DragDropController;
+import movecontroller.DragDropEnteredController;
+import movecontroller.DragDropExitController;
+import movecontroller.DragOverController;
+import movecontroller.DragStartController;
+
+public class AcesUpGUIController extends GameGUIController implements AcesUpAUI{
+	
+
+    @FXML // ResourceBundle that was given to the FXMLLoader
+    private ResourceBundle resources;
+
+    @FXML // URL location of the FXML file that was given to the FXMLLoader
+    private URL location;
+    
+    @FXML // fx:id="acesUpPane"
+    private AnchorPane acesUpPane; // Value injected by FXMLLoader
+
+    @FXML // fx:id="nachziehStapel"
+    private Rectangle nachziehStapel; // Value injected by FXMLLoader
+
+    @FXML // fx:id="spielStapel1"
+    private Rectangle spielStapel1; // Value injected by FXMLLoader
+
+    @FXML // fx:id="spielStapel4"
+    private Rectangle spielStapel4; // Value injected by FXMLLoader
+
+    @FXML // fx:id="spielStapel3"
+    private Rectangle spielStapel3; // Value injected by FXMLLoader
+
+    @FXML // fx:id="spielStapel2"
+    private Rectangle spielStapel2; // Value injected by FXMLLoader
+
+    @FXML // fx:id="ablegeStapel"
+    private Rectangle ablegeStapel; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="talonPane"
+    private Pane talonPane; // Value injected by FXMLLoader
+
+    @FXML // fx:id="playingPane4"
+    private Pane playingPane4; // Value injected by FXMLLoader
+
+    @FXML // fx:id="eliminationPane"
+    private Pane eliminationPane; // Value injected by FXMLLoader
+
+    @FXML // fx:id="playingPane3"
+    private Pane playingPane3; // Value injected by FXMLLoader
+
+    @FXML // fx:id="playingPane2"
+    private Pane playingPane2; // Value injected by FXMLLoader
+
+    @FXML // fx:id="playingPane1"
+    private Pane playingPane1; // Value injected by FXMLLoader
+        
+    private Cardstack[] playingStacks;
+
+	private Cardstack talon;
+
+	private Cardstack eliminationStack;
+	
+	private ArrayList <Pane> spielfeld;
+
+    @FXML
+    public void test(MouseEvent event) {
+
+    }
+
+    @FXML // This method is called by the FXMLLoader when initialization is complete
+    public void initialize() {     
+    	spielfeld = new ArrayList<Pane>();
+    	spielfeld.add(playingPane1);
+    	spielfeld.add(playingPane2);
+    	spielfeld.add(playingPane3);
+    	spielfeld.add(playingPane4);
+    }	
+    
+    /* 
+     * stacks get initialized and pane gets drag / drop controller
+     * @see aui.AcesUpAUI#initializeStacks()
+     */
+    public void initializeStacks(){  
+    	playingStacks = ((AcesUp) patienceController.getPatience().getGame()).getPlayingStacks();
+		talon = ((AcesUp) patienceController.getPatience().getGame()).getTalon();
+		eliminationStack = ((AcesUp) patienceController.getPatience().getGame()).getEliminationStack();
+		acesUpPane.setOnDragOver(new DragOverController());
+	    acesUpPane.setOnDragDropped(new DragDropController(this.patienceController.getAcesUpController()));
+		
+    	refreshAll();
+    }
+	
+	@Override
+	public void init() {
+		patienceController.getAcesUpController().setAcesUpAUI(this);
+		patienceController.getAcesUpController().initGame();
+		
+		//refreshAll();
+	}
+
+	/* 
+	 * stacks get refreshed
+	 * @see aui.AcesUpAUI#refreshAll()
+	 */
+	@Override
+	public void refreshAll() {
+		for (Pane playingPane : this.spielfeld) {
+			playingPane.getChildren().clear();
+		}
+//		talonPane.getChildren().clear();
+//		eliminationPane.getChildren().clear();
+		this.showTalon();
+		this.showEliminationStack();
+		
+		for(int i = 0; i < spielfeld.size(); i++){
+			showPlayingStacks(spielfeld.get(i), this.playingStacks[i]);
+    	}
+		
+	}
+	
+	/**
+	 * sets gui to each card of talon, sets mouseclick eventhandler
+	 */
+	private void showTalon(){
+		if(!this.talon.isEmpty()){
+			Card card= this.talon.peek();
+			Image cardImg = card.getBackImage();
+			ImageView cardImgView = new ImageView(cardImg);
+			talonPane.getChildren().add(cardImgView);
+			
+			cardImgView.setOnDragDetected(new DragStartController(this.patienceController.getAcesUpController(), cardImgView, this.talon, card));
+			cardImgView.setOnDragOver(new DragOverController(this.patienceController.getAcesUpController(), this.talon));
+			cardImgView.setOnDragDropped(new DragDropController(this.patienceController.getAcesUpController()));
+			//cardImgView.setOnDragDone(new DragDoneController(this.patienceController.getAcesUpController()));
+			
+			cardImgView.setOnMouseClicked(new EventHandler<MouseEvent> (){
+				@Override
+				public void handle(MouseEvent mouseEvent){
+					if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+			            if(mouseEvent.getClickCount() == 2){			               
+			               patienceController.getAcesUpController().drawCards();
+			            }
+			        }
+				}
+				
+			});
+		
+			talonPane.setOnDragDropped(new DragDropController(this.patienceController.getAcesUpController()));
+			talonPane.setOnDragOver(new DragOverController());
+		}
+	}
+	
+	/**
+	 * sets gui of each card in eliminationstack
+	 */
+	private void showEliminationStack(){
+		GameController acesUpController = patienceController.getAcesUpController();
+		for(Card card : eliminationStack) {
+			Image cardImg = card.getFaceImage();
+			ImageView cardImgView = new ImageView(cardImg);
+			eliminationPane.getChildren().add(cardImgView);
+			
+			cardImgView.setOnDragDetected(new DragStartController(acesUpController, cardImgView, this.eliminationStack, card));
+			cardImgView.setOnDragOver(new DragOverController(acesUpController, this.eliminationStack));
+			cardImgView.setOnDragDropped(new DragDropController(acesUpController));
+			cardImgView.setOnDragDone(new DragDoneController(acesUpController));
+		}
+		eliminationPane.setOnDragOver(new DragOverController(acesUpController, eliminationStack));
+		eliminationPane.setOnDragEntered(new DragDropEnteredController(acesUpController, eliminationStack, eliminationPane));
+		eliminationPane.setOnDragExited(new DragDropExitController( acesUpController, eliminationPane));
+		eliminationPane.setOnDragDropped(new DragDropController( acesUpController));
+		eliminationPane.setOnDragDone(new DragDoneController(acesUpController));	
+		
+	}
+	
+	/**
+	 * 
+	 * sets gui to each card of playingstacks, sets mouseclick eventhandler to each card of playingstacks
+	 * @param row
+	 * @param stack
+	 */
+	private void showPlayingStacks(Pane row, Cardstack stack){
+		GameController acesUpController = patienceController.getAcesUpController();
+
+		for (int i = 0; i < stack.size(); i++) {
+			Card karte = stack.get(i);
+			Image karteImg = karte.getFaceImage();
+			ImageView cardImgView = new ImageView(karteImg);
+			row.getChildren().add(cardImgView);
+			cardImgView.setLayoutY(i * 30);
+			
+			// setzt DragController für eine Karte
+			cardImgView.setOnDragDetected(new DragStartController(acesUpController, cardImgView, stack, karte));
+			cardImgView.setOnDragOver(new DragOverController(acesUpController, stack));
+			cardImgView.setOnDragDropped(new DragDropController(acesUpController));
+			cardImgView.setOnDragDone(new DragDoneController(acesUpController));
+			
+			cardImgView.setOnMouseClicked(new EventHandler<MouseEvent> (){
+				@Override
+				public void handle(MouseEvent mouseEvent){
+					if(mouseEvent.getButton().equals(MouseButton.PRIMARY) && stack.getType().equals(Type.PLAYINGSTACK)){
+			            if(mouseEvent.getClickCount() == 2){			
+			            	boolean exist = false;
+			            	
+			            	for(Cardstack playingStack: playingStacks){
+								if(patienceController.getAcesUpController().existsHigherRankSameSuit(stack.peek(), playingStack)){
+									//game.getEliminationStack().add(playingStack.pop())									
+									 exist = true;
+								}
+							}
+			            	if(exist){
+			            		patienceController.getAcesUpController().executeMove(new Move(stack,eliminationStack,1));
+			            	}
+			            	refreshAll();
+			               
+			            }
+			        }
+				}
+				
+			});
+
+		}
+		row.setOnDragDropped(new DragDropController(acesUpController));
+		row.setOnDragOver(new DragOverController(acesUpController, stack));
+		row.setOnDragEntered(new DragDropEnteredController(acesUpController, stack, row));
+		row.setOnDragDone(new DragDoneController(acesUpController));	
+	}
+
+	@Override
+	public void refreshMove(Move move) {
+		// TODO Auto-generated method stub
+		
+	}
+}

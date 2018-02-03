@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" minHeight="1070.0" minWidth="1100.0" prefHeight="1070.0" prefWidth="1100.0" styleClass="background" stylesheets="@Hauptfenster.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.HauptfensterController">
+   <children>
+      <Label fx:id="varianteText" layoutX="50.0" layoutY="14.0" styleClass="text" stylesheets="@Hauptfenster.css" text="\$Spielvariante" textAlignment="RIGHT" textFill="#ebbb0e">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Button fx:id="hauptmenueButton" layoutX="50.0" layoutY="1000.0" mnemonicParsing="false" onAction="#hauptmenueClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Hauptmenü" />
+      <Button fx:id="newButton" layoutX="193.0" layoutY="1000.0" mnemonicParsing="false" onAction="#newClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Neu" />
+      <Button fx:id="revertButton" layoutX="279.0" layoutY="1000.0" mnemonicParsing="false" onAction="#revertClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Zug rückgängig" />
+      <Button fx:id="tippButton" layoutX="639.0" layoutY="1000.0" mnemonicParsing="false" onAction="#tippButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Tipp" />
+      <Button fx:id="statistikButton" layoutX="853.0" layoutY="1000.0" mnemonicParsing="false" onAction="#statistikButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Statistik" />
+      <Button fx:id="helpButton" layoutX="973.0" layoutY="1000.0" mnemonicParsing="false" onAction="#helpButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Hilfe" />
+      <Pane fx:id="spielfeld" layoutX="50.0" layoutY="60.0" minHeight="900.0" minWidth="1000.0" prefHeight="900.0" prefWidth="1000.0" style="-fx-border-color: ffffff; -fx-border-width: 2;" stylesheets="@Hauptfenster.css" />
+      <Button fx:id="vorspielenButton" layoutX="482.0" layoutY="17.0" mnemonicParsing="false" onAction="#vorspielenButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Spiel Vorspielen lassen" />
+      <Label fx:id="time" layoutX="790.0" layoutY="21.0" styleClass="text" stylesheets="@Hauptfenster.css" text="\$Zeit">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="saveButton" layoutX="721.0" layoutY="1000.0" mnemonicParsing="false" onAction="#saveButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Speichern" />
+      <Button fx:id="weiterButton" layoutX="867.0" layoutY="17.0" mnemonicParsing="false" onAction="#weiterButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Weiter" />
+      <Button fx:id="pauseButton" layoutX="968.0" layoutY="17.0" mnemonicParsing="false" onAction="#pauseButtonClicked" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Pause" />
+   </children>
+</AnchorPane>

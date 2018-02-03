@@ -1,0 +1,22 @@
+package application;
+
+import controller.PatienceController;
+import javafx.scene.layout.Pane;
+import model.Card;
+import model.Cardstack;
+import model.FreeCell;
+
+public abstract class GameGUIController{
+	
+	protected PatienceController patienceController;
+
+	public PatienceController getPatienceController(){
+		return this.patienceController;
+	}
+
+	public void setPatienceController(PatienceController patienceController){
+		this.patienceController = patienceController;
+	}
+	
+	public abstract void init();
+}

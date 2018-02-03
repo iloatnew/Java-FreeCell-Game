@@ -1,0 +1,42 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.Stack;
+
+import application.FreeCellController;
+
+public class FreeCellSpielZuegen {
+
+	private FreeCellController controller;
+	private Stack<FreeCellSpielZug> spielzugList;
+	
+	public FreeCellSpielZuegen(FreeCellController controller){
+		this.controller = controller;
+		this.spielzugList = new Stack<FreeCellSpielZug>();
+	}
+	
+	public void saveZug(){
+		ArrayList<Stapel> spielStapeln = new ArrayList<Stapel>() ;
+		ArrayList<Stapel> freeCellStapeln = new ArrayList<Stapel>();
+		ArrayList<Stapel> homeStapeln = new ArrayList<Stapel>();
+		spielStapeln = controller.spielStapeln;
+		freeCellStapeln = controller.freeCellStapeln;
+		homeStapeln = controller.homeStapeln;
+		spielzugList.add(new FreeCellSpielZug(spielStapeln,freeCellStapeln,homeStapeln));
+	}
+	
+	public  FreeCellSpielZug getZug(int i){
+		return spielzugList.get(i);
+	}
+	
+	public FreeCellSpielZug lastZug(){
+		if(spielzugList.size()>=1){
+			return spielzugList.pop();
+		}
+		return null;
+	}
+	
+	public int zugNumber(){
+		return spielzugList.size();
+	}
+}

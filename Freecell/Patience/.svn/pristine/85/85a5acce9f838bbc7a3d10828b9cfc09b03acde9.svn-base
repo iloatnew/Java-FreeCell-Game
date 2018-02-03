@@ -1,0 +1,34 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import model.Karte;
+import model.Stapel;
+
+public class DragDropCrontroller implements EventHandler<DragEvent> {
+
+	private Stapel stapel;
+
+	private FreeCellController controller;
+
+	public DragDropCrontroller(FreeCellController controller, Stapel stapel) {
+
+		this.stapel = stapel;
+		this.controller = controller;
+	}
+
+	public void handle(DragEvent event) {
+		System.out.println("Drop detected in "+ stapel.hashCode());
+		if(controller.isDroppable(stapel)) {
+			this.stapel.addAll(this.controller.getStapelToDrag());
+		}
+		else {
+			controller.getZiehHerkunft().addAll(controller.getStapelToDrag());
+		}
+		this.controller.refreshKarte();
+	}
+
+}

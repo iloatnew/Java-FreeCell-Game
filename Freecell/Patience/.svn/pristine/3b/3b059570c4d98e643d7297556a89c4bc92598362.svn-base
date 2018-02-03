@@ -1,0 +1,11 @@
+package aui;
+
+import model.Move;
+
+public interface AcesUpAUI {
+	
+	public void initializeStacks(); 
+	public void refreshAll();
+	public void animateMove(Move move);
+
+}

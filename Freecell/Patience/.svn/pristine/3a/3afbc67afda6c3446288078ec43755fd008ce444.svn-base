@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="spielLadenPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #006400;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SpielLadenController">
+   <children>
+      <Button fx:id="gleicheKartenSpiel" layoutX="92.0" layoutY="30.0" mnemonicParsing="false" onAction="#gleicheKarten" prefHeight="26.0" prefWidth="209.0" text="Mit gleichen Karten spielen" />
+      <Button fx:id="neueSpielvarianteStarten" layoutX="92.0" layoutY="110.0" mnemonicParsing="false" onAction="#neueSpielvariante" prefHeight="26.0" prefWidth="209.0" text="Neue Spielvariante starten" />
+      <Button fx:id="spielImportieren" layoutX="92.0" layoutY="150.0" mnemonicParsing="false" onAction="#spielImport" prefHeight="26.0" prefWidth="209.0" text="Spiel importieren" />
+      <Button fx:id="neuesSpielStarten" layoutX="92.0" layoutY="70.0" mnemonicParsing="false" onAction="#neuesSpiel" prefHeight="26.0" prefWidth="209.0" text="Mit zufälligen Karten starten" />
+      <RadioButton fx:id="mensch" layoutX="54.0" layoutY="221.0" mnemonicParsing="false" text="Mensch vs Mensch" textFill="#d6a002">
+         <toggleGroup>
+            <ToggleGroup fx:id="gegnerauswahl" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="kiLeicht" layoutX="54.0" layoutY="250.0" mnemonicParsing="false" text="Ki (leicht)" textFill="#d6a002" toggleGroup="$gegnerauswahl" />
+      <RadioButton fx:id="kiSchwer" layoutX="226.0" layoutY="250.0" mnemonicParsing="false" selected="true" text="KI (schwer)" textFill="#d6a002" toggleGroup="$gegnerauswahl" />
+      <RadioButton fx:id="kiMittel" layoutX="226.0" layoutY="221.0" mnemonicParsing="false" text="KI (mittel)" textFill="#d6a002" toggleGroup="$gegnerauswahl" />
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</AnchorPane>

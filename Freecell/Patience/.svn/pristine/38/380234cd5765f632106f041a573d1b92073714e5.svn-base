@@ -1,0 +1,17 @@
+package model;
+
+public enum Player {
+
+	;
+
+	private String PLAYER1;
+
+	private String PLAYER2;
+
+	private String AIEASY;
+
+	private String AINORMAL;
+
+	private String AIPRO;
+
+}

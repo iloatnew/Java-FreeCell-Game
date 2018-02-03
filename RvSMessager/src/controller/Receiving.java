@@ -21,6 +21,9 @@ public class Receiving extends Thread {
 		this.messager = messager;
 		this.port = port;
 		terminate = false;
+		showTextWithFrame("");
+		showTextWithFrame("YOU CAN FIND THE RECEIVED MESSAGE HERE");
+		showTextWithFrame("");
 	}
 	
 	public void terminate() {
@@ -30,6 +33,8 @@ public class Receiving extends Thread {
 	/**
 	 * read and split the header of messages,
 	 * then let {@link #checkMessageFormat(String)} recognize the type of messages
+	 * in addition, because a receiving thread runs always in the background, it can also take the job of removing inactive peers
+	 * this {@link #messager.deleteInactivPeers()} should be done every second
 	 */
 	@Override
 	public void run(){
@@ -41,6 +46,7 @@ public class Receiving extends Thread {
 		         receivedMessage = br.readLine();
 		         receivedMessages = receivedMessage.split("\\s+");
 		         checkMessageFormat(receivedMessages[0]);
+		         
 	         }
 	         serverSocket.close();
 	      } catch (IOException e) {
@@ -54,12 +60,29 @@ public class Receiving extends Thread {
 	 */
 	private void checkMessageFormat(String format) {
 		switch (format) {
-		case "MESSAGE": handelMessage();
-						break;
-		case "POKE":	handlePoke();
-		default: 		break;
+		case "MESSAGE": 	handelMessage();
+							break;
+		case "POKE":		handlePoke();
+							break;
+		case "DISCONNECT":	handleDisconnect();
+							break;
+		default: 			break;
 		}
 		
+	}
+
+	/**
+	 * handle the user messages with type DISCONNECT
+	 * when the disconnect message is about the peer itself, will be ignored
+	 * otherwise when the peer in the list, remove the peer in the DISCONNECT message from the peer list
+	 * and send the same DISCONNECT message to all other peers in peer list
+	 */
+	private void handleDisconnect() {
+		String name = receivedMessages[1];
+		String ip = receivedMessages[2];
+		int port = Integer.parseInt(receivedMessages[3]);
+		Peer toDelete = new Peer(name,ip,port);
+		messager.deletePeer(toDelete);
 	}
 
 	/**
@@ -72,7 +95,10 @@ public class Receiving extends Thread {
 					  receivedMessage.length()
 					  );
 		String name = receivedMessages[1];
-		System.out.println("                                "+name + ": " + text);
+		showTextWithFrame("");
+		showTextWithFrame(name + ": ");
+		showTextWithFrame(text);
+		showTextWithFrame("");
 	}
 	
 	/**
@@ -85,4 +111,34 @@ public class Receiving extends Thread {
 		Peer targetPeer = new Peer(name, ip, port);
 		messager.refreshPeerList(targetPeer);
 	}
+	
+	private static void showTextWithFrame(String text) {
+		if(text.length()==0) {
+			for(int i=0;i<80;i++) {
+				System.out.print(" ");
+			}
+			for(int i=0;i<40;i++) {
+				System.out.print("×");
+			}
+			System.out.println("");	
+		}
+		else if(text.length()<36) {
+			for(int i=0;i<80;i++) {
+				System.out.print(" ");
+			}
+			String first = "* "+text;
+			System.out.print(first);
+			for(int i =(40-first.length())-1;i>0;i--) {
+				System.out.print(" ");
+			}
+			System.out.println("*");
+		}
+		else {
+			String first = text.substring(0, 35);
+			String last = text.substring(35, text.length());
+			showTextWithFrame(first);
+			showTextWithFrame(last);
+		}
+	}
+
 }

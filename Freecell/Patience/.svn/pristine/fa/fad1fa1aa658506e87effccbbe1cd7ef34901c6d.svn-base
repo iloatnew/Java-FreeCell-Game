@@ -1,0 +1,11 @@
+package model;
+
+public class MultiplayerStatistics {
+
+	private int cardsPlayer1;
+
+	private int cardsPlayer2;
+
+	private Player player2;
+
+}

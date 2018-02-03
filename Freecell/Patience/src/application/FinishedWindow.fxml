@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="finishedWindowPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="147.0" prefWidth="298.0" styleClass="background" stylesheets="@Hauptfenster.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FinishedWindowController">
+   <children>
+      <Label fx:id="finishedText" layoutX="50.0" layoutY="32.0" prefHeight="58.0" prefWidth="278.0" text="\\$Text">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Button fx:id="okButton" layoutX="97.0" layoutY="100.0" mnemonicParsing="false" onAction="#okButtenClicked" prefHeight="32.0" prefWidth="104.0" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Okay" />
+   </children>
+</AnchorPane>

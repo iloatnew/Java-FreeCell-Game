@@ -1,0 +1,78 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
+import model.Karte;
+import model.Stapel;
+
+/**
+ * DragStartController aktiviert, wenn das Image einer Karte gezieht wird
+ * der Controller hat als parameter ein Karte und ihr Image
+ * @author wentao
+ *
+ */
+public class DragStartController implements EventHandler<MouseEvent> {
+
+	private Karte karte;
+	private Stapel stapel;
+	private ImageView karteImgView;
+	private FreeCellController controller;
+	/**
+	 * Noch nicht gemacht: Controller sollte für alle Typen anpassen
+	 * 
+	 * @param stapel
+	 * @param karte
+	 * @param karteImgView
+	 * @param controller
+	 */
+	public DragStartController(FreeCellController controller, ImageView karteImgView, Stapel stapel, Karte karte)
+    {
+        this.karte = karte;
+        this.karteImgView = karteImgView;
+        this.stapel = stapel;
+        this.controller = controller;
+    }
+	
+	
+	public void handle(MouseEvent event) {
+		System.out.println("Drag "+karte.getSort().name()+" "+karte.getWert().name() + " mit Länge "+ stapel.strasseLaenge(karte));
+		
+        // zieht die Karte aus ihres Stapels
+        if(controller.draggable(stapel,karte)) {
+        	Dragboard db = karteImgView.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent(); 
+            // speizifiert für FreeCell:
+            if(controller.getClass().equals(new FreeCellController().getClass())) {
+            	content = setFreeCellContent(content);
+            }
+            db.setContent(content);
+            event.consume();
+        	stapel.removeAllBelow(karte);
+        }
+        
+        controller.refreshKarte();
+	}
+
+	/**
+	 * setzt bild für das geziehte Stapel und gibt das Stapel zurück in Controller
+	 * anderer Controller kann dann das Stapel auch in Controller zugreifen
+	 * @param content
+	 * @return
+	 */
+	private ClipboardContent setFreeCellContent(ClipboardContent content) {
+		 Stapel stapelToDrag = stapel.cloneAllBelow(karte);
+         controller.setStapelToDrag(stapelToDrag);
+         // erzeugt das Bild für mehrere Karten
+         MergeImages mergeImage = new MergeImages(stapelToDrag);
+         content.putImage(mergeImage.getImage());   
+		 return content;
+	}
+	
+}

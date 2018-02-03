@@ -1,0 +1,45 @@
+package controller;
+
+import java.util.ArrayList;
+
+
+import application.FreeCellController;
+import model.Karte;
+import model.Stapel;
+import model.Stapel.StapelType;
+
+public class AutoMoveController {
+
+	private FreeCellController controller;
+	private Stapel moveStart;
+	private Stapel moveZiel;
+	
+	public AutoMoveController(FreeCellController freeCellController) {
+		this.controller = freeCellController;
+		moveStart = new Stapel(StapelType.SPIELFELD);
+		moveZiel = new Stapel(StapelType.HOMECELL);
+	}
+
+	public void move(){
+		Karte toMove = moveStart.pop();
+		moveZiel.add(toMove);
+		controller.refreshKarte();
+	}
+
+	public boolean autoMoveable() {
+		for(Stapel spielStapel : controller.spielStapeln){
+			for(Stapel homeStapel : controller.homeStapeln){
+				if(homeStapel.size()!=0 && spielStapel.size()!=0){
+					Karte karteTop = spielStapel.peek();
+					Karte karteHome = homeStapel.peek();
+					if(karteHome.inGleichSortAufsteigend(karteTop)){
+						moveStart = spielStapel;
+						moveZiel = homeStapel;
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+}

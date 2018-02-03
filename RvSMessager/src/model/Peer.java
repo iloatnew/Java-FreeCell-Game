@@ -37,6 +37,13 @@ public class Peer {
 		return name + " " + ip + " " + port;
 	}
 
+	public boolean samePeer(Peer otherPeer) {
+		if(this.toString().equals(otherPeer.toString()))
+			return true;
+		else 
+			return false;
+	}
+	
 	public long getPokeTime() {
 		return pokeTime;
 	}
@@ -47,6 +54,11 @@ public class Peer {
 
 	public boolean sameNanme(Peer targetPeer) {
 		return this.getName().equals(targetPeer.getName());
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		
 	}
 
 }

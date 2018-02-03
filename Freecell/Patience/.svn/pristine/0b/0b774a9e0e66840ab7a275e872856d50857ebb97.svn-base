@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1000.0" style="-fx-background-color: #009900;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ZankController">
+   <children>
+      <Rectangle fx:id="mitteKaro2" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="505.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="505.0" AnchorPane.topAnchor="171.0" />
+      <Rectangle fx:id="ersatzstapelGegner" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="285.0" layoutY="18.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.topAnchor="18.0" />
+      <Rectangle fx:id="anlegestapel1" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="255.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="650.0" AnchorPane.topAnchor="171.0" />
+      <Rectangle fx:id="ablegestapelGegner" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="610.0" layoutY="18.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="610.0" AnchorPane.topAnchor="18.0" />
+      <Rectangle fx:id="mitteKaro1" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="400.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="505.0" AnchorPane.topAnchor="171.0" />
+      <Rectangle fx:id="anlegestapel5" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="680.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="650.0" AnchorPane.topAnchor="171.0" />
+      <Rectangle fx:id="nachziehstabelGegner" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="458.0" layoutY="18.0" onDragExited="#test5" onMouseReleased="#test34" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="447.0" AnchorPane.topAnchor="18.0" />
+      <Rectangle fx:id="mittePik1" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="400.0" layoutY="311.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="505.0" AnchorPane.topAnchor="311.0" />
+      <Rectangle fx:id="mitteKreuz1" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="400.0" layoutY="451.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="505.0" AnchorPane.topAnchor="451.0" />
+      <Rectangle fx:id="mitteKreuz2" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="505.0" layoutY="451.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="505.0" AnchorPane.topAnchor="451.0" />
+      <Rectangle fx:id="mittePik2" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="505.0" layoutY="311.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="505.0" AnchorPane.topAnchor="311.0" />
+      <Rectangle fx:id="anlegestapel6" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="680.0" layoutY="311.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="650.0" AnchorPane.topAnchor="311.0" />
+      <Rectangle fx:id="anlegestapel2" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="225.0" layoutY="311.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="650.0" AnchorPane.topAnchor="311.0" />
+      <Rectangle fx:id="anlegestapel7" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="680.0" layoutY="451.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="650.0" AnchorPane.topAnchor="451.0" />
+      <Rectangle fx:id="anlegestapel3" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="225.0" layoutY="451.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="650.0" AnchorPane.topAnchor="451.0" />
+      <Rectangle fx:id="anlegestapel8" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="680.0" layoutY="591.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="650.0" AnchorPane.topAnchor="591.0" />
+      <Rectangle fx:id="anlegestapel4" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="225.0" layoutY="591.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="650.0" AnchorPane.topAnchor="591.0" />
+      <Rectangle fx:id="mitteHerz2" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="505.0" layoutY="591.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.leftAnchor="505.0" AnchorPane.topAnchor="591.0" />
+      <Rectangle fx:id="mitteHerz1" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="400.0" layoutY="591.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="505.0" AnchorPane.topAnchor="591.0" />
+      <Rectangle fx:id="nachziehstapelSpieler" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="448.0" layoutY="744.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.bottomAnchor="18.0" AnchorPane.topAnchor="744.0" />
+      <Rectangle fx:id="ersatzstapelSpieler" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="610.0" layoutY="744.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.topAnchor="744.0" />
+      <Rectangle fx:id="ablegestapelSpieler" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="285.0" layoutY="744.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.topAnchor="744.0" />
+      <Rectangle fx:id="ersatzstapelGegner1" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="229.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="670.0" />
+      <Rectangle fx:id="ersatzstapelGegner2" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="197.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="690.0" />
+      <Rectangle fx:id="ersatzstapelGegner3" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="130.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="710.0" />
+      <Rectangle fx:id="ersatzstapelGegner4" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="118.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="730.0" />
+      <Rectangle fx:id="ersatzstapelGegner5" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="70.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="750.0" />
+      <Rectangle fx:id="ersatzstapelGegner6" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="21.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="770.0" />
+      <Rectangle fx:id="ersatzstapelGegner7" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="28.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="790.0" />
+      <Rectangle fx:id="ersatzstapelGegner8" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="-2.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="810.0" />
+      <Rectangle fx:id="ersatzstapelGegner9" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="14.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="830.0" />
+      <Rectangle fx:id="ersatzstapelGegner10" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="850.0" />
+      <Rectangle fx:id="ersatzstapelGegner11" arcHeight="5.0" arcWidth="5.0" fill="#00000044" height="138.0" layoutX="14.0" layoutY="171.0" stroke="BLACK" strokeType="INSIDE" width="95.0" AnchorPane.rightAnchor="870.0" />
+   </children>
+</AnchorPane>

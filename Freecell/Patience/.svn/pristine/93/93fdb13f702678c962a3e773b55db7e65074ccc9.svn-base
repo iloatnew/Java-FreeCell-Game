@@ -1,0 +1,58 @@
+package application;
+
+import controller.PatienceController;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import model.Card;
+import model.Rank;
+import model.Suit;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.fxml.FXMLLoader;
+
+
+public class Main extends Application {
+	
+	private PatienceController patienceController;
+	
+	@Override
+	public void init(){
+		this.patienceController = new PatienceController();
+		this.patienceController.initController();
+	}
+	
+	@Override
+	public void start(Stage primaryStage) {
+		AnchorPane root = new AnchorPane();
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Hauptmenue.fxml"));
+		try {
+			root = fxmlLoader.load();
+			HauptmenueController hauptmenueController = (HauptmenueController) fxmlLoader.getController();
+			hauptmenueController.setPatienceController(this.patienceController);
+			initScene(primaryStage, root);
+			initStage(primaryStage, root);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		primaryStage.show();
+	}
+	
+	private void initScene(Stage primaryStage, AnchorPane root) {
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(Main.class.getResource("application.css").toExternalForm());
+		primaryStage.setScene(scene);
+	}
+
+	private void initStage(Stage primaryStage, AnchorPane root) {
+		primaryStage.setMinHeight(root.getPrefHeight());
+		primaryStage.setMinWidth(root.getPrefWidth());
+		primaryStage.setResizable(false);
+		primaryStage.setTitle("Unser tolles Spiel");
+	}
+
+	
+	public static void main(String[] args) {
+		launch(args);
+		
+	}
+}

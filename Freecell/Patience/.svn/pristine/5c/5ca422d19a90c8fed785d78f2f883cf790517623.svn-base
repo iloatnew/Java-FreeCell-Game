@@ -1,0 +1,291 @@
+package controller;
+
+import java.util.Stack;
+
+import application.AcesUpGUIController;
+import application.FreeCellGUIController;
+import application.GameGUIController;
+import application.ZankGUIController;
+import javafx.animation.PathTransition;
+import javafx.collections.ObservableList;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
+import model.Cardstack;
+import model.Move;
+import model.Type;
+import movecontroller.MergeImages;
+
+public class AnimationController {
+	
+	private GameGUIController gameGUIController;
+	private Move move;
+	private Stack<Move> allmove;
+	private AnchorPane hauptPane;
+	private AcesUpController acesUpController;
+	
+	public AnimationController(GameGUIController gameGUIController, Move move, AnchorPane hauptPane){
+		this.gameGUIController = gameGUIController;
+		this.move = move;
+		this.hauptPane = hauptPane;
+	}
+	
+
+
+	public void doAnimation(boolean allMove){
+		PlaceInfo placeInfo = new PlaceInfo(move);
+		ImageView animeImg = placeInfo.getImg();
+		hauptPane.getChildren().add(animeImg);
+	
+		ImageView tmpview = placeInfo.getTmpView();
+		if(tmpview!=null){
+			ObservableList<Node> nodes = ((Pane) tmpview.getParent()).getChildren();
+		
+			int tmpsize = move.getNumberOfCards();
+			if(move.getFrom().size() >= tmpsize && nodes.size()>=move.getFrom().size()){
+				while (tmpsize > 0) {
+					((ImageView) nodes.get(move.getFrom().size() - tmpsize)).setImage(null);
+					tmpsize--;
+				}
+			}
+		}
+		
+		Path path = new Path();
+	
+		path.getElements().add(new MoveTo(placeInfo.getStartX(), placeInfo.getStartY()));
+		path.getElements().add(new LineTo(placeInfo.getEndX(), placeInfo.getEndY()));
+	
+		PathTransition pathTransition = new PathTransition();
+		pathTransition.setDuration(Duration.millis(500));
+		pathTransition.setPath(path);
+		pathTransition.setNode(animeImg);
+		pathTransition.setCycleCount(1);
+	
+	
+		pathTransition.play();
+	
+		if(gameGUIController instanceof ZankGUIController){
+			ZankGUIController zankGUIController = (ZankGUIController)gameGUIController;
+			pathTransition.setOnFinished(element -> {
+				hauptPane.getChildren().remove(animeImg);
+				zankGUIController.refreshAll();
+			});
+		}
+		else if(gameGUIController instanceof FreeCellGUIController){
+			FreeCellGUIController freeCellGUIController = (FreeCellGUIController)gameGUIController;
+			pathTransition.setOnFinished(element -> {
+				hauptPane.getChildren().remove(animeImg);
+				freeCellGUIController.refreshAll();
+			});
+		}
+		else if(gameGUIController instanceof AcesUpGUIController){
+			AcesUpGUIController acesUpGUIController = (AcesUpGUIController)gameGUIController;
+			pathTransition.setOnFinished(element -> {
+				hauptPane.getChildren().remove(animeImg);
+				acesUpGUIController.refreshAll();
+				if(allMove){
+					acesUpController.autoPlay();
+				}
+			});
+		}
+	}	
+	
+	private class PlaceInfo {
+			private ImageView animeImg;
+			private ImageView tmpView;
+			private double startX;
+			private double startY;
+			private double endX;
+			private double endY;
+		
+			private PlaceInfo(Move move) {
+				startX = 0;
+				startY = 0;
+				endX = 0;
+				endY = 0;
+				Cardstack stapelToAnime = move.getFrom().cloneAllBelow(move.getNumberOfCards());
+				MergeImages merge = new MergeImages(stapelToAnime);
+				animeImg = new ImageView(merge.getImage());
+				locate(move);
+			}
+		
+			private void locate(Move move) {
+				int iForEnd = move.getTo().getLocation();
+				int iForStart = move.getFrom().getLocation();
+				Node nodeForEnd = null;
+				Node nodeForStart = null;
+				if(gameGUIController instanceof ZankGUIController){
+					ZankGUIController zankGUIController = (ZankGUIController)gameGUIController;
+					Type typeTo = move.getTo().getType();
+					Type typeFrom = move.getFrom().getType();
+					nodeForEnd = locateForZank(move, iForEnd, nodeForEnd, zankGUIController, typeTo, false);
+					nodeForStart = locateForZank(move, iForStart, nodeForStart, zankGUIController, typeFrom, true);
+				}
+				else if(gameGUIController instanceof FreeCellGUIController){
+					FreeCellGUIController freeCelGUIController = (FreeCellGUIController)gameGUIController;
+					Type typeTo = move.getTo().getType();
+					Type typeFrom = move.getFrom().getType();
+					nodeForEnd = locateForFreeCell(move, iForEnd, nodeForEnd, freeCelGUIController, typeTo, false);
+					nodeForStart = locateForFreeCell(move, iForStart, nodeForStart, freeCelGUIController, typeFrom, true);
+				}
+				else if(gameGUIController instanceof AcesUpGUIController){
+					AcesUpGUIController acesUpGUIController = (AcesUpGUIController)gameGUIController;
+					Type typeTo = move.getTo().getType();
+					Type typeFrom = move.getFrom().getType();
+					nodeForEnd = locateForAcesUp(move, iForEnd, nodeForEnd, acesUpGUIController, typeTo, false);
+					nodeForStart = locateForAcesUp(move, iForStart, nodeForStart, acesUpGUIController, typeFrom, true);
+				}
+				Bounds boundsForEnd = nodeForEnd.localToScene(nodeForEnd.getBoundsInLocal());
+				Bounds boundsForStart = nodeForStart.localToScene(nodeForStart.getBoundsInLocal());
+				endX += boundsForEnd.getMinX();
+				endY += boundsForEnd.getMinY();
+				startX += boundsForStart.getMinX();
+				startY += boundsForStart.getMinY();
+			}
+
+			private Node locateForAcesUp(Move move, int index, Node node,
+					AcesUpGUIController acesUpGUIController, Type type, boolean setImg) {
+				switch (type) {
+				case TALON:
+					node = acesUpGUIController.talonPane;
+					if(setImg)
+						tmpView = (ImageView) acesUpGUIController.talonPane.getChildren().get(0);
+					break;
+				case ELIMINATIONSTACK:
+					node = acesUpGUIController.eliminationPane;
+					if(setImg)
+						tmpView = (ImageView) acesUpGUIController.eliminationPane.getChildren().get(acesUpGUIController.eliminationPane.getChildren().size() - 1);
+					break;
+				case PLAYINGSTACK:
+					if(acesUpGUIController.spielfeld.get(index).getChildren().size() >=move.getNumberOfCards()){
+						node = acesUpGUIController.spielfeld.get(index).getChildren()
+								.get(acesUpGUIController.spielfeld.get(index).getChildren().size() - move.getNumberOfCards());
+					}
+					else{
+						node = acesUpGUIController.spielfeld.get(index);
+					}
+					if(setImg)
+						tmpView = (ImageView) node;
+					break;
+				default:
+				}
+				return node;
+			}
+
+			private Node locateForFreeCell(Move move, int index, Node node,
+					FreeCellGUIController freeCelGUIController, Type type, boolean setImg) {
+				switch (type) {
+				case FREECELL:
+					node = freeCelGUIController.freecell.get(index);
+					if(setImg)
+						tmpView = (ImageView) freeCelGUIController.freecell.get(index).getChildren().get(0);
+					break;
+				case HOMECELL:
+					node = freeCelGUIController.homecell.get(index);
+					if(setImg)
+						tmpView = (ImageView) freeCelGUIController.homecell.get(index).getChildren().get(freeCelGUIController.homecell.get(index).getChildren().size() - 1);
+					break;
+				case PLAYINGSTACK:
+					node = freeCelGUIController.spielfeld.get(index).getChildren()
+							.get(freeCelGUIController.spielfeld.get(index).getChildren().size() - move.getNumberOfCards());
+					if(setImg)
+						tmpView = (ImageView) node;
+					break;
+				default:
+				}
+				return node;
+			}
+
+			private Node locateForZank(Move move, int index, Node node, ZankGUIController gameGUIController, Type type, boolean setImg) {
+				switch (type) {
+				case PLAYINGSTACK:
+					if(gameGUIController.playingPanes.get(index).getChildren().size() >=move.getNumberOfCards()){
+						node = gameGUIController.playingPanes.get(index).getChildren()
+								.get(gameGUIController.playingPanes.get(index).getChildren().size() - move.getNumberOfCards());
+					}
+					else{
+						node = gameGUIController.playingPanes.get(index);
+					}
+					if(setImg && !(node instanceof Pane) )
+						tmpView = (ImageView) node;
+					break;
+				case ELIMINATIONSTACKCLUB:
+					node = gameGUIController.eliminationPanes.get(index);
+					if(setImg)
+						tmpView =  (ImageView) gameGUIController.eliminationPanes.get(index).getChildren().get(gameGUIController.eliminationPanes.get(index).getChildren().size() - 1);
+					break;
+				case ELIMINATIONSTACKDIAMOND:
+					node = gameGUIController.eliminationPanes.get(index);
+					if(setImg)
+						tmpView =  (ImageView) gameGUIController.eliminationPanes.get(index).getChildren().get(gameGUIController.eliminationPanes.get(index).getChildren().size() - 1);
+					break;
+				case ELIMINATIONSTACKHEART:
+					node = gameGUIController.eliminationPanes.get(index);
+					if(setImg)
+						tmpView =  (ImageView) gameGUIController.eliminationPanes.get(index).getChildren().get(gameGUIController.eliminationPanes.get(index).getChildren().size() - 1);
+					break;
+				case ELIMINATIONSTACKSPADE:
+					node = gameGUIController.eliminationPanes.get(index);
+					if(setImg)
+						tmpView =  (ImageView) gameGUIController.eliminationPanes.get(index).getChildren().get(gameGUIController.eliminationPanes.get(index).getChildren().size() - 1);
+					break;
+				case HAND:
+					node = gameGUIController.handPanes.get(index);
+					if(setImg)
+						tmpView =  (ImageView) gameGUIController.handPanes.get(index).getChildren().get(gameGUIController.handPanes.get(index).getChildren().size() - 1);
+					break;
+				case RESERVE:
+					node = gameGUIController.reservePanes.get(index);
+					if(setImg)
+						tmpView =  (ImageView) gameGUIController.reservePanes.get(index).getChildren().get(gameGUIController.reservePanes.get(index).getChildren().size() - 1);
+					break;
+				case WASTEPILE:
+					node = gameGUIController.wastePanes.get(index);
+					if(setImg)
+						tmpView =  (ImageView) gameGUIController.wastePanes.get(index).getChildren().get(gameGUIController.wastePanes.get(index).getChildren().size() - 1);
+					break;
+				default:
+					break;
+
+				}
+				return node;
+			}
+		
+		
+			private ImageView getImg() {
+				return animeImg;
+			}
+		
+			public double getStartX() {
+				return startX;
+			}
+		
+			public double getStartY() {
+				return startY;
+			}
+		
+			public double getEndX() {
+				return endX;
+			}
+		
+			public double getEndY() {
+				return endY;
+			}
+		
+			public ImageView getTmpView() {
+				return tmpView;
+			}
+		}
+
+	public void giveController(AcesUpController acesUpController) {
+		this.acesUpController = acesUpController;
+		
+	}
+
+}

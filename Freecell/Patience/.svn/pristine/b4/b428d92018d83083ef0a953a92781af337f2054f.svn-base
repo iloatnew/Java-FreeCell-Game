@@ -1,0 +1,44 @@
+package model;
+
+import java.util.ArrayList;
+
+import application.FreeCellController;
+
+public class FreeCellSpielZug {
+	private Stapel startStapel;
+	private Stapel zielStapel;
+	private int bewegStapel;
+	
+	public FreeCellSpielZug(Stapel startStapel,Stapel zielStapel, int bewegStapel){
+		this.setStartStapel(startStapel);
+		this.setZielStapel(zielStapel);
+		this.setBewegStapel(bewegStapel);
+	}
+
+	public Stapel getStartStapel() {
+		return startStapel;
+	}
+
+	public void setStartStapel(Stapel startStapel) {
+		this.startStapel = startStapel;
+	}
+
+	public Stapel getZielStapel() {
+		return zielStapel;
+	}
+
+	public void setZielStapel(Stapel zielStapel) {
+		this.zielStapel = zielStapel;
+	}
+
+	public int getBewegStapel() {
+		return bewegStapel;
+	}
+
+	public void setBewegStapel(int bewegStapel) {
+		this.bewegStapel = bewegStapel;
+	}
+	
+	
+	
+}

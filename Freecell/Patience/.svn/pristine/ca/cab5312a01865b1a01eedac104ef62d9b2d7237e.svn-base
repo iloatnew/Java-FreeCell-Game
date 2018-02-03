@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.StatistikController">
+   <children>
+      <TabPane prefHeight="400.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="1.8E300" tabMaxWidth="1.8E300" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab fx:id="acesUpTab" styleClass="silent-shiny-orange-color" text="IdiotenPatience">
+               <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="400.0" styleClass="inner-pane">
+                     <children>
+                        <Label layoutX="14.0" layoutY="30.0" text="gespielte Spiele:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="30.0" />
+                        <Label layoutX="14.0" layoutY="68.0" text="davon gewonnen:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="70.0" />
+                        <Label layoutX="14.0" layoutY="106.0" text="Gewinnrate:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="110.0" />
+                        <Label fx:id="acesUpNumberOfGamesLabel" layoutX="200.0" layoutY="30.0" text="\$Anzahl gespielter Spiele" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="30.0" />
+                        <Label fx:id="acesUpWonGamesLabel" layoutX="200.0" layoutY="68.0" text="\$Anzahl gewonnener Spiele" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="70.0" />
+                        <Label fx:id="acesUpWinRateLabel" layoutX="200.0" layoutY="106.0" text="\$Rate in %" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="110.0" />
+                        <Separator layoutX="-1.0" layoutY="181.0" prefHeight="0.0" prefWidth="400.0" style="-fx-region-background: linear-gradient(#ffd65b, #e68400),        linear-gradient(#ffef84, #f2ba44),        linear-gradient(#ffea6a, #efaa22),        linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),        linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="180.0" />
+                        <Label layoutX="15.0" layoutY="196.0" text="verlorene Spiele:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="200.0" />
+                        <Label layoutX="40.0" layoutY="236.0" text="bis zu 25%  gelöst:" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="240.0" />
+                        <Label layoutX="40.0" layoutY="266.0" text="zwischen 25 % und 50% gelöst:" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="270.0" />
+                        <Label layoutX="40.0" layoutY="296.0" text="zwischen 50% und 75% gelöst:" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="300.0" />
+                        <Label layoutX="40.0" layoutY="326.0" text="zwischen 75% und 100% gelöst:" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="330.0" />
+                        <Label fx:id="acesUpSolutionRank1Label" layoutX="300.0" layoutY="236.0" text="\$WERT" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="240.0" />
+                        <Label fx:id="acesUpSolutionRank4Label" layoutX="300.0" layoutY="326.0" text="\$WERT" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="330.0" />
+                        <Label fx:id="acesUpSolutionRank3Label" layoutX="300.0" layoutY="296.0" text="\$WERT" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="300.0" />
+                        <Label fx:id="acesUpSolutionRank2Label" layoutX="300.0" layoutY="266.0" text="\$WERT" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="270.0" />
+                        <Label fx:id="acesUpLostGamesLabel" layoutX="200.0" layoutY="196.0" text="\$Anzahl verlorener Spiele" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="200.0" />
+                        <Label layoutX="14.0" layoutY="146.0" text="durchschnittl. Spielzeit:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="150.0" />
+                        <Label fx:id="acesUpAverageTimeLabel" layoutX="201.0" layoutY="151.0" text="\$Zeit" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="150.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+          </Tab>
+          <Tab fx:id="freecellTab" styleClass="silent-shiny-orange-color" text="FreeCell">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="380.0" prefWidth="400.0" styleClass="inner-pane">
+                     <children>
+                        <Label layoutX="14.0" layoutY="30.0" text="gespielte Spiele:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="30.0" />
+                        <Label layoutX="14.0" layoutY="68.0" text="davon gewonnen:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="70.0" />
+                        <Label layoutX="14.0" layoutY="106.0" text="Gewinnrate:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="110.0" />
+                        <Label fx:id="freecellNumberOfGamesLabel" layoutX="200.0" layoutY="30.0" text="\$Anzahl gespielter Spiele" />
+                        <Label fx:id="freecellWonGamesLabel" layoutX="200.0" layoutY="68.0" text="\$Anzahl gewonnener Spiele" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="70.0" />
+                        <Label fx:id="freecellWinRateLabel" layoutX="200.0" layoutY="106.0" text="\$Rate in %" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="110.0" />
+                        <Separator layoutY="144.0" prefWidth="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="180.0" />
+                        <Label layoutX="23.0" layoutY="205.0" text="verlorene Spiele:" AnchorPane.leftAnchor="23.0" AnchorPane.topAnchor="200.0" />
+                        <Label layoutX="48.0" layoutY="245.0" text="bis zu 25%  gelöst:" AnchorPane.leftAnchor="48.0" AnchorPane.topAnchor="240.0" />
+                        <Label layoutX="48.0" layoutY="275.0" text="zwischen 25 % und 50% gelöst:" AnchorPane.leftAnchor="48.0" AnchorPane.topAnchor="270.0" />
+                        <Label layoutX="48.0" layoutY="305.0" text="zwischen 50% und 75% gelöst:" AnchorPane.leftAnchor="48.0" AnchorPane.topAnchor="300.0" />
+                        <Label layoutX="48.0" layoutY="335.0" text="zwischen 75% und 100% gelöst:" AnchorPane.leftAnchor="48.0" AnchorPane.topAnchor="330.0" />
+                        <Label fx:id="freecellSolutionRank4Label" layoutX="308.0" layoutY="335.0" text="\$WERT" AnchorPane.leftAnchor="308.0" AnchorPane.topAnchor="330.0" />
+                        <Label fx:id="freecellSolutionRank3Label" layoutX="308.0" layoutY="305.0" text="\$WERT" AnchorPane.leftAnchor="308.0" AnchorPane.topAnchor="300.0" />
+                        <Label fx:id="freecellSolutionRank2Label" layoutX="308.0" layoutY="275.0" text="\$WERT" AnchorPane.leftAnchor="308.0" AnchorPane.topAnchor="270.0" />
+                        <Label fx:id="freecellSolutionRank1Label" layoutX="308.0" layoutY="245.0" text="\$WERT" AnchorPane.leftAnchor="308.0" AnchorPane.topAnchor="240.0" />
+                        <Label fx:id="freecellLostGamesLabel" layoutX="208.0" layoutY="205.0" text="\$Anzahl verlorener Spiele" AnchorPane.leftAnchor="208.0" AnchorPane.topAnchor="200.0" />
+                        <Label layoutX="16.0" layoutY="151.0" text="durchschnittl. Spielzeit: " AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="150.0" />
+                        <Label fx:id="freecellAverageTimeLabel" layoutX="201.0" layoutY="151.0" text="\$Zeit" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="150.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+          </Tab>
+            <Tab fx:id="zankPatienceTab" styleClass="silent-shiny-orange-color" text="ZankPatience">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="inner-pane">
+                     <children>
+                        <Label layoutX="40.0" layoutY="23.0" text="gespielte Spiele:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="30.0" />
+                        <Label layoutX="15.0" layoutY="337.0" text="Gewinnrate:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="220.0" />
+                        <Label fx:id="zankNumberOfGamesLabel" layoutX="223.0" layoutY="38.0" text="\$Anzahl gespielter Spiele" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="30.0" />
+                        <Label fx:id="zankWinRateLabel" layoutX="200.0" layoutY="337.0" text="\$Rate in %" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="220.0" />
+                        <Label layoutX="27.0" layoutY="86.0" text="gegen leichten COM:" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="90.0" />
+                        <Label layoutX="23.0" layoutY="120.0" text="gegen mittleren COM:" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="120.0" />
+                        <Label layoutX="29.0" layoutY="158.0" text="gegen starken COM:" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="150.0" />
+                        <Label fx:id="zankStatisticsCom1Label" layoutX="200.0" layoutY="86.0" text="\$Anzahl gespielt/gewonnen" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="90.0" />
+                        <Label fx:id="zankStatisticsCom2Label" layoutX="200.0" layoutY="120.0" text="\$Anzahl gespielt/gewonnen" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="120.0" />
+                        <Label fx:id="zankStatisticsCom3Label" layoutX="212.0" layoutY="191.0" text="\$Anzahl gespielt/gewonnen" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="150.0" />
+                        <Label layoutX="29.0" layoutY="199.0" text="gegen Mensch:" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="180.0" />
+                        <Label fx:id="zankStatisticsPlayer2Label" layoutX="181.0" layoutY="220.0" prefHeight="16.0" prefWidth="185.0" text="\$Anzahl gespielt/gewonnen" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="180.0" />
+                        <Label layoutX="202.0" layoutY="57.0" text="(gespielt/ gewonnen)" textFill="#00000077" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="60.0" />
+                        <Label layoutX="14.0" layoutY="255.0" text="durchschnittl. Spielzeit:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="250.0" />
+                        <Label layoutX="201.0" layoutY="255.0" text="\$Zeit" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="250.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+         <stylesheets>
+            <URL value="@Hauptfenster.css" />
+            <URL value="@Statistics.css" />
+         </stylesheets>
+         <styleClass>
+            <String fx:value="shiny-orange-color" />
+            <String fx:value="TabPane" />
+         </styleClass>
+      </TabPane>
+   </children>
+</AnchorPane>

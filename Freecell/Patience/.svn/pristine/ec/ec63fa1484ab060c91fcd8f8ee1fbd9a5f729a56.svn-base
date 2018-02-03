@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="spielLadenPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="400.0" style="-fx-background-color: #006400;" stylesheets="@Hauptfenster.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SpielLadenController">
+   <children>
+      <Button fx:id="gleicheKartenSpiel" layoutX="60.0" layoutY="30.0" mnemonicParsing="false" onAction="#gleicheKarten" prefHeight="38.0" prefWidth="280.0" styleClass="shiny-orange" stylesheets="@Hauptfenster.css" text="Mit gleichen Karten spielen" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="30.0" />
+      <Button fx:id="neueSpielvarianteStarten" layoutX="60.0" layoutY="130.0" mnemonicParsing="false" onAction="#neueSpielvariante" prefHeight="26.0" prefWidth="280.0" styleClass="shiny-orange" text="Zurück zum Hauptmenü" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="130.0" />
+      <Button fx:id="neuesSpielStarten" layoutX="60.0" layoutY="80.0" mnemonicParsing="false" onAction="#neuesSpiel" prefHeight="38.0" prefWidth="280.0" styleClass="shiny-orange" text="Mit zufälligen Karten starten" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="80.0" />
+      <Separator fx:id="separator" layoutX="2.0" layoutY="195.0" prefHeight="0.0" prefWidth="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="201.0" />
+      <Label fx:id="player1Label" layoutX="24.0" layoutY="219.0" text="Spieler 1:" textFill="#d6a002" AnchorPane.leftAnchor="24.0" AnchorPane.topAnchor="225.0" />
+      <ChoiceBox fx:id="player1" layoutX="96.0" layoutY="214.0" prefWidth="150.0" AnchorPane.topAnchor="220.0" />
+      <Label fx:id="player2Label" layoutX="24.0" layoutY="262.0" text="Spieler 2:" textFill="#d6a002" AnchorPane.topAnchor="265.0" />
+      <ChoiceBox fx:id="player2" layoutX="96.0" layoutY="257.0" prefWidth="150.0" AnchorPane.topAnchor="260.0" />
+      <Label fx:id="beginner" layoutX="24.0" layoutY="301.0" text="Wer soll anfangen?" textFill="#d6a002" AnchorPane.topAnchor="300.0" />
+      <RadioButton fx:id="startPlayer1" layoutX="24.0" layoutY="328.0" mnemonicParsing="false" text="Spieler 1" textFill="#d6a002" AnchorPane.topAnchor="330.0">
+         <toggleGroup>
+            <ToggleGroup fx:id="startplayer" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="startPlayer2" layoutX="194.0" layoutY="328.0" mnemonicParsing="false" text="Spieler 2" textFill="#d6a002" toggleGroup="$startplayer" AnchorPane.topAnchor="330.0" />
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</AnchorPane>

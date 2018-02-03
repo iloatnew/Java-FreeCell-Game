@@ -1,0 +1,43 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import model.Karte;
+import model.Stapel;
+
+public class DragDropCrontroller implements EventHandler<DragEvent> {
+
+	
+
+	private FreeCellController controller;
+	private AutoMoveController autoMoveController;
+	
+	public DragDropCrontroller(FreeCellController controller) {
+		this.controller = controller;
+		autoMoveController = new AutoMoveController(this.controller);
+	}
+
+	public void handle(DragEvent event) {
+		System.out.println("Drop detected in "+ controller.getZielStapel().hashCode());
+		if(controller.isDroppable(controller.getZielStapel())) {
+			this.controller.getZielStapel().addAll(this.controller.getStapelToDrag());
+			controller.spielZug++;
+			controller.zuegen.saveZug();
+			event.consume();
+		}
+		else {
+			controller.getZiehHerkunft().addAll(controller.getStapelToDrag());
+			event.consume();
+		}
+		while(autoMoveController.autoMoveable()){
+			autoMoveController.move();
+			this.controller.refreshKarte();
+		}
+		
+		this.controller.refreshKarte();
+	}
+
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#test" prefHeight="900.0" prefWidth="1000.0" styleClass="background" stylesheets="@Hauptfenster.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.IdiotenController">
+   <children>
+      <Rectangle fx:id="nachziehStapel" arcHeight="5.0" arcWidth="5.0" fill="#ffffff45" height="153.0" layoutX="15.0" layoutY="15.0" stroke="BLACK" strokeType="OUTSIDE" width="105.0" AnchorPane.leftAnchor="114.0" AnchorPane.topAnchor="14.0" />
+      <Rectangle fx:id="spielStapel1" arcHeight="5.0" arcWidth="5.0" fill="#ffffff45" height="153.0" layoutX="200.0" layoutY="15.0" stroke="BLACK" strokeType="OUTSIDE" width="105.0" AnchorPane.leftAnchor="269.0" AnchorPane.topAnchor="14.0" />
+      <Rectangle fx:id="spielStapel4" arcHeight="5.0" arcWidth="5.0" fill="#ffffff45" height="153.0" layoutX="739.0" layoutY="15.0" stroke="BLACK" strokeType="OUTSIDE" width="105.0" AnchorPane.leftAnchor="627.0" AnchorPane.topAnchor="14.0" />
+      <Rectangle fx:id="spielStapel3" arcHeight="5.0" arcWidth="5.0" fill="#ffffff45" height="153.0" layoutX="567.0" layoutY="15.0" stroke="BLACK" strokeType="OUTSIDE" width="105.0" AnchorPane.leftAnchor="507.0" AnchorPane.topAnchor="14.0" />
+      <Rectangle fx:id="spielStapel2" arcHeight="5.0" arcWidth="5.0" fill="#ffffff45" height="153.0" layoutX="409.0" layoutY="21.0" stroke="BLACK" strokeType="OUTSIDE" width="105.0" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="14.0" />
+      <Rectangle fx:id="ablegeStapel" arcHeight="5.0" arcWidth="5.0" fill="#ffffff45" height="153.0" layoutX="1012.0" layoutY="15.0" stroke="BLACK" strokeType="OUTSIDE" width="105.0" AnchorPane.rightAnchor="114.0" AnchorPane.topAnchor="14.0" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,49 @@
+package aicontroller;
+
+import controller.AutoMoveController;
+import controller.PatienceController;
+import exceptions.IllegalGameArgumentException;
+import exceptions.NoMovesPossibleException;
+import exceptions.NotEnoughCardsOnPlaystacksException;
+import model.AcesUp;
+import model.Game;
+import model.Move;
+import model.Zank;
+
+
+/**
+ * @author Steven, Luise
+ * The ZankAIController is the AI For Zank.
+ */
+
+public class ZankAIController extends AIController {
+
+	private Zank zank;
+
+	private ZankAI startAI;
+	private AutoMoveController autoMoveController;
+
+	public ZankAIController(){
+		
+	}	
+	
+	@Override
+	public void setGame(Game game) throws IllegalGameArgumentException {
+		if(game.getClass() == AcesUp.class){
+			zank = (Zank) game;
+		}
+		else{
+			throw new IllegalGameArgumentException();
+		}
+	}
+	
+	public void initAI(AutoMoveController autoMoveController){
+		this.autoMoveController = autoMoveController;
+		startAI = new ZankAI(this, zank, autoMoveController);
+	}
+	
+	@Override
+	public Move getNextMove() throws NotEnoughCardsOnPlaystacksException, NoMovesPossibleException {
+		return startAI.getNextMove();
+	}
+}

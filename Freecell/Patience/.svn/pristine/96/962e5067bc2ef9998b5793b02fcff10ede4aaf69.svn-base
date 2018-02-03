@@ -1,0 +1,86 @@
+package application;
+
+import javafx.fxml.FXML;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
+
+public class ZankController {
+
+    @FXML
+    private Rectangle mitteKaro2;
+
+    @FXML
+    private Rectangle ersatzstapelGegner;
+
+    @FXML
+    private Rectangle anlegestapel1;
+
+    @FXML
+    private Rectangle ablegestapelGegner;
+
+    @FXML
+    private Rectangle mitteKaro1;
+
+    @FXML
+    private Rectangle anlegestapel5;
+
+    @FXML
+    private Rectangle nachziehstabelGegner;
+
+    @FXML
+    private Rectangle mittePik1;
+
+    @FXML
+    private Rectangle mitteKreuz1;
+
+    @FXML
+    private Rectangle mitteKreuz2;
+
+    @FXML
+    private Rectangle mittePik2;
+
+    @FXML
+    private Rectangle anlegestapel6;
+
+    @FXML
+    private Rectangle anlegestapel2;
+
+    @FXML
+    private Rectangle anlegestapel7;
+
+    @FXML
+    private Rectangle anlegestapel3;
+
+    @FXML
+    private Rectangle anlegestapel8;
+
+    @FXML
+    private Rectangle anlegestapel4;
+
+    @FXML
+    private Rectangle mitteHerz2;
+
+    @FXML
+    private Rectangle mitteHerz1;
+
+    @FXML
+    private Rectangle nachziehstapelSpieler;
+
+    @FXML
+    private Rectangle ersatzstapelSpieler;
+
+    @FXML
+    private Rectangle ablegestapelSpieler;
+
+    @FXML
+    void test34(MouseEvent event) {
+
+    }
+
+    @FXML
+    void test5(DragEvent event) {
+
+    }
+
+}

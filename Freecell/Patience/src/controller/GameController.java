@@ -1,0 +1,211 @@
+package controller;
+
+import java.util.Date;
+
+import aicontroller.AIController;
+import model.Card;
+import model.Cardstack;
+import model.Move;
+
+
+/**
+ * @author Luise
+ * this class specifies all methods which the single patience version Controller need to implement
+ * implemented by : AcesUpController, FreeCellController, ZankController
+ */
+
+public abstract class GameController {
+
+	protected Cardstack targetStack;
+	protected Cardstack stackToDrag;
+	protected Cardstack sourceStack;
+	private long startTime;
+	protected AIController aIController; 
+	
+	protected PatienceController patienceController;
+	protected AutoMoveController autoMoveController;
+	protected boolean autoplay = false;
+	protected boolean animationFinished = true;
+
+	
+	/**
+	 * initializes the game by calling the current game and starStack from patienceController
+	 * then laying the cards on the playing field
+	 */
+	public abstract void initGame();
+
+	/**
+	 * @param stack, card
+	 * @return True, if the given card is draggable from the given cardstack
+	 * false, otherwise
+	 */
+	public abstract boolean isDraggable(Cardstack stack, Card card);
+	
+	/**
+	 * @param stack
+	 * checks if given cardstack is droppaple on the stored targetStack(private attribute)
+	 */
+	public abstract boolean isDroppable(Cardstack stack);
+
+	/**
+	 * checks if the game is finished
+	 */
+	public abstract boolean isFinished();
+	
+	/**
+	 * calls the AI and executes the next Move the AI suggests
+	 */
+	public abstract void autoPlay();
+	
+	public abstract void showTipp();
+	
+	/**
+	 * reverts the last move from the history, deletes it from the history
+	 */
+	public abstract void undoMove();
+
+	/**
+	 * adds a new statistics object to the statistics of the current game 
+	 */
+	public abstract void addStatistics();
+	
+	
+	/**
+	 * discards all cards from the current stacks and initializes another game with the same cards
+	 */
+	public abstract void restartGame();
+	
+	/**
+	 * cancels the current Game 
+	 */
+	public abstract void cancelGame();
+	
+	
+	/**
+	 * @param move
+	 *  executes the given move
+	 */
+	public abstract void executeMove(Move move);
+
+	
+	/**
+	 * calls AUI to update the cardstacks of the current game
+	 */
+	public abstract void refreshKarte();
+
+	
+	/**
+	 * @param patienceController
+	 * sets the private attribute patienceController
+	 */
+	public void setPatienceController(PatienceController patienceController){
+		this.patienceController = patienceController;
+	}
+	
+	/**
+	 * @return stored private attribute patienceController
+	 * 
+	 */
+	public PatienceController getPatienceController(){
+		return this.patienceController;
+	}
+	
+	/**
+	 * @param aiController
+	 * sets the private attribute aiController
+	 */
+	public void setAIController(AIController aIController){
+		this.aIController = aIController;
+	}
+	
+	/**
+	 * @return stored private attribute aiController
+	 * 
+	 */
+	public AIController getAIController(){
+		return this.aIController;
+	}	
+	
+	public void setAutoMoveController(AutoMoveController autoMoveController){
+		this.autoMoveController = autoMoveController;
+	}
+	
+	public AutoMoveController getAutoMoveController(){
+		return autoMoveController;
+	}
+	
+	public void switchAutplay(){
+		this.autoplay = !autoplay;
+	}	
+
+	/**
+	 * @return stored private attribute targetStack
+	 * 
+	 */
+	public Cardstack getTargetStack() {
+		return targetStack;
+	}
+
+	/**
+	 * @param targetStack
+	 * sets the private attribute targetStack
+	 */
+	public void setTargetStack(Cardstack targetStack) {
+		this.targetStack = targetStack;
+	}
+
+	/**
+	 * @return stored private attribute stackToDrag
+	 * 
+	 */
+	public Cardstack getStackToDrag() {
+		return stackToDrag;
+	}
+
+	/**
+	 * @param currentDrag
+	 * sets the private attribute currentDrag
+	 */
+	public void setStackToDrag(Cardstack currentDrag) {
+		this.stackToDrag = currentDrag;
+	}
+
+	/**
+	 * @return stored private attribute sourceStack
+	 * 
+	 */
+	public Cardstack getSourceStack() {
+		return sourceStack;
+	}
+
+	/**
+	 * @param sourceStack
+	 * sets the private attribute sourceStack
+	 */
+	public void setSourceStack(Cardstack sourceStack) {
+		this.sourceStack = sourceStack;
+	}
+	
+	/**
+	 * @return stored private attribute startTime
+	 * 
+	 */
+	public long getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * @param startTime
+	 * sets the private attribute startTime
+	 */
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @return duration of the game in seconds
+	 */
+	public int getElapsedTime() {
+		return (int)(((new Date()).getTime() - this.startTime))/1000;
+	}		
+}

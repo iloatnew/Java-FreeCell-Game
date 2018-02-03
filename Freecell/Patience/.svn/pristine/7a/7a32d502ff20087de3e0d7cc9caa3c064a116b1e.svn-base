@@ -1,0 +1,44 @@
+package controller;
+
+import application.FreeCellController;
+import javafx.event.EventHandler;
+import javafx.scene.input.DragEvent;
+
+public class DragDropCrontroller implements EventHandler<DragEvent> {
+
+	
+
+	private FreeCellController controller;
+	private AutoMoveController autoMoveController;
+	
+	public DragDropCrontroller(FreeCellController controller) {
+		this.controller = controller;
+		autoMoveController = new AutoMoveController(this.controller);
+	}
+
+	/**
+	 * wenn die Bewegung gültig ist, bewegt die Karten
+	 * wenn nicht, setzt die Karten wieder zurück
+	 * wenn hochziehbare Karte im aktuellen SpielStapeln steht, zieht ihr hoch.
+	 */
+	public void handle(DragEvent event) {
+		System.out.println("Drop detected in "+ controller.getZielStapel().hashCode());
+		if(controller.isDroppable(controller.getZielStapel())) {
+			this.controller.getZielStapel().addAll(this.controller.getStapelToDrag());
+			controller.zuegen.saveZug();
+			event.consume();
+		}
+		else {
+			controller.getZiehHerkunft().addAll(controller.getStapelToDrag());
+			event.consume();
+		}
+//		while(autoMoveController.autoMoveable()){
+//			autoMoveController.move();
+//			controller.zuegen.saveZug();
+//			this.controller.refreshKarte();
+//		}
+		
+		this.controller.refreshKarte();
+	}
+
+}
